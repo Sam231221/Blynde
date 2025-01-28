@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../../../lib/api";
+import { useSelector } from "react-redux";
 
 // Async thunk for submitting review
 export const submitReview = createAsyncThunk(
@@ -15,6 +16,7 @@ export const submitReview = createAsyncThunk(
           },
         }
       );
+      console.log(response.data);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);

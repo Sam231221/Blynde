@@ -139,7 +139,7 @@ export const register = (name, email, password) => async (dispatch) => {
   }
 };
 
-export const getUserDetails = (id) => async (dispatch, getState) => {
+export const getUserDetails = () => async (dispatch, getState) => {
   try {
     dispatch(USER_DETAIL_REQUEST());
 
@@ -155,7 +155,7 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.get(`/api/users/${id}/`, config);
+    const { data } = await axios.get(`/api/users/profile/`, config);
 
     dispatch(USER_DETAIL_SUCCESS(data));
   } catch (error) {
@@ -185,11 +185,7 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
     };
 
     //update using put() method
-    const { data } = await axios.put(
-      `/api/users/profile/update/`,
-      user,
-      config
-    );
+    const { data } = await axios.put(`/api/users/profile/`, user, config);
 
     dispatch(USER_PROFILE_UPDATE_SUCCESS(data));
     //we wanna logged in user with these updated data.

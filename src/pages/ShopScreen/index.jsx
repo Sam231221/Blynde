@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PageContainer from "../../components/PageContainer";
 import ProductSidebar from "./components/ProductSidebar";
 import ProductRightbar from "./components/ProductRightbar";
 import { Link } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 const items = [
   { label: "Home", path: "/" },
   { label: "Shop", path: "/shop" },
@@ -11,10 +12,59 @@ const items = [
 export default function ShopScreen() {
   const [selectedFilters, setSelectedFilters] = useState({
     categories: [],
-    price: [0, 1000],
+    price: [0, 500],
     sizes: [],
     color: "",
   });
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { categories, price, sizes, color } = selectedFilters;
+  useEffect(() => {
+    // Update query params when categories change
+    if (categories.length > 0) {
+      setSearchParams((prevParams) => {
+        const params = new URLSearchParams(prevParams);
+        params.set("categories", categories.join(","));
+        return params;
+      });
+    } else {
+      setSearchParams((prevParams) => {
+        const params = new URLSearchParams(prevParams);
+        params.delete("categories"); // Remove the categories param if no categories are selected
+        return params;
+      });
+    }
+
+    setSearchParams((prevParams) => {
+      const params = new URLSearchParams(prevParams);
+      if (color) {
+        params.set("colors", color);
+      } else {
+        params.delete("colors");
+      }
+      return params;
+    });
+
+    setSearchParams((prevParams) => {
+      const params = new URLSearchParams(prevParams);
+      if (sizes.length > 0) {
+        params.set("sizes", sizes.map(encodeURIComponent).join(","));
+      } else {
+        params.delete("sizes"); // Remove the sizes param if no sizes are selected
+      }
+      return params;
+    });
+
+    if (price) {
+      const [minValue, maxValue] = price;
+      setSearchParams((prevParams) => {
+        const params = new URLSearchParams(prevParams);
+        params.set("minPrice", minValue);
+        params.set("maxPrice", maxValue);
+        return params;
+      });
+    }
+  }, [categories, price, color, sizes, setSearchParams]);
+  console.log("asdasd");
   const handleCategoriesChange = (categories) => {
     setSelectedFilters((preb) => ({ ...preb, categories }));
   };

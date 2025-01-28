@@ -18,7 +18,7 @@ function ProfileScreen() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
-
+  console.log("adasd");
   const dispatch = useDispatch();
   const redirect = useNavigate();
 
@@ -33,12 +33,12 @@ function ProfileScreen() {
 
   useEffect(() => {
     //if the user is not logged in
-
     if (!userInfo) {
       redirect("/login");
     } else {
+      //get the details from backend
       if (!user || !user.name || success || userInfo._id !== user._id) {
-        dispatch(getUserDetails("profile"));
+        dispatch(getUserDetails());
       } else {
         //set the name and email to form field after getting user detail from /api/users/profile/.
         setName(user.name);

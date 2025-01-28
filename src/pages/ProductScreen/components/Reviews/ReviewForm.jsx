@@ -34,7 +34,7 @@ const ReviewForm = ({ productId, user }) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <h1 className="text-lg my-3 text-gray-800 ">Add a Review</h1>
+      <h1 className="text-xl my-3 text-gray-900 ">Add a Review</h1>
       <hr />
       <br />
       {error && <p>Error: {error}</p>}

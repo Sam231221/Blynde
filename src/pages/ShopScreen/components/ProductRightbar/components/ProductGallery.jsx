@@ -15,15 +15,33 @@ export default function ProductGallery({
   const [productsDisplaytype, setProductsDisplaytype] = useState("grid");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const [pagination, setPagination] = useState({
+    currentPage: 1,
+    totalPages: 1,
+    totalItems: 0,
+  });
+  const [productQtyPerPage, setProductQtyPerPage] = useState(8);
+  const [sortOption, setSortOption] = useState("popularity");
   const dispatch = useDispatch();
 
   // fetch products
   useEffect(() => {
     async function fetchProducts() {
       try {
-        const { data } = await axios.get("/api/products/all/");
-        setProducts(data);
+        console.log(pagination.currentPage);
+        const params = {
+          page: pagination.currentPage,
+          page_size: productQtyPerPage,
+          sort: sortOption,
+          ...selectedFilters,
+        };
+        const { data } = await axios.get("/api/products/all/", { params });
+        setProducts(data.results);
+        setPagination({
+          currentPage: data.pagination.current_page,
+          totalPages: data.pagination.total_pages,
+          totalItems: data.pagination.total_items,
+        });
         setLoading(false);
       } catch (err) {
         setError(
@@ -36,7 +54,19 @@ export default function ProductGallery({
     }
 
     fetchProducts();
-  }, []);
+  }, [pagination.currentPage, productQtyPerPage, sortOption, selectedFilters]);
+
+  const paginate = useCallback(
+    (pageNumber) => {
+      if (pageNumber >= 1 && pageNumber <= pagination.totalPages) {
+        setPagination((prevPagination) => ({
+          ...prevPagination,
+          currentPage: pageNumber,
+        }));
+      }
+    },
+    [pagination.totalPages]
+  );
 
   const addToWishlistHandler = (id) => {
     dispatch(addToWishList(id));
@@ -72,13 +102,8 @@ export default function ProductGallery({
     return tempProducts;
   }
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [productsPerPage, setProductsPerPage] = useState(8);
-  const [sortOption, setSortOption] = useState("popularity");
-
-  // Sort products based on selected sort option
-  const sortedProducts = useMemo(() => {
-    return [...products].sort((a, b) => {
+  const sortedAndFilteredProducts = useMemo(() => {
+    const sorted = [...products].sort((a, b) => {
       switch (sortOption) {
         case "price-low-high":
           return a.price - b.price;
@@ -92,29 +117,16 @@ export default function ProductGallery({
           return 0;
       }
     });
-  }, [products, sortOption]);
-  //Apply Filters
-  const filteredProducts = filterProducts(sortedProducts);
-  //Calculate total number of pages
-  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
 
-  // Calculate products for the current page
-  const currentProducts = useMemo(() => {
-    const indexOfLastProduct = currentPage * productsPerPage;
-    const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-    return filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
-  }, [currentPage, productsPerPage, filteredProducts]);
+    return filterProducts(sorted);
+  }, [pagination.currentPage, products, sortOption, selectedFilters]);
 
-  const handleProductsPerPageChange = useCallback((event) => {
-    setProductsPerPage(Number(event.target.value));
+  const handleProductQtyPerPageChange = useCallback((event) => {
+    setProductQtyPerPage(Number(event.target.value));
   }, []);
 
   const handleSortChange = useCallback((event) => {
     setSortOption(event.target.value);
-  }, []);
-
-  const paginate = useCallback((pageNumber) => {
-    setCurrentPage(pageNumber);
   }, []);
 
   if (loading) {
@@ -167,19 +179,22 @@ export default function ProductGallery({
             />
           </div>
           <p>
-            Showing {currentPage * productsPerPage - productsPerPage + 1}-
-            {Math.min(currentPage * productsPerPage, filteredProducts.length)}{" "}
-            of {filteredProducts.length} results
+            Showing {(pagination.currentPage - 1) * productQtyPerPage + 1}-
+            {Math.min(
+              pagination.currentPage * productQtyPerPage,
+              pagination.totalItems
+            )}{" "}
+            of {pagination.totalItems} results
           </p>
         </div>
         <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
           <div className="flex gap-2 items-center">
             <span>Show:</span>
             <select
-              value={productsPerPage}
-              onChange={handleProductsPerPageChange}
+              value={productQtyPerPage}
+              onChange={handleProductQtyPerPageChange}
               className="focus:outline-none"
-              id="productsPerPage"
+              id="productQtyPerPage"
             >
               <option value="8">8 Items</option>
               <option value="16">16 Items</option>
@@ -206,7 +221,7 @@ export default function ProductGallery({
         </div>
       </div>
 
-      {currentProducts.length === 0 ? (
+      {products.length === 0 ? (
         <div className="container mx-auto py-8 px-4">
           <div
             className="bg-zinc-100 border border-gray-400 text-gray-790 px-4 py-3 rounded relative"
@@ -222,7 +237,7 @@ export default function ProductGallery({
           showtype={productsDisplaytype}
           productheight={`h-[200px] sm:h-[300px]`}
           addToWishlistHandler={addToWishlistHandler}
-          products={currentProducts}
+          products={sortedAndFilteredProducts}
         />
       )}
 
@@ -230,18 +245,18 @@ export default function ProductGallery({
       <div className="my-4 flex justify-center">
         <nav className="inline-flex rounded-md shadow">
           <button
-            onClick={() => paginate(currentPage - 1)}
-            disabled={currentPage === 1}
+            onClick={() => paginate(pagination.currentPage - 1)}
+            disabled={pagination.currentPage === 1}
             className="px-3 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Previous
           </button>
-          {[...Array(totalPages)].map((_, index) => (
+          {[...Array(pagination.totalPages)].map((_, index) => (
             <button
               key={index}
               onClick={() => paginate(index + 1)}
               className={`px-3 py-2 border border-gray-300 text-sm font-medium ${
-                currentPage === index + 1
+                pagination.currentPage === index + 1
                   ? "bg-blue-50 text-blue-600"
                   : "bg-white text-gray-500 hover:bg-gray-50"
               }`}
@@ -250,8 +265,8 @@ export default function ProductGallery({
             </button>
           ))}
           <button
-            onClick={() => paginate(currentPage + 1)}
-            disabled={currentPage === totalPages}
+            onClick={() => paginate(pagination.currentPage + 1)}
+            disabled={pagination.currentPage === pagination.totalPages}
             className="px-3 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Next

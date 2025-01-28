@@ -19,7 +19,7 @@ export const ProfileDropDown = ({ classes }) => {
   let ProfileDivRef = useRef();
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
-
+  console.log(userInfo);
   useEffect(() => {
     let handler = (e) => {
       if (!ProfileDivRef.current.contains(e.target)) {

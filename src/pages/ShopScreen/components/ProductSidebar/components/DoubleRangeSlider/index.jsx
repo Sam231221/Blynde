@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./style.css";
 import Slider from "react-slider";
 
 export default function DoubleRangeSlider({ handlePriceChange, min, max }) {
   const [values, setValues] = useState([min, max]);
+
   const handleSliderChange = (newValue) => {
     setValues(newValue);
+
     handlePriceChange(newValue);
   };
 

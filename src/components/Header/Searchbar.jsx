@@ -14,10 +14,17 @@ export default function Searchbar() {
     async function fetchProducts(debouncedSearch) {
       try {
         setLoading(true);
-        const { data } = await axios.get("/api/products/all/");
+        setError(null);
+        // Create the query parameter if there's a search query
+        const query = debouncedSearch ? `?search=${debouncedSearch}` : "";
+
+        // Fetch products with search query
+        const { data } = await axios.get(`/api/products/all/${query}`);
+
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
-        const filteredproducts = data.filter((product) =>
+        //frontend filteringproducts
+        const filteredproducts = data.results.filter((product) =>
           product.name.toLowerCase().includes(debouncedSearch.toLowerCase())
         );
         setProducts(filteredproducts);
@@ -61,7 +68,7 @@ export default function Searchbar() {
                 {products.map((product) => {
                   return (
                     <Link
-                      to={`product/${product._id}`}
+                      to={`/product/${product._id}`}
                       className="bg-slate-50 hover:bg-slate-100  p-2 flex min-w-[200px] sm:min-w-[300px]"
                       key={product._id}
                     >

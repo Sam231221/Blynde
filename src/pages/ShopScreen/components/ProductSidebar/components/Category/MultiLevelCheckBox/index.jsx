@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { GoPlus } from "react-icons/go";
 import { HiOutlineMinusSmall } from "react-icons/hi2";
 import Checkbox from "../../../../../../../components/reusables/Checkbox";
+
 const MultiLevelCheckbox = ({ handleCategoriesChange, categories }) => {
   const [expanded, setExpanded] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
+
   const handleToggle = (id) => {
     const newExpanded = expanded.includes(id)
       ? expanded.filter((cat) => cat !== id)
