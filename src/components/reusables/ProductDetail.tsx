@@ -30,10 +30,10 @@ export const ProductDetail = ({ product, openModal }) => {
   const handleSizeChange = (size) => {
     setData((prev) => ({ ...prev, size }));
   };
-  console.log(data);
-  const addToCartHandler = () => {
+
+  const addToCartHandler = (id) => {
     const { quantity, size, color } = data;
-    if (quantity && size && color) {
+    if (product._id === id && quantity && size && color) {
       dispatch(
         addToCart({
           productId: product._id,
@@ -127,7 +127,7 @@ export const ProductDetail = ({ product, openModal }) => {
             )}
 
             <button
-              onClick={() => addToCartHandler()}
+              onClick={() => addToCartHandler(product._id)}
               className="bg-sky-500 w-full font-medium hover:bg-sky-600 text-white py-2 px-4"
               disabled={product.countInStock <= 0}
               type="button"

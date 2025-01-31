@@ -4,8 +4,9 @@ import { RxDashboard } from "react-icons/rx";
 import { CiCircleList } from "react-icons/ci";
 
 import ProductGridShowCase from "../../../../../components/reusables/ProductGridShowCase";
-import { addToWishList } from "../../../../../redux/actions/userActions";
+
 import axios from "../../../../../lib/api";
+import { addToCart } from "../../../../../redux/reducers/Cart/CartSlice";
 
 export default function ProductGallery({
   selectedFilters,
@@ -68,8 +69,18 @@ export default function ProductGallery({
     [pagination.totalPages]
   );
 
-  const addToWishlistHandler = (id) => {
-    dispatch(addToWishList(id));
+  const addToWishlistHandler = (product) => {
+    dispatch(
+      addToCart({
+        productId: product._id,
+        name: product.name,
+        price: product.sale_price ? product.sale_price : product.price,
+        color,
+        size,
+        thumbnail: product.thumbnail,
+        quantity,
+      })
+    );
   };
   function filterProducts(sortedProducts) {
     let tempProducts = [...sortedProducts];

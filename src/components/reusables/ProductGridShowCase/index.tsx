@@ -105,7 +105,6 @@ export default function ProductGridShowCase({
                           handleColorChange={handleColorChange}
                           handleSizeChange={handleSizeChange}
                           handleQuantityChange={handleQuantityChange}
-                          addToCartHandler={addToCartHandler}
                           data={data}
                           openModal={openModal}
                         />

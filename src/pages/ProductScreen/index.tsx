@@ -9,28 +9,35 @@ import PageContainer from "../../components/PageContainer";
 import Reviews from "./components/Reviews";
 import { ProductDetail } from "../../components/reusables/ProductDetail";
 
-import { listProductDetails } from "../../redux/actions/productActions";
 import { useModalContext } from "../../providers/ModalProvider";
+import { RootState } from "../../types";
+import { fetchProductDetail } from "../../redux/reducers/Product/ProductSlice";
 const items = [
   { label: "Home", path: "/" },
   { label: "Shop", path: "/shop" },
 ];
 export default function ProductScreen() {
   const { openModal } = useModalContext();
-
   const dispatch = useDispatch();
-  const { id } = useParams();
-  const userLogin = useSelector((state) => state.userLogin);
+
+  const { id } = useParams<{ id: string }>();
+
+  const { productDetail, loading, error } = useSelector(
+    (state: RootState) => state.product
+  );
+  const userLogin = useSelector((state) => state.auth);
   const { userInfo } = userLogin;
-  //select a particular state i.e productList state which is an obj
-  const productDetail = useSelector((state) => state.productDetails);
-  const { error, loading, product } = productDetail;
-  const { success } = useSelector((state) => state.reviews);
+
+  // const { success } = useSelector((state) => state.reviews);
 
   useEffect(() => {
-    dispatch(listProductDetails(id));
-  }, [dispatch, id, success]);
-
+    if (id) {
+      dispatch(fetchProductDetail(Number(id))); // Fetch product data
+    }
+  }, [id, dispatch]);
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
+  if (!productDetail) return <p>Product not found</p>;
   return (
     <PageContainer>
       <div className="container mx-auto mt-24">
@@ -53,10 +60,10 @@ export default function ProductScreen() {
             <li className="flex items-center gap-2">
               <span className="text-gray-300">/</span>
               <Link
-                to={`/product/${product._id}`}
+                to={`/product/${productDetail._id}`}
                 className="text-gray-500 hover:text-gray-700"
               >
-                {product.name}
+                {productDetail.name}
               </Link>
             </li>
           </ol>
@@ -67,8 +74,8 @@ export default function ProductScreen() {
           <Message variant="danger">{error}</Message>
         ) : (
           <>
-            <ProductDetail product={product} openModal={openModal} />
-            <Reviews userInfo={userInfo} productId={product._id} />
+            <ProductDetail product={productDetail} openModal={openModal} />
+            {/* <Reviews userInfo={userInfo} productId={product._id} /> */}
           </>
         )}
       </div>
