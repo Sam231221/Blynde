@@ -1,0 +1,17 @@
+.range-thumb::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background-color: #4a90e2; /* Customize color */
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.range-thumb::-moz-range-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background-color: #4a90e2;
+  border-radius: 50%;
+  cursor: pointer;
+}
