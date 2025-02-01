@@ -1,47 +1,70 @@
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { MdOutlineZoomOutMap } from "react-icons/md";
+import { EyeOutline, HeartOutline, RepeatOutline } from "react-ionicons";
 import ProductImageTransition from "./ProductImageTransition";
 import Rating from "../../Rating";
 import ProductColorSelect from "../../ProductColorSelect";
 import SizeVariant from "../../SizeVariant";
 import ProductPriceInput from "../../ProductPriceInput";
 
-import { useState } from "react";
-import { useDispatch } from "react-redux";
 import { useModalContext } from "../../../providers/ModalProvider";
 import { ProductDetail } from "../ProductDetail";
+import { addToCart } from "../../../redux/reducers/Cart/CartSlice";
+import { Product } from "../../../types";
 
-// import { addToCart } from "../../../redux/actions/cartAction";
-
+interface ProductGridShowCaseProps {
+  showtype?: string;
+  products: Product[];
+  productheight: string;
+}
 export default function ProductGridShowCase({
   showtype = "grid",
   products,
   productheight,
-  addToWishlistHandler,
-}) {
-  const { openModal, closeModal, content } = useModalContext();
+}: ProductGridShowCaseProps) {
+  const { openModal } = useModalContext();
   const dispatch = useDispatch();
   const [data, setData] = useState({
     quantity: 1,
     color: "",
     size: "",
   });
-  const handleQuantityChange = (quantity) => {
+  const handleQuantityChange = (quantity: number) => {
     setData((prev) => ({ ...prev, quantity }));
   };
-  const handleColorChange = (color) => {
+  const handleColorChange = (color: string) => {
     setData((prev) => ({ ...prev, color }));
   };
-  const handleSizeChange = (size) => {
+  const handleSizeChange = (size: string) => {
     setData((prev) => ({ ...prev, size }));
   };
-  const addToCartHandler = (id) => {
-    // const { quantity, size, color } = data;
-    // if (id && quantity && size && color) {
-    //   dispatch(addToCart(id, quantity, color, size));
-    // } else {
-    //   alert("Please select size and color");
-    // }
+
+  const addToCartHandler = (
+    productId: number,
+    name: string,
+    price: number,
+    color: string,
+    size: string,
+    thumbnail: string,
+    quantity: number
+  ) => {
+    if (productId && quantity && size && color) {
+      dispatch(
+        addToCart({
+          productId,
+          name,
+          price,
+          color,
+          size,
+          thumbnail,
+          quantity,
+        })
+      );
+    } else {
+      alert("Please select size and color");
+    }
   };
 
   return (
@@ -90,12 +113,13 @@ export default function ProductGridShowCase({
                 {/* Product Actions */}
                 <div className="absolute flex flex-col top-3 right-3 text-lg  transition-all duration-200 ease-in-out z-[3] translate-x-14 group-hover:translate-x-0  ">
                   <div className="flex justify-center items-center w-10 h-10 bg-white mb-2 text-gray-400 border border-zinc-200  transition-all duration-200 ease-in-out rounded-full hover:bg-gray-900 hover:text-white hover:border-gray-800">
-                    <ion-icon
-                      name="heart-outline"
-                      role="img"
-                      className="md hydrated"
+                    <HeartOutline
+                      color={"#00000"}
+                      title={"heart-outline"}
+                      height="20px"
+                      width="20px"
                       aria-label="heart outline"
-                    ></ion-icon>
+                    />
                   </div>
                   <div
                     onClick={() =>
@@ -118,15 +142,22 @@ export default function ProductGridShowCase({
                     to={`/product/${product._id}`}
                     className="flex justify-center items-center w-10 h-10 bg-white mb-2 text-gray-400 border border-zinc-200  transition-all duration-200 ease-in-out rounded-full hover:bg-gray-900 hover:text-white hover:border-gray-800"
                   >
-                    <ion-icon
-                      name="eye-outline"
-                      role="img"
-                      className="md hydrated"
+                    <EyeOutline
+                      color={"#00000"}
+                      title={"eye-outline"}
+                      height="20px"
+                      width="20px"
                       aria-label="eye outline"
-                    ></ion-icon>
+                    />
                   </Link>
                   <button className="flex justify-center items-center w-10 h-10 bg-white mb-2 text-gray-400 border border-zinc-200  transition-all duration-200 ease-in-out rounded-full hover:bg-gray-900 hover:text-white hover:border-gray-800">
-                    <ion-icon name="repeat-outline"></ion-icon>
+                    <RepeatOutline
+                      color={"#00000"}
+                      title={"repeat-outline"}
+                      height="20px"
+                      width="20px"
+                      aria-label="repeat outline"
+                    />
                   </button>
                 </div>
               </div>
@@ -204,12 +235,13 @@ export default function ProductGridShowCase({
                   {/* Product Actions */}
                   <div className="absolute flex flex-col top-3 right-3 text-lg  transition-all duration-200 ease-in-out z-[3] translate-x-14 group-hover:translate-x-0 ">
                     <div className="flex justify-center items-center w-10 h-10 bg-white mb-2 text-gray-400 border border-zinc-200  transition-all duration-200 ease-in-out rounded-full hover:bg-gray-900 hover:text-white hover:border-gray-800">
-                      <ion-icon
-                        name="heart-outline"
-                        role="img"
-                        className="md hydrated"
+                      <HeartOutline
+                        color={"#00000"}
+                        title={"heart-outline"}
+                        height="20px"
+                        width="20px"
                         aria-label="heart outline"
-                      ></ion-icon>
+                      />
                     </div>
                     <div className="flex justify-center items-center w-10 h-10 bg-white mb-2 py-2 text-gray-400 border border-zinc-200  transition-all duration-200 ease-in-out rounded-full hover:bg-gray-900 hover:text-white hover:border-gray-800">
                       <MdOutlineZoomOutMap
@@ -221,15 +253,22 @@ export default function ProductGridShowCase({
                       to={`/product/${product._id}`}
                       className="flex justify-center items-center w-10 h-10 bg-white mb-2 text-gray-400 border border-zinc-200  transition-all duration-200 ease-in-out rounded-full hover:bg-gray-900 hover:text-white hover:border-gray-800"
                     >
-                      <ion-icon
-                        name="eye-outline"
-                        role="img"
-                        className="md hydrated"
+                      <EyeOutline
+                        color={"#00000"}
+                        title={"eye-outline"}
+                        height="20px"
+                        width="20px"
                         aria-label="eye outline"
-                      ></ion-icon>
+                      />
                     </Link>
                     <button className="flex justify-center items-center w-10 h-10 bg-white mb-2 text-gray-400 border border-zinc-200  transition-all duration-200 ease-in-out rounded-full hover:bg-gray-900 hover:text-white hover:border-gray-800">
-                      <ion-icon name="repeat-outline"></ion-icon>
+                      <RepeatOutline
+                        color={"#00000"}
+                        title={"repeat-outline"}
+                        height="20px"
+                        width="20px"
+                        aria-label="repeat outline"
+                      />
                     </button>
                   </div>
                 </div>
@@ -295,9 +334,12 @@ export default function ProductGridShowCase({
                     onClick={() =>
                       addToCartHandler(
                         product._id,
-                        data.quantity,
+                        product.name,
+                        product.sale_price ? product.sale_price : product.price,
                         data.color,
-                        data.size
+                        data.size,
+                        product.thumbnail,
+                        data.quantity
                       )
                     }
                     className="bg-sky-500 w-full font-medium hover:bg-sky-600 text-white py-2 px-4"

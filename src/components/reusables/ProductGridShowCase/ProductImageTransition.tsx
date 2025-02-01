@@ -1,11 +1,23 @@
 import { useCallback, useState } from "react";
 import { endpoint } from "../../../lib/api";
-export default function ProductImageTransition({ name, img_albums }) {
+interface ProductImageTransitionProps {
+  name: string;
+  img_albums: { image: string }[];
+}
+
+export default function ProductImageTransition({
+  name,
+  img_albums,
+}: ProductImageTransitionProps) {
   const [showFirstImage, setShowFirstImage] = useState(true);
   // Memoize event handlers to avoid unnecessary re-renders
-  const handleImageError = useCallback((e) => {
-    e.target.src = "https://dummyjson.com/image/200x200";
-  }, []);
+  const handleImageError = useCallback(
+    (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+      (e.target as HTMLImageElement).src =
+        "https://dummyjson.com/image/200x200";
+    },
+    []
+  );
   return (
     <div
       onMouseEnter={() => setShowFirstImage(false)}

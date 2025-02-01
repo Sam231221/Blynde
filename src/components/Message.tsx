@@ -1,7 +1,13 @@
 import clsx from "clsx";
 import { FaRegCircleCheck } from "react-icons/fa6";
 import { CiCircleAlert } from "react-icons/ci";
-export const Message = ({ variant, children }) => {
+export const Message = ({
+  variant,
+  children,
+}: {
+  variant: string;
+  children: React.ReactNode;
+}) => {
   return (
     <div className="container mx-auto ">
       <div

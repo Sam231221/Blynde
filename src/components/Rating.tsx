@@ -1,6 +1,18 @@
-import { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, MouseEvent } from "react";
 
-export default function Rating({
+interface RatingProps {
+  color?: string;
+  count?: number;
+  fontSize?: number;
+  value?: number;
+  text?: string;
+  className?: string;
+  hoverEnabled?: boolean;
+  hoverColor?: string;
+  onChange?: (value: number) => void;
+}
+
+const Rating: React.FC<RatingProps> = ({
   color = "gold",
   count = 5,
   fontSize = "24px",
@@ -10,38 +22,49 @@ export default function Rating({
   hoverEnabled = false,
   hoverColor = "orange",
   onChange,
-}) {
-  const [hoverValue, setHoverValue] = useState(null);
+}) => {
+  const [hoverValue, setHoverValue] = useState<number | null>(null);
   const [currentValue, setCurrentValue] = useState(value);
 
   useEffect(() => {
-    setCurrentValue(value); // Update currentValue when value prop changes
+    setCurrentValue(value);
   }, [value]);
 
-  const handleClick = (index) => {
-    setCurrentValue(index);
-    if (onChange) {
-      onChange(index);
+  const handleClick = (index: number | null) => {
+    if (index !== null) {
+      // Handle potential null from hover
+      setCurrentValue(index);
+      if (onChange) {
+        onChange(index);
+      }
     }
   };
 
-  const handleMouseMove = (e, index) => {
+  const handleMouseMove = (e: MouseEvent<HTMLSpanElement>, index: number) => {
     if (hoverEnabled) {
-      const { left, width } = e.target.getBoundingClientRect();
+      const { left, width } = e.currentTarget.getBoundingClientRect(); // Use currentTarget
       const x = e.clientX - left;
       const isHalf = x < width / 2;
       setHoverValue(isHalf ? index - 0.5 : index);
     }
   };
 
+  const handleMouseLeave = () => {
+    setHoverValue(null);
+  };
+
   const stars = useMemo(() => {
     const result = [];
+
     for (let i = 1; i <= count; i++) {
       let starClass = "far fa-star";
-      if (hoverEnabled && hoverValue >= i) {
-        starClass = "fas fa-star";
-      } else if (hoverEnabled && hoverValue >= i - 0.5) {
-        starClass = "fas fa-star-half-alt";
+
+      if (hoverEnabled) {
+        if (hoverValue !== null && hoverValue >= i) {
+          starClass = "fas fa-star";
+        } else if (hoverValue !== null && hoverValue >= i - 0.5) {
+          starClass = "fas fa-star-half-alt";
+        }
       } else if (currentValue >= i) {
         starClass = "fas fa-star";
       } else if (currentValue >= i - 0.5) {
@@ -52,17 +75,21 @@ export default function Rating({
         <span
           key={i}
           onMouseMove={(e) => handleMouseMove(e, i)}
-          onMouseLeave={() => setHoverValue(null)}
-          onClick={() => handleClick(hoverValue)}
+          onMouseLeave={handleMouseLeave}
+          onClick={() => handleClick(hoverValue ?? i)} //Click on hover value or current star
+          style={{ cursor: hoverEnabled ? "pointer" : "default" }} // Add cursor style
         >
           <i
             className={`${starClass} ${className}`}
             style={{
-              color: hoverEnabled && hoverValue >= i ? hoverColor : color,
+              color:
+                hoverEnabled && hoverValue !== null && hoverValue >= i
+                  ? hoverColor
+                  : color,
               fontSize,
             }}
             aria-hidden="true"
-          ></i>
+          />
         </span>
       );
     }
@@ -86,4 +113,6 @@ export default function Rating({
       )}
     </span>
   );
-}
+};
+
+export default Rating;

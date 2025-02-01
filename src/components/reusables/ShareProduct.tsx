@@ -9,7 +9,7 @@ import {
   XIcon,
 } from "react-share";
 import CodeSnippet from "../code-snippet";
-export const ShareProduct = ({ id }) => {
+export const ShareProduct = ({ id }: { id: number }) => {
   return (
     <div>
       <h2 className="text-xl tracking-wide mb-2">Copy link</h2>
@@ -26,6 +26,7 @@ export const ShareProduct = ({ id }) => {
         </FacebookShareButton>
         <FacebookMessengerShareButton
           url={`${import.meta.env.VITE_PUBLIC_URL}/product/${id}`}
+          appId={import.meta.env.VITE_FACEBOOK_APP_ID}
         >
           <FacebookMessengerIcon size={32} round />
         </FacebookMessengerShareButton>

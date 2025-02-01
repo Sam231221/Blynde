@@ -1,5 +1,4 @@
 // Your Axios instance
-import { useUser } from "../hooks/useAuth";
 import store from "../redux/store";
 import { Order } from "../types";
 import apiClient from "./api";

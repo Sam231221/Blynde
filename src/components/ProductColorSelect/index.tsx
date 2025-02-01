@@ -1,22 +1,26 @@
 import React, { useState } from "react";
 import { IoCloseOutline } from "react-icons/io5";
-function ProductColorSelect({
+interface ProductColorSelectProps {
+  handleColorChange?: (color: string) => void;
+  colors: { hex_code: string; name: string; stock?: number }[];
+  direction?: "horizontal" | "vertical";
+}
+const ProductColorSelect: React.FC<ProductColorSelectProps> = ({
   handleColorChange,
   colors,
-  classNames,
   direction = "horizontal",
-}) {
-  const [selectedColor, setSelectedColor] = useState(null);
+}) => {
+  const [selectedColor, setSelectedColor] = useState<string | null>(null);
 
-  const handleColorClick = (color) => {
+  const handleColorClick = (color: string) => {
     setSelectedColor(color);
-    handleColorChange(color);
+    if (handleColorChange) handleColorChange(color);
   };
 
   return (
     <div className={`flex flex-col gap-2 `}>
       <h1 className="font-medium text-gray-800">
-        Colors: <span>{selectedColor}</span>
+        Color: <span>{selectedColor}</span>
       </h1>
       <div
         className={`flex gap-3 ${
@@ -26,7 +30,6 @@ function ProductColorSelect({
         {colors.map((color) => (
           <div
             id={color.name}
-            type="button"
             key={color.hex_code}
             className={`relative w-8 h-8 rounded-full cursor-pointer ${
               selectedColor === color.name
@@ -48,12 +51,12 @@ function ProductColorSelect({
           className="flex items-center mb-3"
           onClick={() => setSelectedColor(null)}
         >
-          <IoCloseOutline color={15} />
+          <IoCloseOutline fontSize={15} />
           <span className="ml-2 text-xs"> Clear</span>
         </button>
       )}
     </div>
   );
-}
+};
 
 export default ProductColorSelect;

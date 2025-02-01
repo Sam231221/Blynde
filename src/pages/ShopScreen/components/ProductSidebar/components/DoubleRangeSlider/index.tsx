@@ -1,14 +1,23 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "./style.css";
-import Slider from "react-slider";
+import DoubleSlider from "../../../../../../components/reusables/DoubleSlider";
 
-export default function DoubleRangeSlider({ handlePriceChange, min, max }) {
-  const [values, setValues] = useState([min, max]);
+interface DoubleRangeSliderProps {
+  handlePriceChange: (range: [number, number]) => void;
+  min: number;
+  max: number;
+}
 
-  const handleSliderChange = (newValue) => {
-    setValues(newValue);
+export default function DoubleRangePriceSlider({
+  handlePriceChange,
+  min = 0,
+  max = 100,
+}: DoubleRangeSliderProps) {
+  const [values, setValues] = useState<[number, number]>([min, max]);
 
-    handlePriceChange(newValue);
+  const handleSliderChange = (minValue: number, maxValue: number) => {
+    setValues([minValue, maxValue]);
+    handlePriceChange([minValue, maxValue]);
   };
 
   return (
@@ -18,17 +27,19 @@ export default function DoubleRangeSlider({ handlePriceChange, min, max }) {
       </h2>
 
       <div className="px-3 text-[14px] font-medium">
-        <div className="">
+        <div>
           ${values[0]} - ${values[1]}
         </div>
 
-        <p>Current Range:${values[1] - values[0]}</p>
-        <Slider
-          className={"slider"}
-          onChange={handleSliderChange}
-          value={values}
+        <p>Current Range: ${values[1] - values[0]}</p>
+
+        <DoubleSlider
+          className="slider"
           min={min}
           max={max}
+          defaultMinValue={values[0]}
+          defaultMaxValue={values[1]}
+          onChange={handleSliderChange}
         />
       </div>
     </div>

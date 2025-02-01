@@ -1,7 +1,7 @@
 import {
   Category,
-  DoubleRangeSlider,
   Colors,
+  DoubleRangePriceSlider,
   FilterBySize,
 } from "./components";
 
@@ -17,7 +17,7 @@ const ProductSidebar = ({
         <section className="w-full border-r-2 border-[#e5e5e5] z-[3] flex flex-col items-center overflow-y-auto">
           <Category handleCategoriesChange={handleCategoriesChange} />
           {/* Range Slider */}
-          <DoubleRangeSlider
+          <DoubleRangePriceSlider
             min={0}
             max={500}
             handlePriceChange={handlePriceChange}

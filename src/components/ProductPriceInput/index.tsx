@@ -1,21 +1,30 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { FiMinus, FiPlus } from "react-icons/fi";
-function ProductPriceInput({ unitPrice = 1, qty = 1, id, handleChange }) {
+interface ProductPriceInputProps {
+  qty?: number;
+  id?: string;
+  handleChange?: (qty: number, id: string | undefined) => void;
+}
+function ProductPriceInput({
+  qty = 1,
+  id,
+  handleChange,
+}: ProductPriceInputProps) {
   const [quantity, setQuantity] = useState(qty);
 
   const handleIncrement = () => {
     setQuantity(quantity + 1);
-    handleChange(quantity + 1, id);
-  };
-
-  const handleDecrement = () => {
-    if (quantity > 1) {
-      setQuantity(quantity - 1);
+    if (handleChange) {
       handleChange(quantity + 1, id);
     }
   };
 
-  const totalPrice = quantity * unitPrice;
+  const handleDecrement = () => {
+    if (handleChange) {
+      handleChange(quantity - 1, id);
+    }
+    setQuantity(quantity - 1);
+  };
 
   return (
     <>
@@ -42,7 +51,6 @@ function ProductPriceInput({ unitPrice = 1, qty = 1, id, handleChange }) {
           <FiPlus size={15} />
         </button>
       </div>
-      {/* <span className='mt-4 ml-4'>Total: ${totalPrice}</span> */}
     </>
   );
 }

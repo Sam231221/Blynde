@@ -1,6 +1,13 @@
 import { Link } from "react-router-dom";
 import { FaLongArrowAltRight } from "react-icons/fa";
-function CheckoutSteps({ step1, step2, step3, step4 }) {
+interface CheckoutStepsProps {
+  step1?: boolean;
+  step2?: boolean;
+  step3?: boolean;
+  step4?: boolean;
+}
+
+function CheckoutSteps({ step1, step2, step3, step4 }: CheckoutStepsProps) {
   return (
     <div className="flex items-center gap-3 justify-center mb-4">
       <div>
@@ -16,12 +23,12 @@ function CheckoutSteps({ step1, step2, step3, step4 }) {
           </div>
         ) : (
           <div className="flex items-center gap-2">
-            <Link
+            <button
               className="font-medium text-zinc-800 uppercase tracking-wider"
               disabled
             >
               Login
-            </Link>
+            </button>
             <FaLongArrowAltRight className="text-zinc-800 " size={20} />
           </div>
         )}
@@ -40,12 +47,12 @@ function CheckoutSteps({ step1, step2, step3, step4 }) {
           </div>
         ) : (
           <div className="flex items-center gap-2">
-            <Link
+            <button
               className="font-medium text-zinc-800 uppercase tracking-wider"
               disabled
             >
               Shipping
-            </Link>
+            </button>
             <FaLongArrowAltRight className="text-zinc-800 " size={20} />
           </div>
         )}
@@ -64,12 +71,12 @@ function CheckoutSteps({ step1, step2, step3, step4 }) {
           </div>
         ) : (
           <div className="flex items-center gap-2">
-            <Link
+            <button
               className="font-medium text-zinc-800 uppercase tracking-wider"
               disabled
             >
               Payment
-            </Link>
+            </button>
             <FaLongArrowAltRight className="text-zinc-800 " size={20} />
           </div>
         )}
@@ -87,12 +94,12 @@ function CheckoutSteps({ step1, step2, step3, step4 }) {
           </div>
         ) : (
           <div className="flex items-center gap-2">
-            <Link
-              className="font-medium text-zinc-800 uppercase tracking-wider"
+            <button
               disabled
+              className="font-medium text-zinc-800 uppercase tracking-wider"
             >
               Place Order
-            </Link>
+            </button>
           </div>
         )}
       </div>

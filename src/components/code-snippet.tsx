@@ -1,7 +1,13 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Check, Copy } from "lucide-react";
 
-export default function CodeSnippet({ code, language = "javascript" }) {
+export default function CodeSnippet({
+  code,
+  language = "javascript",
+}: {
+  code: string;
+  language: string;
+}) {
   const [isCopied, setIsCopied] = useState(false);
 
   const copyToClipboard = async () => {

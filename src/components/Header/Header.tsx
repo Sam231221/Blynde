@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 import clsx from "clsx";
 
 import { RiUserReceived2Line } from "react-icons/ri";
@@ -12,9 +12,10 @@ import CartRightBar from "./CartRightBar";
 import { ProfileDropDown } from "./ProfileDropDown";
 import Searchbar from "./Searchbar";
 import { useUser } from "../../hooks/useAuth";
+import { RootState } from "../../types";
 function Header() {
   const [sideCartNav, setSideCartNav] = useState(false);
-  const cart = useSelector((state) => state.cart);
+  const cart = useSelector((state: RootState) => state.cart);
   const { cartItems } = cart;
 
   const userInfo = useUser();

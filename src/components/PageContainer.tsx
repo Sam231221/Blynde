@@ -1,7 +1,7 @@
 import Footer from "./Footer";
 import Header from "./Header";
 
-function PageContainer({ children }) {
+function PageContainer({ children }: { children: React.ReactNode }) {
   return (
     <div className="relative ">
       <Header />

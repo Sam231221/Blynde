@@ -1,9 +1,13 @@
 import React, { useState } from "react";
 import { IoCloseOutline } from "react-icons/io5";
-function SizeVariant({ handleSizeChange, sizes }) {
-  const [selectedSize, setSelectedSize] = useState(null);
+interface SizeVariantProps {
+  handleSizeChange: (size: string) => void;
+  sizes: { id: number; name: string; stock: number }[];
+}
+function SizeVariant({ handleSizeChange, sizes }: SizeVariantProps) {
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
 
-  const handleSizeClick = (size) => {
+  const handleSizeClick = (size: string) => {
     setSelectedSize(size);
     handleSizeChange(size);
   };

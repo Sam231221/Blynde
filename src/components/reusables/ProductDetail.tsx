@@ -13,25 +13,31 @@ import { ShareProduct } from "./ShareProduct";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../redux/reducers/Cart/CartSlice";
+import { Product } from "../../types/index";
 
-export const ProductDetail = ({ product, openModal }) => {
+interface ProductDetailProps {
+  product: Product;
+  openModal?: (content: JSX.Element) => void;
+}
+
+export const ProductDetail = ({ product, openModal }: ProductDetailProps) => {
   const [data, setData] = useState({
     quantity: 1,
     color: "",
     size: "",
   });
   const dispatch = useDispatch();
-  const handleQuantityChange = (quantity) => {
+  const handleQuantityChange = (quantity: number) => {
     setData((prev) => ({ ...prev, quantity }));
   };
-  const handleColorChange = (color) => {
+  const handleColorChange = (color: string) => {
     setData((prev) => ({ ...prev, color }));
   };
-  const handleSizeChange = (size) => {
+  const handleSizeChange = (size: string) => {
     setData((prev) => ({ ...prev, size }));
   };
 
-  const addToCartHandler = (id) => {
+  const addToCartHandler = (id: number) => {
     const { quantity, size, color } = data;
     if (product._id === id && quantity && size && color) {
       dispatch(
@@ -151,7 +157,9 @@ export const ProductDetail = ({ product, openModal }) => {
               <span>Add to Wishlist</span>
             </button>
             <button
-              onClick={() => openModal(<ShareProduct id={product._id} />)}
+              onClick={() =>
+                openModal && openModal(<ShareProduct id={product._id} />)
+              }
               className="text-zinc-800 flex items-center gap-2 font-medium tracking-wide text-sm my-2"
             >
               <PiShareNetworkLight size={20} />

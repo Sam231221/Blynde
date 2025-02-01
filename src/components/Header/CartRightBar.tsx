@@ -1,10 +1,19 @@
 import { Link, useNavigate } from "react-router-dom";
 import { HiOutlineXMark } from "react-icons/hi2";
 import { useSelector } from "react-redux";
+import { RootState } from "../../types";
 
-export default function CartRightBar({ sideCartNav, setSideCartNav }) {
+interface CartRightBarProps {
+  sideCartNav: boolean;
+  setSideCartNav: (value: boolean) => void;
+}
+
+export default function CartRightBar({
+  sideCartNav,
+  setSideCartNav,
+}: CartRightBarProps) {
   const redirect = useNavigate();
-  const cart = useSelector((state) => state.cart);
+  const cart = useSelector((state: RootState) => state.cart);
   const { cartItems } = cart;
   const checkoutHandler = () => {
     redirect("/login?redirect=shipping");

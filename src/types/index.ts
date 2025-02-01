@@ -12,6 +12,11 @@ export interface User {
   isAdmin: boolean;
   token: string;
 }
+export interface AuthState {
+  loading: boolean;
+  error: string | null;
+  userInfo: User | null;
+}
 
 export interface UserInfo {
   id: string;
@@ -40,14 +45,6 @@ export interface CartItem {
   thumbnail: string;
   quantity: number;
 }
-export interface AuthState {
-  loading: boolean;
-  error: string | null;
-  userInfo: User | null;
-}
-
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
 
 export interface Order {
   _id: string; // Use _id to match Django's default PK
@@ -85,12 +82,31 @@ interface ShippingAddress {
   country: string;
   shippingPrice: number;
 }
-
-export type Product = {
+export type Size = {
   id: number;
   name: string;
+  stock: number;
+};
+export type Product = {
+  _id: number;
+  name: string;
   price: number;
+  thumbnail: string;
+  sale_price?: number;
+  badge: string;
+  size: Size[];
+  review_count: number;
+  countInStock: number;
+  rating: number;
+  colors: { hex_code: string; name: string; stock?: number }[];
+  priceBadge: string;
+  discount_percentage: number;
   description: string;
+  image_albums: [
+    {
+      image: string;
+    }
+  ];
   // other product properties...
 };
 
@@ -111,3 +127,6 @@ export interface ProductState {
   loading: boolean;
   error: string | null;
 }
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;

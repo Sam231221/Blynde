@@ -1,4 +1,4 @@
-function FormContainer({ children }) {
+function FormContainer({ children }: { children: React.ReactNode }) {
   return <div className="pb-10 pt-10 flex items-center">{children}</div>;
 }
 

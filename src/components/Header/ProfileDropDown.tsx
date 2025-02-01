@@ -1,22 +1,28 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import profile from "/images/profile.png";
 import { RxTriangleDown } from "react-icons/rx";
 import { BsBoxArrowRight, BsGear, BsPerson } from "react-icons/bs";
 
-import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { useLogout, useUser } from "../../hooks/useAuth";
 // import { logout } from "../../redux/reducers/AuthSlice2";
-export const ProfileDropDown = ({ classes }) => {
+interface ProfileDropDownProps {
+  classes?: string;
+}
+
+export const ProfileDropDown = ({ classes }: ProfileDropDownProps) => {
   const [open, setOpen] = useState(false);
-  const dispatch = useDispatch();
-  let ProfileDivRef = useRef();
+
+  const ProfileDivRef = useRef<HTMLDivElement>(null);
   // const { userInfo } = useSelector((state: RootState) => state.auth);
   const userInfo = useUser();
   const logout = useLogout();
   useEffect(() => {
-    let handler = (e) => {
-      if (!ProfileDivRef.current.contains(e.target)) {
+    const handler = (e: MouseEvent) => {
+      if (
+        ProfileDivRef.current &&
+        !ProfileDivRef.current.contains(e.target as Node)
+      ) {
         setOpen(false);
       }
     };
@@ -53,7 +59,7 @@ export const ProfileDropDown = ({ classes }) => {
                            top-14 right-[2px] border-[#f4f4f4] bg-[#fff] drop-shadow-lg w-[220px] p-2`}
       >
         <div className="ml-4 mb-2">
-          <h2 className="text-md capitalize">{userInfo.name}</h2>
+          <h2 className="text-md capitalize">{userInfo?.name}</h2>
         </div>
         <hr />
         <ul>

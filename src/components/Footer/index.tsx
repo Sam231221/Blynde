@@ -227,7 +227,7 @@ export default function Footer() {
 
             <li className="footer-nav-item flex">
               <div className="icon-box">
-                <ion-icon name="location-outline"></ion-icon>
+                {/* <ion-icon name="location-outline"></ion-icon> */}
               </div>
 
               <address className="content">
@@ -237,7 +237,7 @@ export default function Footer() {
 
             <li className="footer-nav-item flex">
               <div className="icon-box">
-                <ion-icon name="call-outline"></ion-icon>
+                {/* <ion-icon name="call-outline"></ion-icon> */}
               </div>
 
               <a href="tel:+607936-8058" className="footer-nav-link">
@@ -247,7 +247,7 @@ export default function Footer() {
 
             <li className="footer-nav-item flex">
               <div className="icon-box">
-                <ion-icon name="mail-outline"></ion-icon>
+                {/* <ion-icon name="mail-outline"></ion-icon> */}
               </div>
 
               <a href="mailto:example@gmail.com" className="footer-nav-link">
@@ -265,25 +265,25 @@ export default function Footer() {
               <ul className="social-link">
                 <li className="footer-nav-item">
                   <a href="#" className="footer-nav-link">
-                    <ion-icon name="logo-facebook"></ion-icon>
+                    {/* <ion-icon name="logo-facebook"></ion-icon> */}
                   </a>
                 </li>
 
                 <li className="footer-nav-item">
                   <a href="#" className="footer-nav-link">
-                    <ion-icon name="logo-twitter"></ion-icon>
+                    {/* <ion-icon name="logo-twitter"></ion-icon> */}
                   </a>
                 </li>
 
                 <li className="footer-nav-item">
                   <a href="#" className="footer-nav-link">
-                    <ion-icon name="logo-linkedin"></ion-icon>
+                    {/* <ion-icon name="logo-linkedin"></ion-icon> */}
                   </a>
                 </li>
 
                 <li className="footer-nav-item">
                   <a href="#" className="footer-nav-link">
-                    <ion-icon name="logo-instagram"></ion-icon>
+                    {/* <ion-icon name="logo-instagram"></ion-icon> */}
                   </a>
                 </li>
               </ul>

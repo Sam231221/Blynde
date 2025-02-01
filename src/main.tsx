@@ -7,7 +7,7 @@ import ModalContextProvider from "./providers/ModalProvider.tsx";
 import { Provider } from "react-redux";
 import store from "./redux/store.ts";
 import { queryClient } from "./lib/queryClient.ts";
-
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
@@ -16,6 +16,7 @@ createRoot(document.getElementById("root")!).render(
           <App />
         </ModalContextProvider>
       </Provider>
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   </React.StrictMode>
 );
