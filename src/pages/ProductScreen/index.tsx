@@ -75,7 +75,7 @@ export default function ProductScreen() {
         ) : (
           <>
             <ProductDetail product={productDetail} openModal={openModal} />
-            {/* <Reviews userInfo={userInfo} productId={product._id} /> */}
+            <Reviews userInfo={userInfo} productId={productDetail._id} />
           </>
         )}
       </div>

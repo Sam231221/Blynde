@@ -1,35 +1,37 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Rating from "../../../../components/Rating";
-import {
-  resetReviewStatus,
-  submitReview,
-} from "../../../../redux/reducers/Review/ReviewSlice";
+import { addReview } from "../../../../redux/reducers/ReviewSlice";
+import { AppDispatch, RootState } from "../../../../types";
 
-const ReviewForm = ({ productId, user }) => {
+const ReviewForm = ({ productId, userId, username }) => {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
-  const dispatch = useDispatch();
-  const { loading, error, success } = useSelector((state) => state.reviews);
 
-  useEffect(() => {
-    if (success) {
-      setRating(0);
-      setComment("");
-      dispatch(resetReviewStatus());
-    }
-  }, [success, dispatch]);
+  const dispatch: AppDispatch = useDispatch();
+  const { loading, error, success } = useSelector(
+    (state: RootState) => state.reviews
+  );
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const reviewData = {
-      productId: productId,
-      user: user,
-      rating,
-      comment,
-    };
+    if (!comment || rating === 0) {
+      alert("Please fill out all fields.");
+      return;
+    }
 
-    dispatch(submitReview(reviewData));
+    dispatch(
+      addReview({
+        product: Number(productId),
+        user: userId, // Assume logged-in user ID (should be dynamic)
+        name: username,
+        rating: rating,
+        comment: comment,
+      })
+    );
+    setRating(0);
+    setComment("");
   };
 
   return (

@@ -31,6 +31,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import AuthSlice from "./reducers/AuthSlice";
 import ProductSlice from "./reducers//Product/ProductSlice";
 import CartSlice from "./reducers/Cart/CartSlice";
+import ReviewSlice from "./reducers/ReviewSlice";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../types";
 //Admin
@@ -39,6 +40,7 @@ const store = configureStore({
     auth: AuthSlice,
     product: ProductSlice,
     cart: CartSlice,
+    reviews: ReviewSlice,
     // //Products
     // productList: ProductListReducer,
     // productDetails: ProductDetailReducer,

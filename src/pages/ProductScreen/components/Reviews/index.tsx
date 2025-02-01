@@ -2,38 +2,40 @@ import React, { useEffect, useState } from "react";
 
 import ReviewForm from "./ReviewForm";
 import Rating from "../../../../components/Rating";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Message } from "../../../../components/Message";
-import axios from "../../../../lib/api";
+
 import Moment from "moment";
+import { AppDispatch, RootState } from "../../../../types";
+import { fetchReviews } from "../../../../redux/reducers/ReviewSlice";
 
 export default function Reviews({ productId, userInfo }) {
-  const [reviews, setReviews] = useState([]); // State for storing reviews
-  const { success } = useSelector((state) => state.reviews);
+  const dispatch = useDispatch<AppDispatch>();
+
+  const { reviews, loading: reviewLoading } = useSelector(
+    (state: RootState) => state.reviews
+  );
 
   useEffect(() => {
-    const fetchReviews = async () => {
-      try {
-        const { data } = await axios.get(`/api/products/${productId}/reviews/`);
-        setReviews(data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
     if (productId) {
-      fetchReviews();
+      dispatch(fetchReviews());
     }
-  }, [productId, success]);
+  }, [productId, dispatch]);
+  const productReviews = reviews.filter(
+    (review) => review.product === Number(productId)
+  );
   return (
     <>
       <h1 className="text-xl font-semibold text-gray-800">
         Reviews({reviews.length})
       </h1>
       <hr />
-
-      {reviews.length > 0 ? (
-        reviews
+      {reviewLoading ? (
+        <p>Loading reviews...</p>
+      ) : productReviews.length === 0 ? (
+        <p>No reviews yet. Be the first to review!</p>
+      ) : (
+        productReviews
           .slice()
           .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
           .map((review, index) => (
@@ -62,12 +64,15 @@ export default function Reviews({ productId, userInfo }) {
               </div>
             </div>
           ))
-      ) : (
-        <p>No reviews yet.</p>
       )}
+
       <div className="mb-4">
         {userInfo.name ? (
-          <ReviewForm user={userInfo.name} productId={productId} />
+          <ReviewForm
+            username={userInfo.name}
+            userId={userInfo.id}
+            productId={productId}
+          />
         ) : (
           <>
             <Message variant="alert">You need to sigin to add a review</Message>

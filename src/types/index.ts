@@ -62,6 +62,16 @@ export type Product = {
   description: string;
   // other product properties...
 };
+
+export type Review = {
+  product: number; // Product ID
+  user: number | null; // User ID (nullable)
+  name: string;
+  rating: number; // 1 to 5 stars
+  comment: string;
+  createdAt: string; // ISO date string
+  // other review properties...
+};
 export interface ProductState {
   allProducts: Product[];
   topProducts: Product[];
