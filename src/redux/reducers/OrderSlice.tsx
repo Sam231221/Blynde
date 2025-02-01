@@ -19,6 +19,7 @@ const orderSlice = createSlice({
       state.orders = action.payload;
     },
     setSelectedOrder: (state, action: PayloadAction<Order | null>) => {
+      console.log("eee:", action.payload);
       state.selectedOrder = action.payload;
     },
     addOrder: (state, action: PayloadAction<Order>) => {

@@ -1,5 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { CartItem, CartState, RootState } from "../../../types";
+import {
+  CartItem,
+  CartState,
+  RootState,
+  ShippingAddress,
+} from "../../../types";
 
 // Get initial cart state from localStorage
 const cartItemsFromStorage: CartItem[] = JSON.parse(
@@ -75,7 +80,7 @@ const cartSlice = createSlice({
       state.cartItems = [];
       localStorage.removeItem("cartItems");
     },
-    saveShippingAddress: (state, action: PayloadAction<object>) => {
+    saveShippingAddress: (state, action: PayloadAction<ShippingAddress>) => {
       state.shippingAddress = action.payload;
       localStorage.setItem("shippingAddress", JSON.stringify(action.payload));
     },

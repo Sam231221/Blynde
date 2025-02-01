@@ -15,8 +15,9 @@ import {
   selectSelectedOrder,
   setSelectedOrder,
 } from "../redux/reducers/OrderSlice";
-import { fetchOrderById } from "../lib/orderApi";
-import { useQuery } from "@tanstack/react-query";
+import { deliverOrder, fetchOrderById } from "../lib/orderApi";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { queryClient } from "../lib/queryClient";
 
 const items = [
   { label: "Home", path: "/" },
@@ -37,17 +38,31 @@ export default function OrderScreen() {
   } = useQuery({
     queryKey: ["order", id],
     queryFn: () => fetchOrderById(Number(id)),
+    onSuccess: (data) => {
+      //  If you absolutely need to sync with Redux, do it here, after the query has succeeded.
+      //  However, in most cases, you won't need this. TanStack Query's cache is sufficient.
+      dispatch(setSelectedOrder(data)); // Only if really necessary
+    },
   });
+
   if (order) {
     dispatch(setSelectedOrder(order));
   }
-  // const orderPay = useSelector((state) => state.orderPay);
-  // const { loading: loadingPay, success: successPay } = orderPay;
+  const { mutate: deliverUserOrder, isPending: isDelivering } = useMutation({
+    mutationFn: deliverOrder,
+    onSuccess: (response) => {
+      console.log("updatedOrder:", response);
+      // refetch updated order in background -note no dispatch used
+      queryClient.invalidateQueries({ queryKey: ["order", id] }); // Refetch order
+    },
+  });
+  const handleUpdateStatus = (orderId: number) => {
+    deliverUserOrder({ orderId });
+  };
 
-  // const orderDeliver = useSelector((state) => state.orderDeliver);
-  // const { loading: loadingDeliver, success: successDeliver } = orderDeliver;
-
+  const successPaymentHandler = (paymentResult) => {};
   const userInfo = useUser();
+
   if (isLoading) return <Loader />;
   if (error) return <p>Error loading order</p>;
   return (
@@ -77,55 +92,63 @@ export default function OrderScreen() {
               Order Details
             </h1>
             <h1 className="text-sm ml-3 mb-2 text-zinc-800 font-medium">
-              Order No: {order._id}
+              Order No: {selectedOrder._id}
             </h1>
             <h1 className="text-sm ml-3 mb-2 text-zinc-800 font-medium">
               Issued on :{" "}
-              {Moment(order.createdAt).format("MMMM Do YYYY, h:mm a")}
+              {Moment(selectedOrder.createdAt).format("MMMM Do YYYY, h:mm a")}
             </h1>
             <h1 className="text-sm ml-3 mb-2 text-zinc-800 font-medium">
               {/* Total: ${finalOrder.totalPrice} */}
             </h1>
             <h1 className="text-sm ml-3 mb-2 text-zinc-800 font-medium">
-              Payment Method : {order.paymentMethod}
+              Payment Method : {selectedOrder.paymentMethod}
             </h1>
           </div>
           <div className="md:w-1/4 bg-zinc-50 border p-4">
             <h1 className="font-medium text-lg border-b mb-2 pb-2">
               Payment Options
             </h1>
-            {order.isPaid ? (
+            {selectedOrder.isPaid ? (
               <Message variant="success">
-                Paid on {Moment(order.paidAt).format("MMMM Do YYYY, h:mm a")}
+                Paid on{" "}
+                {Moment(selectedOrder.paidAt).format("MMMM Do YYYY, h:mm a")}
               </Message>
             ) : (
               <Message variant="alert">Not Paid</Message>
             )}
-            {/* {!order.isPaid && (
+            {!selectedOrder.isPaid && (
               <div>
-                <PayPalButton
-                  amount={order.totalPrice}
+                {/* <PayPalButton
+                  amount={selectedOrder.totalPrice}
                   onSuccess={successPaymentHandler}
-                />
+                /> */}
               </div>
-            )} */}
+            )}
           </div>
-          {/* <div className="md:w-1/6 border bg-zinc-50 p-4">
+          <div className="md:w-1/6 border bg-zinc-50 p-4">
             <h1 className="font-medium text-lg border-b mb-2 pb-2">Status</h1>
-            {loadingDeliver && <Loader />}
+            {isDelivering && <Loader />}
 
-            {order.isDelivered ? (
+            {selectedOrder.isDelivered ? (
               <Message variant="success">
                 Delivered on{" "}
-                {Moment(order.deliveredAt).format("MMMM Do YYYY, h:mm a")}
+                {Moment(selectedOrder.deliveredAt).format(
+                  "MMMM Do YYYY, h:mm a"
+                )}
               </Message>
             ) : (
-              <Message variant={"alert"}>Not Delivered</Message>
+              <>
+                <Message variant={"alert"}>Not Delivered</Message>
+                <button onClick={() => handleUpdateStatus(selectedOrder?._id)}>
+                  Deliver it
+                </button>
+              </>
             )}
             {userInfo &&
               userInfo.isAdmin &&
-              order.isPaid &&
-              !order.isDelivered && (
+              selectedOrder.isPaid &&
+              !selectedOrder.isDelivered && (
                 <div className="mb-3 ms-2">
                   <button
                     type="button"
@@ -136,7 +159,7 @@ export default function OrderScreen() {
                   </button>
                 </div>
               )}
-          </div> */}
+          </div>
         </div>
         <table className="table flex-1 md:flex-[3_1_0%] border w-full mt-4 mb-2">
           <thead className="bg-secondaryBgColor ">

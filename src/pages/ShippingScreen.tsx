@@ -3,15 +3,17 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import FormContainer from "../components/FormContainer";
 import CheckoutSteps from "../components/CheckoutSteps";
-import { saveShippingAddress } from "../redux/actions/cartAction";
+
 import PageContainer from "../components/PageContainer";
+import { RootState } from "../types";
+import { saveShippingAddress } from "../redux/reducers/Cart/CartSlice";
 const items = [
   { label: "Home", path: "/" },
   { label: "Shipping", path: "/shipping" },
 ];
 
 function ShippingScreen() {
-  const cart = useSelector((state) => state.cart);
+  const cart = useSelector((state: RootState) => state.cart);
   const { shippingAddress } = cart;
 
   const dispatch = useDispatch();

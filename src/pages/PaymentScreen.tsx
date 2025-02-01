@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { savePaymentMethod } from "../redux/actions/cartAction";
+
 import CheckoutSteps from "../components/CheckoutSteps";
 
 import PageContainer from "../components/PageContainer";
 import FormContainer from "../components/FormContainer";
+import { savePaymentMethod } from "../redux/reducers/Cart/CartSlice";
 
 const items = [
   { label: "Home", path: "/" },

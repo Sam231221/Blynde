@@ -9,7 +9,7 @@ import { Message } from "../../components/Message";
 import { RootState, AppDispatch } from "../../types";
 import { useRegister } from "../../hooks/useAuth";
 
-function RegisterScreen({ location, history }) {
+function RegisterScreen() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

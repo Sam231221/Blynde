@@ -6,9 +6,12 @@ import { CiBookmark } from "react-icons/ci";
 import { Message } from "../components/Message";
 import PageContainer from "../components/PageContainer";
 
-import { createOrder } from "../redux/actions/orderActions";
-import { ORDER_CREATE_RESET } from "../redux/reducers/Order/OrderCreateSlice";
 import { endpoint } from "../lib/api";
+import { Order, RootState } from "../types";
+import { createOrder } from "../lib/orderApi";
+import { useMutation } from "@tanstack/react-query";
+import { queryClient } from "../lib/queryClient";
+import { clearCart } from "../redux/reducers/Cart/CartSlice";
 const items = [
   { label: "Home", path: "/" },
   { label: "Shipping", path: "/shipping" },
@@ -16,13 +19,13 @@ const items = [
   { label: "Place Order", path: "/placeorder" },
 ];
 function PlaceOrderScreen() {
-  const orderCreate = useSelector((state) => state.orderCreate);
-  const { order, error, success } = orderCreate;
+  // const orderCreate = useSelector((state) => state.orderCreate);
+  // const { order, error, success } = orderCreate;
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const cart = useSelector((state) => state.cart);
+  const cart = useSelector((state: RootState) => state.cart);
 
   //since cart is not exstensible, we will use spread operator.
   // cconsole.log(Object.isExtensible(cart))
@@ -51,20 +54,30 @@ function PlaceOrderScreen() {
     navigate("/payment");
   }
 
-  useEffect(() => {
-    //In backend order_views.getOrderById
-    //a success variable is used to redirect to /order/:id
-    if (success) {
-      window.location.reload();
-      navigate(`/order/${order._id}`);
-      dispatch(ORDER_CREATE_RESET());
-    }
-  }, [success, navigate, dispatch, order._id]);
+  const { mutate: placeUserOrder, isError: error } = useMutation({
+    mutationFn: createOrder,
+    onSuccess: (newOrder) => {
+      // Invalidate the relevant query so it refetches and shows the new order
+      queryClient.invalidateQueries(["orders"]); // Example query key
+      dispatch(clearCart());
+      navigate(`/order/${newOrder._id}`);
+
+      // Optionally, do something with the new order data
+      console.log("Order created:", newOrder);
+    },
+    onError: (error) => {
+      // Handle errors - display a message to the user, etc.
+      console.error("Error creating order:", error);
+      alert("There was an error creating your order.");
+    },
+  });
 
   //on clicking PlaceOrderButton dispatch createOrder() that will also create Order Instance in backend
   const placeOrder = () => {
-    dispatch(
-      createOrder({
+    if (cart.cartItems.length === 0) {
+      alert("Your cart is empty");
+    } else {
+      placeUserOrder({
         orderItems: cart.cartItems,
         shippingAddress: cart.shippingAddress,
         paymentMethod: cart.paymentMethod,
@@ -72,10 +85,9 @@ function PlaceOrderScreen() {
         shippingPrice: shippingPrice,
         taxPrice: taxPrice,
         totalPrice: totalPrice,
-      })
-    );
+      });
+    }
   };
-
   return (
     <PageContainer>
       <div className="container mx-auto py-2 overflow-auto mt-10">
@@ -216,7 +228,7 @@ function PlaceOrderScreen() {
                       <div className="w-14 h-14">
                         <img
                           className="w-full h-full object-contain"
-                          src={`${endpoint}${item.thumbnail}`}
+                          src={item.thumbnail}
                           alt={item.name}
                         />
                       </div>
