@@ -3,23 +3,20 @@ import React, { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { PayPalButton } from "react-paypal-button-v2";
-import { FaRegCircleCheck } from "react-icons/fa6";
+
 import Loader from "../components/Loader";
 import { Message } from "../components/Message";
 
-import {
-  getOrderDetails,
-  payOrder,
-  deliverOrder,
-} from "../redux/actions/orderActions";
-
-import {
-  ORDER_PAY_REQUEST,
-  ORDER_PAY_RESET,
-} from "../redux/reducers/Order/OrderPaySlice";
 import Moment from "moment";
 
 import PageContainer from "../components/PageContainer";
+import { useUser } from "../hooks/useAuth";
+import {
+  selectSelectedOrder,
+  setSelectedOrder,
+} from "../redux/reducers/OrderSlice";
+import { fetchOrderById } from "../lib/orderApi";
+import { useQuery } from "@tanstack/react-query";
 
 const items = [
   { label: "Home", path: "/" },
@@ -27,78 +24,33 @@ const items = [
 ];
 export default function OrderScreen() {
   const { id } = useParams();
-
+  const selectedOrder = useSelector(selectSelectedOrder);
   const dispatch = useDispatch();
   const redirect = useNavigate();
 
   const [sdkReady, setSdkReady] = useState(false);
-
-  const orderDetails = useSelector((state) => state.orderDetails);
-  const { order, error, loading } = orderDetails;
-
-  const orderPay = useSelector((state) => state.orderPay);
-  const { loading: loadingPay, success: successPay } = orderPay;
-
-  const orderDeliver = useSelector((state) => state.orderDeliver);
-  const { loading: loadingDeliver, success: successDeliver } = orderDeliver;
-
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
-
-  let finalOrder = {};
-  if (!loading && !error) {
-    finalOrder = {
-      ...order,
-      itemsPrice: order.orderItems
-        .reduce((acc, item) => acc + item.price * item.qty, 0)
-        .toFixed(2),
-    };
+  // Fetch order details
+  const {
+    data: order,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["order", id],
+    queryFn: () => fetchOrderById(Number(id)),
+  });
+  if (order) {
+    dispatch(setSelectedOrder(order));
   }
+  // const orderPay = useSelector((state) => state.orderPay);
+  // const { loading: loadingPay, success: successPay } = orderPay;
 
-  const addPayPalScript = () => {
-    const script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src =
-      "https://www.paypal.com/sdk/js?client-id=AUpg7Hgv4nw9CDxWQjKj8AJF4bUTShD8dYs1zXAdLI8HgtQNZ9RuHpOtWfhdfcBrcZVrngZzf9MiRvDG&disable-funding=credit";
-    script.async = true;
+  // const orderDeliver = useSelector((state) => state.orderDeliver);
+  // const { loading: loadingDeliver, success: successDeliver } = orderDeliver;
 
-    setSdkReady(true);
-
-    document.body.appendChild(script);
-  };
-
-  useEffect(() => {
-    if (!userInfo) {
-      redirect("/login");
-    }
-    if (!order || successPay || order._id !== id || successDeliver) {
-      dispatch(ORDER_PAY_RESET());
-      // dispatch(ORDER_DELIVERY_RESET())
-      dispatch(getOrderDetails(id));
-    } //if order is not paid yet
-    else if (!order.isPaid) {
-      //if no paypal has been added yet
-      addPayPalScript();
-    }
-  }, [dispatch, id]);
-
-  const successPaymentHandler = (paymentResult) => {
-    dispatch(payOrder(id, paymentResult));
-    alert("Payment Completed!");
-    window.location.reload();
-  };
-
-  const deliverHandler = () => {
-    dispatch(deliverOrder(order));
-    alert("Order Delivery Completed!");
-    window.location.reload();
-  };
-
-  return loading ? (
-    <Loader />
-  ) : error ? (
-    <Message variant="danger">{error}</Message>
-  ) : (
+  const userInfo = useUser();
+  if (isLoading) return <Loader />;
+  if (error) return <p>Error loading order</p>;
+  return (
     <PageContainer>
       <div className="container mx-auto py-2 overflow-auto mt-10">
         {/* Breadcrumbs */}
@@ -132,7 +84,7 @@ export default function OrderScreen() {
               {Moment(order.createdAt).format("MMMM Do YYYY, h:mm a")}
             </h1>
             <h1 className="text-sm ml-3 mb-2 text-zinc-800 font-medium">
-              Total: ${finalOrder.totalPrice}
+              {/* Total: ${finalOrder.totalPrice} */}
             </h1>
             <h1 className="text-sm ml-3 mb-2 text-zinc-800 font-medium">
               Payment Method : {order.paymentMethod}
@@ -149,16 +101,16 @@ export default function OrderScreen() {
             ) : (
               <Message variant="alert">Not Paid</Message>
             )}
-            {!order.isPaid && (
+            {/* {!order.isPaid && (
               <div>
                 <PayPalButton
                   amount={order.totalPrice}
                   onSuccess={successPaymentHandler}
                 />
               </div>
-            )}
+            )} */}
           </div>
-          <div className="md:w-1/6 border bg-zinc-50 p-4">
+          {/* <div className="md:w-1/6 border bg-zinc-50 p-4">
             <h1 className="font-medium text-lg border-b mb-2 pb-2">Status</h1>
             {loadingDeliver && <Loader />}
 
@@ -184,7 +136,7 @@ export default function OrderScreen() {
                   </button>
                 </div>
               )}
-          </div>
+          </div> */}
         </div>
         <table className="table flex-1 md:flex-[3_1_0%] border w-full mt-4 mb-2">
           <thead className="bg-secondaryBgColor ">
@@ -227,7 +179,7 @@ export default function OrderScreen() {
             <tr className="border-b ">
               <td className="p-2 border-r text-sm text-gray-700">Subtotal:</td>
               <td className="p-2  text-sm text-gray-700">
-                ${finalOrder.itemsPrice}
+                {/* ${finalOrder.itemsPrice} */}
               </td>
             </tr>
 

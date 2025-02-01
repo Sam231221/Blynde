@@ -12,12 +12,6 @@ export interface User {
   isAdmin: boolean;
   token: string;
 }
-export interface ShippingAddress {
-  address: string;
-  city: string;
-  postalCode: string;
-  country: string;
-}
 
 export interface UserInfo {
   id: string;
@@ -54,6 +48,43 @@ export interface AuthState {
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
+
+export interface Order {
+  _id: string; // Use _id to match Django's default PK
+  user: User; // Or a more specific user type
+  paymentMethod: string;
+  taxPrice: number;
+  shippingPrice: number;
+  totalPrice: number;
+  isPaid: boolean;
+  paidAt: string | null;
+  isDelivered: boolean;
+  deliveredAt: string | null;
+  createdAt: string;
+  orderItems: OrderItem[]; // Include order items directly in the Order type
+  shippingAddress: ShippingAddress;
+}
+
+export interface OrderItem {
+  _id: string;
+  product: Product; // Or a more specific product type
+  order: string; // Or the Order type itself if you prefer
+  name: string;
+  color: string;
+  size: string;
+  qty: number;
+  price: number;
+  thumbnail: string;
+}
+interface ShippingAddress {
+  _id: string;
+  order: string; // Or the Order type itself
+  address: string;
+  city: string;
+  postalCode: string;
+  country: string;
+  shippingPrice: number;
+}
 
 export type Product = {
   id: number;

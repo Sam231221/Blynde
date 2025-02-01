@@ -6,13 +6,15 @@ import { Review } from "../../types";
 interface ReviewState {
   reviews: Review[];
   loading: boolean;
-  error: string | null;
+  error: { message: string; code?: number } | null;
+  showReviewForm: boolean;
 }
 
 const initialState: ReviewState = {
   reviews: [],
   loading: false,
-  error: null,
+  error: { message: "" },
+  showReviewForm: false,
 };
 
 // Async thunk to fetch reviews for a product
@@ -49,6 +51,7 @@ const reviewSlice = createSlice({
   reducers: {
     clearReviews: (state) => {
       state.reviews = [];
+      state.error = null; // Clear error when clearing reviews
     },
   },
   extraReducers: (builder) => {
@@ -68,8 +71,30 @@ const reviewSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       })
-      .addCase(addReview.fulfilled, (state, action: PayloadAction<Review>) => {
-        state.reviews.push(action.payload);
+      .addCase(addReview.pending, (state, action) => {
+        state.loading = true;
+        state.error = null;
+        // Optimistic update: Add the review immediately (assuming it will succeed)
+        state.reviews.push(action.meta.arg); // action.meta.arg contains the review data
+      })
+      .addCase(addReview.fulfilled, (state, action) => {
+        state.loading = false;
+        // If the API call succeeds, the server's response might have a different ID or timestamp.
+        // Find the optimistically added review and replace it with the server's version.
+        const index = state.reviews.findIndex(
+          (review) => review === action.meta.arg
+        ); // Assuming object reference is maintained. If not, find using a unique identifier.
+        if (index !== -1) {
+          state.reviews[index] = action.payload;
+        }
+      })
+      .addCase(addReview.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+        // Revert the optimistic update: Remove the review from the state
+        state.reviews = state.reviews.filter(
+          (review) => review !== action.meta.arg
+        ); // Again, assuming same object reference. If not, filter using unique ID.
       });
   },
 });

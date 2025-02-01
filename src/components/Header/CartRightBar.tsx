@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { HiOutlineXMark } from "react-icons/hi2";
 import { useSelector } from "react-redux";
-import { endpoint } from "../../lib/api";
+
 export default function CartRightBar({ sideCartNav, setSideCartNav }) {
   const redirect = useNavigate();
   const cart = useSelector((state) => state.cart);

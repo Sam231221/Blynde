@@ -1,19 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
 
-// import ProductDetailReducer from "./reducers/Product/ProductDetailSlice";
-
-// import UserLoginReducer from "./reducers/User/UserLoginSlice";
 // import ProductListReducer from "./reducers/Product/ProductListSlice";
 // import ProductDeleteReducer from "./reducers/Product/ProductDeleteSlice";
 // import ProductCreateReducer from "./reducers/Product/ProductCreateSlice";
 // import ProductUpdateReducer from "./reducers/Product/ProductUpdateSlice";
 // import ProductTopRatedReducer from "./reducers/Product/ProductTopRatedSlice";
 
-// import ReviewReducer from "./reducers/Review/ReviewSlice";
-
 // //Users
 // import UserLikeReducer from "./reducers/User/UserLikeSlice";
-// import UserRegisterReducer from "./reducers/User/UserRegisterSlice";
+
 // import UserUpdateProfileSlice from "./reducers/User/UserUpdateProfileSlice";
 // import UserDetailReducer from "./reducers/User/UserDetailSlice";
 // import UserDeleteReducer from "./reducers/User/UserDeleteSlice";
@@ -28,19 +23,23 @@ import { configureStore } from "@reduxjs/toolkit";
 // import OrderListsReducer from "./reducers/Order/OrderListsSlice";
 // import OrderPayReducer from "./reducers/Order/OrderPaySlice";
 
-import AuthSlice from "./reducers/AuthSlice";
-import ProductSlice from "./reducers//Product/ProductSlice";
-import CartSlice from "./reducers/Cart/CartSlice";
-import ReviewSlice from "./reducers/ReviewSlice";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../types";
+
+import AuthReducer from "./reducers/AuthSlice";
+import ProductReducer from "./reducers//Product/ProductSlice";
+import CartReducer from "./reducers/Cart/CartSlice";
+import ReviewReducer from "./reducers/ReviewSlice";
+import OrderReducer from "./reducers/OrderSlice";
 //Admin
 const store = configureStore({
   reducer: {
-    auth: AuthSlice,
-    product: ProductSlice,
-    cart: CartSlice,
-    reviews: ReviewSlice,
+    auth: AuthReducer,
+    product: ProductReducer,
+    cart: CartReducer,
+    reviews: ReviewReducer,
+    orders: OrderReducer,
+
     // //Products
     // productList: ProductListReducer,
     // productDetails: ProductDetailReducer,
@@ -58,6 +57,7 @@ const store = configureStore({
     // userDetails: UserDetailReducer,
     // userUpdate: UserUpdateReducer,
     // wishlist: UserLikeReducer,
+
     // orderCreate: OrderCreateReducer,
     // orderDetails: OrderDetailsReducer,
     // orderPay: OrderPayReducer,

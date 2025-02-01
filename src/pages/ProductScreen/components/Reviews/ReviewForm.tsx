@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Rating from "../../../../components/Rating";
 import { addReview } from "../../../../redux/reducers/ReviewSlice";
 import { AppDispatch, RootState } from "../../../../types";
-
+import DOMPurify from "dompurify";
 const ReviewForm = ({ productId, userId, username }) => {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
@@ -15,19 +15,32 @@ const ReviewForm = ({ productId, userId, username }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const sanitizedComment = DOMPurify.sanitize(comment);
 
-    if (!comment || rating === 0) {
+    if (!sanitizedComment || rating === 0) {
       alert("Please fill out all fields.");
+      return;
+    }
+
+    if (sanitizedComment.length > 500) {
+      // Example comment length limit
+      alert("Comment is too long (max 500 characters).");
+      return;
+    }
+
+    const productIdNumber = Number(productId);
+    if (isNaN(productIdNumber)) {
+      alert("Invalid product ID.");
       return;
     }
 
     dispatch(
       addReview({
-        product: Number(productId),
-        user: userId, // Assume logged-in user ID (should be dynamic)
+        product: productIdNumber,
+        user: userId,
         name: username,
         rating: rating,
-        comment: comment,
+        comment: sanitizedComment,
       })
     );
     setRating(0);
@@ -36,13 +49,15 @@ const ReviewForm = ({ productId, userId, username }) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <h1 className="text-xl my-3 text-gray-900 ">Add a Review</h1>
+      <h1 className="text-xl mt-5  text-gray-900 font-semibold">
+        Add a Review
+      </h1>
       <hr />
       <br />
-      {error && <p>Error: {error}</p>}
+      {error && <p>Error: {error.message}</p>}
       {success && <p>Review submitted successfully!</p>}
       <div className="flex flex-col mb-2">
-        <label className="text-xs mb-1" htmlFor="">
+        <label className="text-xs mb-1" htmlFor="comment">
           Your rating: <span>*</span>
         </label>
         <div className="flex gap-3">
