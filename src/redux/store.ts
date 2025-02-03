@@ -27,6 +27,7 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../types";
 
 import AuthReducer from "./reducers/AuthSlice";
+import UserReducer from "./reducers/UserSlice";
 import ProductReducer from "./reducers//Product/ProductSlice";
 import CartReducer from "./reducers/Cart/CartSlice";
 import ReviewReducer from "./reducers/ReviewSlice";
@@ -35,6 +36,7 @@ import OrderReducer from "./reducers/OrderSlice";
 const store = configureStore({
   reducer: {
     auth: AuthReducer,
+    users: UserReducer,
     product: ProductReducer,
     cart: CartReducer,
     reviews: ReviewReducer,

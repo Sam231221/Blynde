@@ -132,7 +132,7 @@ const routes = [
       },
       {
         name: "UserEditScreen",
-        path: "/admin/user/:id/edit",
+        path: "/admin/userlist/:id/",
         component: <UserEditScreen />,
       },
       {

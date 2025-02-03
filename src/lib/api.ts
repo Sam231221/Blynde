@@ -1,4 +1,4 @@
-import axios, { AxiosInstance } from "axios";
+import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 
 // Define the endpoint as a constant with the proper type
 export const endpoint: string = import.meta.env.VITE_APP_API as string;
@@ -11,5 +11,5 @@ const apiClient: AxiosInstance = axios.create({
     Accept: "application/json", // Accept JSON responses by default
   },
 });
-
+export type { AxiosRequestConfig };
 export default apiClient;
