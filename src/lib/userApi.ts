@@ -28,25 +28,7 @@ const apiRequest = async (
     config.data = body; // Use 'data' for the request body in axios
   }
   const response = await apiClient(config);
-  console.log("sfsd:", response);
   return response.data;
-  //   try {
-  //     const response = await apiClient(config);
-  //     return response.data; // axios automatically parses JSON responses
-  //   } catch (error: any) {
-  //     if (apiClient.isAxiosError(error)) {
-  //       // Handle Axios errors (e.g., network error, server error)
-  //       const errorData = error.response?.data; // Access error details from the server
-  //       throw new Error(
-  //         errorData?.message ||
-  //           error.message ||
-  //           `HTTP error! status: ${error.response?.status}`
-  //       );
-  //     } else {
-  //       // Handle other errors (e.g., type errors)
-  //       throw new Error(error.message);
-  //     }
-  //   }
 };
 // React Query Hooks (for data fetching and mutations) - Recommended approach
 export const useUsersQuery = () =>

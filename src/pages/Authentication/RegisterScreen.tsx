@@ -1,50 +1,61 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import { useDispatch, useSelector } from "react-redux";
-
-import Loader from "../../components/Loader";
-import { Message } from "../../components/Message";
+import { useSelector } from "react-redux";
 
 import { RootState, AppDispatch } from "../../types";
 import { useRegister } from "../../hooks/useAuth";
-
+import Spinner from "../../components/Spinner";
+import { ToastContainer, toast } from "react-toastify";
 function RegisterScreen() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [message, setMessage] = useState("");
 
-  const redirect = useNavigate();
-  const dispatch = useDispatch<AppDispatch>();
-  const { loading, error, userInfo } = useSelector(
-    (state: RootState) => state.auth
-  );
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    if (userInfo) {
-      redirect("/login");
-    }
-  }, [userInfo]);
-  const { mutate: register, isLoading, isError } = useRegister();
+  const { userInfo } = useSelector((state: RootState) => state.auth);
+
+  const { mutate: register, isPending } = useRegister();
   const submitHandler = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (password != confirmPassword) {
-      setMessage("Passwords do not match");
+      toast.error("Passwords do not match");
     } else {
-      register({ name, email, password });
+      register(
+        { name, email, password },
+        {
+          onSuccess: () => {
+            toast.success("You have successfully created an Account!");
+            navigate("/login");
+          }, // Redirect on success
+          onError: (err) => {
+            console.error("Registration error (in component):", err);
+            if (err && err.data && err.data.message) {
+              toast.error(err.data.message);
+            } else if (err.message) {
+              toast.error(err.message); // Display a more general error message
+            } else {
+              toast.error("An error occurred during registration.");
+            }
+          },
+        }
+      );
     }
   };
+  useEffect(() => {
+    if (userInfo) {
+      navigate("/");
+    }
+  }, [navigate, userInfo]);
 
   return (
     <div className="pb-10 pt-10 flex  h-screen">
       <div className="form-signin shadow  w-[300px] sm:w-[500px] m-auto px-10">
         <h3 className="mb-2 font-bold text-2xl text-center">Blynde Sign Up</h3>
-        {message && <Message variant="danger">{message}</Message>}
-        {error && <Message variant="danger">{error}</Message>}
-        {loading && <Loader />}
+
         <form onSubmit={submitHandler}>
           <div className="mb-3 flex flex-col">
             <label className="text-sm mb-2 font-semibold  text-zinc-900">
@@ -101,23 +112,25 @@ function RegisterScreen() {
               onChange={(e) => setConfirmPassword(e.target.value)}
             ></input>
           </div>
-          <input
-            className="bg-sky-500 hover:bg-sky-600 text-white py-2 px-4"
+          <button
+            className="bg-sky-500 w-24 hover:bg-sky-600 text-white py-2 px-4"
             type="submit"
-            value={"Register"}
-          />
+          >
+            {isPending ? <Spinner /> : "Register"}
+          </button>
 
           <div className="py-3 mt-5 flex justify-between items-center">
             <p className="flex text-xs">
               Have an account?{" "}
               <Link className="text-sky-500" to="/login">
-                Login
+                login
               </Link>{" "}
               here
             </p>
           </div>
         </form>
       </div>
+      <ToastContainer />
     </div>
   );
 }

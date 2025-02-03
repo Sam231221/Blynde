@@ -13,8 +13,6 @@ export interface User {
   token: string;
 }
 export interface AuthState {
-  loading: boolean;
-  error: string | null;
   userInfo: User | null;
 }
 
