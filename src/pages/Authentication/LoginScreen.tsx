@@ -23,8 +23,8 @@ function LoginScreen() {
     e.preventDefault();
     login(formData, {
       onSuccess: () => {
-        toast.success("Login successfully.");
         navigate("/");
+        toast.success("Login successfully.");
       },
       onError: (err) => {
         console.error("Registration error (in component):", err);

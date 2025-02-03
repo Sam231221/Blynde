@@ -28,8 +28,8 @@ function RegisterScreen() {
         { name, email, password },
         {
           onSuccess: () => {
-            toast.success("You have successfully created an Account!");
             navigate("/login");
+            toast.success("You have successfully created an Account!");
           }, // Redirect on success
           onError: (err) => {
             console.error("Registration error (in component):", err);
