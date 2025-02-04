@@ -2,14 +2,12 @@ import store from "../redux/store";
 
 export interface User {
   refresh: string;
-  access: string;
   id: number;
-  _id: number;
   username: string;
-  firstName: string;
+  first_name: string;
+  last_name: string;
+  profile_pic: string;
   email: string;
-  name: string;
-  isAdmin: boolean;
   token: string;
 }
 export interface AuthState {

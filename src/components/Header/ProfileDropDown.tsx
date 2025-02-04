@@ -59,7 +59,7 @@ export const ProfileDropDown = ({ classes }: ProfileDropDownProps) => {
                            top-14 right-[2px] border-[#f4f4f4] bg-[#fff] drop-shadow-lg w-[220px] p-2`}
       >
         <div className="ml-4 mb-2">
-          <h2 className="text-md capitalize">{userInfo?.name}</h2>
+          <h2 className="text-md capitalize">{userInfo?.first_name}</h2>
         </div>
         <hr />
         <ul>

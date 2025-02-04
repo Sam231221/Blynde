@@ -35,6 +35,7 @@ const apiRequest = async (
 export const loginUser = (userData: {
   username: string;
   password: string;
+  rememberMe: boolean;
 }): Promise<User> => {
   return apiRequest("/api/users/login/", "POST", userData);
 };
