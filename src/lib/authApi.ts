@@ -41,9 +41,13 @@ export const loginUser = (userData: {
 
 // Register User
 export const registerUser = (userData: {
-  name: string;
+  firstName: string;
+  lastName: string;
+  username: string;
   email: string;
   password: string;
+  confirmPassword: string;
+  agreeToTerms: boolean;
 }): Promise<User> => {
   return apiRequest("/api/users/register/", "POST", userData);
 };

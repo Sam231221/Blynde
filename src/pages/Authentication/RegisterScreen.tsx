@@ -2,48 +2,53 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { useSelector } from "react-redux";
-
+import { columns2 } from "lucide-react";
 import { RootState, AppDispatch } from "../../types";
 import { useRegister } from "../../hooks/useAuth";
 import Spinner from "../../components/Spinner";
 import { ToastContainer, toast } from "react-toastify";
-function RegisterScreen() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
 
+const RegistrationScreen = () => {
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    agreeToTerms: false,
+  });
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, checked } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+    setErrors((prev) => ({ ...prev, [name]: "" })); // Clear error on input change
+  };
   const navigate = useNavigate();
 
   const { userInfo } = useSelector((state: RootState) => state.auth);
 
   const { mutate: register, isPending } = useRegister();
-  const submitHandler = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (password != confirmPassword) {
-      toast.error("Passwords do not match");
-    } else {
-      register(
-        { name, email, password },
-        {
-          onSuccess: () => {
-            navigate("/login");
-            toast.success("You have successfully created an Account!");
-          }, // Redirect on success
-          onError: (err) => {
-            console.error("Registration error (in component):", err);
-            if (err && err.data && err.data.message) {
-              toast.error(err.data.message);
-            } else if (err.message) {
-              toast.error(err.message); // Display a more general error message
-            } else {
-              toast.error("An error occurred during registration.");
-            }
-          },
+    setErrors({});
+    register(formData, {
+      onSuccess: () => {
+        navigate("/login");
+        toast.success("You have successfully created an Account!");
+      }, // Redirect on success
+      onError: (err: any) => {
+        console.error("Registration error (in component):", err);
+        if (err.response?.data?.errors) {
+          setErrors(err.response.data.errors); // Store field-specific errors
+        } else {
+          toast.error("Something went wrong. Please try again.");
         }
-      );
-    }
+      },
+    });
   };
   useEffect(() => {
     if (userInfo) {
@@ -52,87 +57,221 @@ function RegisterScreen() {
   }, [navigate, userInfo]);
 
   return (
-    <div className="pb-10 pt-10 flex  h-screen">
-      <div className="form-signin shadow  w-[300px] sm:w-[500px] m-auto px-10">
-        <h3 className="mb-2 font-bold text-2xl text-center">Blynde Sign Up</h3>
-
-        <form onSubmit={submitHandler}>
-          <div className="mb-3 flex flex-col">
-            <label className="text-sm mb-2 font-semibold  text-zinc-900">
-              Name
-            </label>
-            <input
-              className="text-xs border text-gray-700 bg-none focus:outline-none focus:border-[1px] focus:border-sky-400 py-2 px-2 "
-              required
-              type="name"
-              placeholder="Enter name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            ></input>
-          </div>
-
-          <div className="mb-3 flex flex-col">
-            <label className="text-sm mb-2 font-semibold  text-zinc-900">
-              Email Address
-            </label>
-            <input
-              className="border text-xs text-gray-700 bg-none focus:outline-none focus:border-[1px] focus:border-sky-400 py-2 px-2 "
-              required
-              type="email"
-              placeholder="Enter Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            ></input>
-          </div>
-
-          <div className="mb-3 flex flex-col">
-            <label className="text-sm mb-2 font-semibold  text-zinc-900">
-              Password
-            </label>
-            <input
-              className="border text-xs text-gray-700 bg-none focus:outline-none focus:border-[1px] focus:border-sky-400 py-2 px-2 "
-              required
-              type="password"
-              placeholder="Enter Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            ></input>
-          </div>
-
-          <div className="mb-3 flex flex-col">
-            <label className="text-sm mb-2 font-semibold  text-zinc-900">
-              Confirm Password
-            </label>
-            <input
-              className="border text-xs text-gray-700 bg-none focus:outline-none focus:border-[1px] focus:border-sky-400 py-2 px-2 "
-              required
-              type="password"
-              placeholder="Confirm Password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            ></input>
-          </div>
-          <button
-            className="bg-sky-500 w-24 hover:bg-sky-600 text-white py-2 px-4"
-            type="submit"
-          >
-            {isPending ? <Spinner /> : "Register"}
-          </button>
-
-          <div className="py-3 mt-5 flex justify-between items-center">
-            <p className="flex text-xs">
-              Have an account?{" "}
-              <Link className="text-sky-500" to="/login">
-                login
-              </Link>{" "}
-              here
+    <div className="min-h-screen bg-zinc-200/20 flex items-center justify-center p-4">
+      <div className="w-full max-w-6xl bg-white rounded-lg shadow-lg overflow-hidden flex">
+        {/* Left Section - Form */}
+        <div className="w-full lg:w-1/2 p-8 lg:p-12">
+          <div className="mb-8">
+            <div className="text-teal-600 font-semibold flex items-center gap-2 mb-6">
+              <span className="text-2xl">⌘</span>
+              <span>Blynde</span>
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              Create Account
+            </h2>
+            <p className="text-gray-500 text-sm">
+              Join Blynde today and discover your unique style with our curated
+              collection
             </p>
           </div>
-        </form>
+
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label
+                  htmlFor="firstName"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  First Name
+                </label>
+                <input
+                  type="text"
+                  id="firstName"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
+                  placeholder="John"
+                />
+                {errors["firstName"] && (
+                  <p className="text-red-500 text-sm">{errors["firstName"]}</p>
+                )}
+              </div>
+              <div>
+                <label
+                  htmlFor="lastName"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Last Name
+                </label>
+                <input
+                  type="text"
+                  id="lastName"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
+                  placeholder="Doe"
+                />
+                {errors["lastName"] && (
+                  <p className="text-red-500 text-sm">{errors["lastName"]}</p>
+                )}
+              </div>
+            </div>
+
+            <div>
+              <label
+                htmlFor="username"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Username
+              </label>
+              <input
+                type="text"
+                id="username"
+                name="username"
+                value={formData.username}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
+                placeholder="Choose a unique username"
+              />
+              {errors["username"] && (
+                <p className="text-red-500 text-sm">{errors["username"]}</p>
+              )}
+            </div>
+
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Email
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
+                placeholder="john.doe@example.com"
+              />
+              {errors["email"] && (
+                <p className="text-red-500 text-sm">{errors["email"]}</p>
+              )}
+            </div>
+
+            <div>
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Password
+              </label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
+                placeholder="at least 8 characters"
+              />
+              {errors["password"] && (
+                <p className="text-red-500 text-sm">{errors["password"]}</p>
+              )}
+            </div>
+
+            <div>
+              <label
+                htmlFor="confirmPassword"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Confirm Password
+              </label>
+              <input
+                type="password"
+                id="confirmPassword"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
+                placeholder="confirm your password"
+              />
+              {errors["password"] && (
+                <p className="text-red-500 text-sm">{errors["password"]}</p>
+              )}
+            </div>
+
+            <div className="flex flex-col">
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="agreeToTerms"
+                  name="agreeToTerms"
+                  checked={formData.agreeToTerms}
+                  onChange={handleChange}
+                  className="h-4 w-4 text-teal-600 focus:ring-teal-500 border-gray-300 rounded"
+                />
+                <label
+                  htmlFor="agreeToTerms"
+                  className="ml-2 text-sm text-gray-600"
+                >
+                  I agree to the Terms of Service and Privacy Policy
+                </label>
+              </div>
+              {errors["agreeToTerms"] && (
+                <p className="text-red-500 text-sm">{errors["agreeToTerms"]}</p>
+              )}
+            </div>
+
+            <button
+              type="submit"
+              className="w-full bg-sky-600 text-white py-2 px-4 rounded-md hover:bg-sky-700 transition duration-200"
+            >
+              {isPending ? <Spinner /> : "Create Account"}
+            </button>
+
+            <button
+              type="button"
+              className="w-full border border-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-50 transition duration-200 flex items-center justify-center gap-2"
+            >
+              <columns2 size={20} />
+              Sign Up with columns2
+            </button>
+
+            <p className="text-center text-sm text-gray-600">
+              Already have an account?{" "}
+              <Link to="/login" className="text-teal-600 hover:text-teal-500">
+                Log In
+              </Link>
+            </p>
+          </form>
+        </div>
+
+        {/* Right Section - Image */}
+        <div className="hidden lg:block lg:w-1/2 relative">
+          <div className="absolute inset-0 bg-sky-900/30">
+            <div className="p-12 text-white h-full flex flex-col justify-end">
+              <h2 className="text-3xl font-bold mb-4">Blynde Fashion House</h2>
+              <p className="text-white/90">
+                Step into a world of timeless elegance and contemporary style.
+                At Blynde, we believe fashion is a personal expression of your
+                unique story, crafted with precision and delivered with
+                excellence.
+              </p>
+            </div>
+          </div>
+          <img
+            src="/Banner.png"
+            alt="Fashion"
+            className="object-cover h-full w-full"
+          />
+        </div>
       </div>
       <ToastContainer />
     </div>
   );
-}
+};
 
-export default RegisterScreen;
+export default RegistrationScreen;
