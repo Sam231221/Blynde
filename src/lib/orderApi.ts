@@ -1,9 +1,5 @@
-// Your Axios instance
-import store from "../redux/store";
 import { Order } from "../types";
-import apiClient from "./api";
-const state = store.getState();
-const userToken = state.auth.userInfo ? state.auth.userInfo.token : "";
+import { apiRequest } from "./api";
 
 export const updateOrder = async ({
   id,
@@ -12,57 +8,32 @@ export const updateOrder = async ({
   id: number;
   updates: Partial<Order>;
 }): Promise<Order> => {
-  const { data } = await apiClient.put(`/api/orders/${id}/`, updates);
+  const data = await apiRequest(`/api/orders/${id}/`, "PUT", updates);
   return data;
 };
 export const deliverOrder = async ({ orderId }: { orderId: number }) => {
-  const config = {
-    headers: {
-      "Content-type": "application/json",
-      Authorization: `Bearer ${userToken}`,
-    },
-  };
-  const { data } = await apiClient.put(
-    `/api/orders/${orderId}/deliver/`,
-    {},
-    config
-  );
+  const data = await apiRequest(`/api/orders/${orderId}/deliver/`, "PUT");
   return data;
 };
-
+export const payOrder = async ({ orderId }: { orderId: number }) => {
+  const data = await apiRequest(`/api/orders/${orderId}/pay/`, "PUT");
+  console.log("sdas:", data);
+  return data;
+};
 // Fetch orders
 export const fetchOrders = async (): Promise<Order[]> => {
-  const config = {
-    headers: {
-      "Content-type": "application/json",
-      Authorization: `Bearer ${userToken}`,
-    },
-  };
-  const { data } = await apiClient.get("/api/orders/myorders/", config);
-
+  const data = await apiRequest("/api/orders/myorders/", "GET");
   return data;
 };
 
 // Fetch order by ID
 export const fetchOrderById = async (id: number): Promise<Order> => {
-  const config = {
-    headers: {
-      "Content-type": "application/json",
-      Authorization: `Bearer ${userToken}`,
-    },
-  };
-  const { data } = await apiClient.get(`/api/orders/${id}/`, config);
-  return data;
+  const response = await apiRequest(`/api/orders/${id}/`, "GET");
+  return response;
 };
 
 // Create an order
-export const createOrder = async (order: Partial<Order>): Promise<Order> => {
-  const config = {
-    headers: {
-      "Content-type": "application/json",
-      Authorization: `Bearer ${userToken}`,
-    },
-  };
-  const { data } = await apiClient.post("/api/orders/add/", order, config);
+export const createOrder = (order: Partial<Order>) => {
+  const data = apiRequest("/api/orders/add/", "POST", order);
   return data;
 };

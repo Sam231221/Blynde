@@ -3,7 +3,7 @@ import store from "../redux/store";
 import apiClient, { AxiosRequestConfig } from "./api";
 import { queryClient } from "./queryClient";
 
-const apiRequest = async (
+export const apiRequest = async (
   url: string,
   method: string = "GET",
   body: any = null

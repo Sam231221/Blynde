@@ -180,7 +180,6 @@ const LoginScreen = () => {
           />
         </div>
       </div>
-      <ToastContainer />
     </div>
   );
 };

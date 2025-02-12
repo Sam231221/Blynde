@@ -8,12 +8,14 @@ import { Provider } from "react-redux";
 import store from "./redux/store.ts";
 import { queryClient } from "./lib/queryClient.ts";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { ToastContainer } from "react-toastify";
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <Provider store={store}>
         <ModalContextProvider>
           <App />
+          <ToastContainer />
         </ModalContextProvider>
       </Provider>
       <ReactQueryDevtools initialIsOpen={false} />

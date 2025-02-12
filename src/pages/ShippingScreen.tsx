@@ -63,7 +63,7 @@ function ShippingScreen() {
              step1: User must be logged in
              step2: User Shipping Address 
             */}
-            <h3 className="text-center font-medium tracking-wide text-2xl my-3">
+            <h3 className="text-center font-bold text-gray-800 tracking-wide text-2xl my-3">
               {" "}
               Checkout Process
             </h3>

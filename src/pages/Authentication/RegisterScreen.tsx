@@ -269,7 +269,6 @@ const RegistrationScreen = () => {
           />
         </div>
       </div>
-      <ToastContainer />
     </div>
   );
 };

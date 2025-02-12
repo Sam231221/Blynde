@@ -56,7 +56,7 @@ function PaymentScreen() {
         </nav>
         <FormContainer>
           <div className="form-signin px-4 py-3 border w-100 m-auto">
-            <h3 className="text-center font-medium tracking-wide text-2xl my-3">
+            <h3 className="text-center font-bold text-gray-800 tracking-wide text-2xl my-3">
               {" "}
               Checkout Process
             </h3>

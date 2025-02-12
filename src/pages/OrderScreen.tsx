@@ -3,11 +3,10 @@ import React, { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { PayPalButton } from "react-paypal-button-v2";
+import Moment from "moment";
 
 import Loader from "../components/Loader";
 import { Message } from "../components/Message";
-
-import Moment from "moment";
 
 import PageContainer from "../components/PageContainer";
 import { useUser } from "../hooks/useAuth";
@@ -15,56 +14,98 @@ import {
   selectSelectedOrder,
   setSelectedOrder,
 } from "../redux/reducers/OrderSlice";
-import { deliverOrder, fetchOrderById } from "../lib/orderApi";
+import { deliverOrder, fetchOrderById, payOrder } from "../lib/orderApi";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { queryClient } from "../lib/queryClient";
+import { toast } from "react-toastify";
+import { clearCart } from "../redux/reducers/Cart/CartSlice";
 
 const items = [
   { label: "Home", path: "/" },
   { label: "Order", path: "/order" },
 ];
+
 export default function OrderScreen() {
   const { id } = useParams();
-  const selectedOrder = useSelector(selectSelectedOrder);
   const dispatch = useDispatch();
   const redirect = useNavigate();
+  const selectedOrder = useSelector(selectSelectedOrder);
+  const userInfo = useUser();
 
   const [sdkReady, setSdkReady] = useState(false);
-  // Fetch order details
+
   const {
-    data: order,
+    data: fetchedOrders,
     isLoading,
     error,
   } = useQuery({
     queryKey: ["order", id],
     queryFn: () => fetchOrderById(Number(id)),
-    onSuccess: (data) => {
-      //  If you absolutely need to sync with Redux, do it here, after the query has succeeded.
-      //  However, in most cases, you won't need this. TanStack Query's cache is sufficient.
-      dispatch(setSelectedOrder(data)); // Only if really necessary
+  });
+
+  useEffect(() => {
+    if (fetchedOrders) {
+      dispatch(setSelectedOrder(fetchedOrders));
+    }
+  }, [fetchedOrders, dispatch]);
+  let finalOrder = {};
+  if (!isLoading && !error) {
+    finalOrder = {
+      ...selectedOrder,
+      itemsPrice: selectedOrder?.orderItems
+        .reduce((acc, item) => acc + item.price * item.qty, 0)
+        .toFixed(2),
+    };
+  }
+
+  const addPayPalScript = () => {
+    const script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src =
+      "https://www.paypal.com/sdk/js?client-id=AUpg7Hgv4nw9CDxWQjKj8AJF4bUTShD8dYs1zXAdLI8HgtQNZ9RuHpOtWfhdfcBrcZVrngZzf9MiRvDG&disable-funding=credit";
+    script.async = true;
+    script.onload = () => setSdkReady(true);
+    document.body.appendChild(script);
+  };
+
+  const { mutate: deliverUserOrder, isPending: isDelivering } = useMutation({
+    mutationFn: deliverOrder,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["order", id] });
     },
   });
 
-  if (order) {
-    dispatch(setSelectedOrder(order));
-  }
-  const { mutate: deliverUserOrder, isPending: isDelivering } = useMutation({
-    mutationFn: deliverOrder,
-    onSuccess: (response) => {
-      console.log("updatedOrder:", response);
-      // refetch updated order in background -note no dispatch used
-      queryClient.invalidateQueries({ queryKey: ["order", id] }); // Refetch order
+  const { mutate: payUserOrder, isPending: isPaying } = useMutation({
+    mutationFn: payOrder,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["order", id] });
+    },
+    onError: (error) => {
+      console.log("eror:", error);
+      toast.error("An error occurred");
     },
   });
+
   const handleUpdateStatus = (orderId: number) => {
     deliverUserOrder({ orderId });
   };
 
-  const successPaymentHandler = (paymentResult) => {};
-  const userInfo = useUser();
+  const successPaymentHandler = () => {
+    payUserOrder({ orderId: selectedOrder._id });
+  };
+
+  useEffect(() => {
+    if (!userInfo) {
+      redirect("/login");
+    }
+    if (!selectedOrder?.isPaid && !sdkReady) {
+      addPayPalScript();
+    }
+  }, [userInfo, id, redirect, selectedOrder?.isPaid, sdkReady]);
 
   if (isLoading) return <Loader />;
-  if (error) return <p>Error loading order</p>;
+  if (error) return <p>An error occurred</p>;
+
   return (
     <PageContainer>
       <div className="container mx-auto py-2 overflow-auto mt-10">
@@ -86,197 +127,196 @@ export default function OrderScreen() {
             ))}
           </ol>
         </nav>
-        <div className="mt-3 flex  flex-col gap-2 md:flex-row">
-          <div className="md:flex-1  bg-zinc-50 border p-4">
-            <h1 className="font-medium text-lg border-b mb-2 pb-2">
-              Order Details
-            </h1>
-            <h1 className="text-sm ml-3 mb-2 text-zinc-800 font-medium">
-              Order No: {selectedOrder._id}
-            </h1>
-            <h1 className="text-sm ml-3 mb-2 text-zinc-800 font-medium">
-              Issued on :{" "}
-              {Moment(selectedOrder.createdAt).format("MMMM Do YYYY, h:mm a")}
-            </h1>
-            <h1 className="text-sm ml-3 mb-2 text-zinc-800 font-medium">
-              {/* Total: ${finalOrder.totalPrice} */}
-            </h1>
-            <h1 className="text-sm ml-3 mb-2 text-zinc-800 font-medium">
-              Payment Method : {selectedOrder.paymentMethod}
-            </h1>
-          </div>
-          <div className="md:w-1/4 bg-zinc-50 border p-4">
-            <h1 className="font-medium text-lg border-b mb-2 pb-2">
-              Payment Options
-            </h1>
-            {selectedOrder.isPaid ? (
-              <Message variant="success">
-                Paid on{" "}
-                {Moment(selectedOrder.paidAt).format("MMMM Do YYYY, h:mm a")}
-              </Message>
-            ) : (
-              <Message variant="alert">Not Paid</Message>
-            )}
-            {!selectedOrder.isPaid && (
-              <div>
-                {/* <PayPalButton
-                  amount={selectedOrder.totalPrice}
-                  onSuccess={successPaymentHandler}
-                /> */}
+
+        {selectedOrder !== null && (
+          <>
+            <div className="mt-3 flex flex-col gap-2 md:flex-row">
+              <div className="md:flex-1 bg-zinc-50 border p-4">
+                <h1 className="font-medium text-lg border-b mb-2 pb-2">
+                  Order Details
+                </h1>
+                <h1 className="text-sm ml-3 mb-2 text-zinc-800 font-medium">
+                  Order No: {selectedOrder._id}
+                </h1>
+                <h1 className="text-sm ml-3 mb-2 text-zinc-800 font-medium">
+                  Issued on:{" "}
+                  {Moment(selectedOrder.createdAt).format(
+                    "MMMM Do YYYY, h:mm a"
+                  )}
+                </h1>
+                <h1 className="text-sm ml-3 mb-2 text-zinc-800 font-medium">
+                  Total: ${finalOrder.totalPrice}
+                </h1>
+                <h1 className="text-sm ml-3 mb-2 text-zinc-800 font-medium">
+                  Payment Method: {selectedOrder.paymentMethod}
+                </h1>
               </div>
-            )}
-          </div>
-          <div className="md:w-1/6 border bg-zinc-50 p-4">
-            <h1 className="font-medium text-lg border-b mb-2 pb-2">Status</h1>
-            {isDelivering && <Loader />}
-
-            {selectedOrder.isDelivered ? (
-              <Message variant="success">
-                Delivered on{" "}
-                {Moment(selectedOrder.deliveredAt).format(
-                  "MMMM Do YYYY, h:mm a"
+              <div className="md:w-1/4 bg-zinc-50 border p-4">
+                <h1 className="font-medium text-lg border-b mb-2 pb-2">
+                  Payment Options
+                </h1>
+                {selectedOrder.isPaid ? (
+                  <Message variant="success">
+                    Paid on{" "}
+                    {Moment(selectedOrder.paidAt).format(
+                      "MMMM Do YYYY, h:mm a"
+                    )}
+                  </Message>
+                ) : (
+                  <Message variant="alert">Not Paid</Message>
                 )}
-              </Message>
-            ) : (
-              <>
-                <Message variant={"alert"}>Not Delivered</Message>
-                <button onClick={() => handleUpdateStatus(selectedOrder?._id)}>
-                  Deliver it
-                </button>
-              </>
-            )}
-            {userInfo &&
-              userInfo.isAdmin &&
-              selectedOrder.isPaid &&
-              !selectedOrder.isDelivered && (
-                <div className="mb-3 ms-2">
-                  <button
-                    type="button"
-                    className="text-white bg-sky-500 hover:bg-sky-600 px-5 text-xs font-medium py-2"
-                    onClick={deliverHandler}
-                  >
-                    Mark As Delivered
-                  </button>
-                </div>
-              )}
-          </div>
-        </div>
-        <table className="table flex-1 md:flex-[3_1_0%] border w-full mt-4 mb-2">
-          <thead className="bg-secondaryBgColor ">
-            <tr className="uppercase text-zinc-700">
-              <th className="p-2 border-r text-sm font-semibold tracking-wide text-left">
-                Product
-              </th>
-              <th className="p-2 text-sm font-semibold tracking-wide text-left">
-                Total
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr className="border-b ">
-              <td className="p-2 border-r text-sm text-gray-700">
-                <ol>
-                  {order.orderItems.map((item, index) => (
-                    <li key={index} className="flex items-center">
-                      <div>
-                        <Link
-                          className="nav-links link-dark"
-                          to={`/product/${item.product}`}
-                        >
-                          {item.name} x {item.qty}
-                        </Link>
-                      </div>
-                    </li>
-                  ))}
-                </ol>
-              </td>
-              <td className="p-2  text-sm text-gray-700">
-                <ol>
-                  {order.orderItems.map((item, index) => (
-                    <li key={index}>${(item.qty * item.price).toFixed(2)}</li>
-                  ))}
-                </ol>
-              </td>
-            </tr>
+                {!selectedOrder.isPaid && sdkReady && (
+                  <div>
+                    <PayPalButton
+                      amount={selectedOrder.totalPrice}
+                      onSuccess={successPaymentHandler}
+                    />
+                  </div>
+                )}
+              </div>
+              <div className="md:w-1/6 border bg-zinc-50 p-4">
+                <h1 className="font-medium text-lg border-b mb-2 pb-2">
+                  Status
+                </h1>
+                {isDelivering && <Loader />}
+                {selectedOrder.isDelivered ? (
+                  <Message variant="success">
+                    Delivered on{" "}
+                    {Moment(selectedOrder.deliveredAt).format(
+                      "MMMM Do YYYY, h:mm a"
+                    )}
+                  </Message>
+                ) : (
+                  <>
+                    <Message variant="alert">Not Delivered</Message>
+                  </>
+                )}
+                {userInfo &&
+                  userInfo.isAdmin &&
+                  selectedOrder.isPaid &&
+                  !selectedOrder.isDelivered && (
+                    <div className="mb-3 ms-2">
+                      <button
+                        type="button"
+                        className="text-white bg-sky-500 hover:bg-sky-600 px-5 text-xs font-medium py-2"
+                        onClick={() => handleUpdateStatus(selectedOrder._id)}
+                      >
+                        Mark As Delivered
+                      </button>
+                    </div>
+                  )}
+              </div>
+            </div>
 
-            <tr className="border-b ">
-              <td className="p-2 border-r text-sm text-gray-700">Subtotal:</td>
-              <td className="p-2  text-sm text-gray-700">
-                {/* ${finalOrder.itemsPrice} */}
-              </td>
-            </tr>
+            <table className="table flex-1 md:flex-[3_1_0%] border w-full mt-4 mb-2">
+              <thead className="bg-secondaryBgColor">
+                <tr className="uppercase text-zinc-700">
+                  <th className="p-2 border-r text-sm font-semibold tracking-wide text-left">
+                    Product
+                  </th>
+                  <th className="p-2 text-sm font-semibold tracking-wide text-left">
+                    Total
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="border-b">
+                  <td className="p-2 border-r text-sm text-gray-700">
+                    <ol>
+                      {selectedOrder?.orderItems.map((item, index) => (
+                        <li key={index} className="flex items-center">
+                          <div>
+                            <Link
+                              className="nav-links link-dark"
+                              to={`/product/${item.product}`}
+                            >
+                              {item.name} x {item.qty}
+                            </Link>
+                          </div>
+                        </li>
+                      ))}
+                    </ol>
+                  </td>
+                  <td className="p-2 text-sm text-gray-700">
+                    <ol>
+                      {selectedOrder?.orderItems.map((item, index) => (
+                        <li key={index}>
+                          ${(item.qty * item.price).toFixed(2)}
+                        </li>
+                      ))}
+                    </ol>
+                  </td>
+                </tr>
+                <tr className="border-b">
+                  <td className="p-2 border-r text-sm text-gray-700">
+                    Subtotal:
+                  </td>
+                  <td className="p-2 text-sm text-gray-700">
+                    ${finalOrder.itemsPrice}
+                  </td>
+                </tr>
+                <tr className="border-b">
+                  <td className="p-2 border-r text-sm text-gray-700">
+                    Shipping:
+                  </td>
+                  <td className="p-2 text-sm text-gray-700">
+                    ${selectedOrder.shippingPrice}
+                  </td>
+                </tr>
+                <tr className="border-b">
+                  <td className="p-2 border-r text-sm text-gray-700">
+                    Payment Method:
+                  </td>
+                  <td className="p-2 text-sm text-gray-700">
+                    {selectedOrder.paymentMethod}
+                  </td>
+                </tr>
+                <tr className="border-b">
+                  <td className="p-2 border-r text-sm text-gray-700">Tax:</td>
+                  <td className="p-2 text-sm text-gray-700">
+                    ${selectedOrder.taxPrice}
+                  </td>
+                </tr>
+                <tr className="border-b">
+                  <td className="p-2 text-sm text-gray-700">Total:</td>
+                  <td className="p-2 text-sm text-gray-700">
+                    ${selectedOrder.totalPrice}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
 
-            <tr className="border-b ">
-              <td className="p-2 border-r  text-sm text-gray-700">Shipping:</td>
-              <td className="p-2  text-sm text-gray-700">
-                ${order.shippingPrice}
-              </td>
-            </tr>
-
-            <tr className="border-b ">
-              <td className="p-2 border-r text-sm text-gray-700">
-                Payment Method:
-              </td>
-              <td className="p-2  text-sm text-gray-700">
-                {order.paymentMethod}
-              </td>
-            </tr>
-
-            <tr className="border-b ">
-              <td className="p-2 border-r text-sm text-gray-700">Tax:</td>
-              <td className="p-2  text-sm text-gray-700">${order.taxPrice}</td>
-            </tr>
-
-            <tr className="border-b ">
-              <td className="p-2  text-sm text-gray-700">Total:</td>
-              <td className="p-2  text-sm text-gray-700">
-                ${order.totalPrice}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-
-        <div className="bg-zinc-50 border p-4 mb-3 sm:w-2/6">
-          <h1 className="font-medium text-lg border-b mb-2 pb-2">
-            Shipping Address
-          </h1>
-          <p className="text-sm text-gray-700 my-1">
-            <label className=" font-medium mr-3" htmlFor="">
-              Name:
-            </label>
-            <span>{order.user.name}</span>
-          </p>
-          <p className="text-sm text-gray-700 my-1">
-            <label className=" font-medium mr-3" htmlFor="">
-              Email:
-            </label>
-            <span>{order.user.email}</span>
-          </p>
-          <p className="text-sm text-gray-700 my-1">
-            <label className=" font-medium mr-3" htmlFor="">
-              Address:
-            </label>
-            <span>{order.shippingAddress.address}</span>
-          </p>
-          <p className="text-sm text-gray-700 my-1">
-            <label className=" font-medium mr-3" htmlFor="">
-              City:
-            </label>
-            <span>{order.shippingAddress.city}</span>
-          </p>
-          <p className="text-sm text-gray-700 my-1">
-            <label className=" font-medium mr-3" htmlFor="">
-              Postal Code:
-            </label>
-            <span>{order.shippingAddress.postalCode}</span>
-          </p>
-          <p className="text-sm text-gray-700 my-1">
-            <label className=" font-medium mr-3" htmlFor="">
-              Country:
-            </label>
-            <span>{order.shippingAddress.country}</span>
-          </p>
-        </div>
+            <div className="bg-zinc-50 border p-4 mb-3 sm:w-2/6">
+              <h1 className="font-medium text-lg border-b mb-2 pb-2">
+                Shipping Address
+              </h1>
+              <p className="text-sm text-gray-700 my-1">
+                <label className="font-medium mr-3">Name:</label>
+                <span>{selectedOrder.user.name}</span>
+              </p>
+              <p className="text-sm text-gray-700 my-1">
+                <label className="font-medium mr-3">Email:</label>
+                <span>{selectedOrder.user.email}</span>
+              </p>
+              <p className="text-sm text-gray-700 my-1">
+                <label className="font-medium mr-3">Address:</label>
+                <span>{selectedOrder.shippingAddress.address}</span>
+              </p>
+              <p className="text-sm text-gray-700 my-1">
+                <label className="font-medium mr-3">City:</label>
+                <span>{selectedOrder.shippingAddress.city}</span>
+              </p>
+              <p className="text-sm text-gray-700 my-1">
+                <label className="font-medium mr-3">Postal Code:</label>
+                <span>{selectedOrder.shippingAddress.postalCode}</span>
+              </p>
+              <p className="text-sm text-gray-700 my-1">
+                <label className="font-medium mr-3">Country:</label>
+                <span>{selectedOrder.shippingAddress.country}</span>
+              </p>
+            </div>
+          </>
+        )}
       </div>
     </PageContainer>
   );
