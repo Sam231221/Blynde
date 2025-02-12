@@ -11,7 +11,7 @@ import { Order, RootState } from "../types";
 import { createOrder } from "../lib/orderApi";
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "../lib/queryClient";
-import { clearCart } from "../redux/reducers/Cart/CartSlice";
+import { clearCart } from "../redux/reducers/CartSlice";
 const items = [
   { label: "Home", path: "/" },
   { label: "Shipping", path: "/shipping" },

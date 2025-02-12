@@ -11,7 +11,7 @@ import { ProductDetail } from "../../components/reusables/ProductDetail";
 
 import { useModalContext } from "../../providers/ModalProvider";
 import { RootState } from "../../types";
-import { fetchProductDetail } from "../../redux/reducers/Product/ProductSlice";
+import { fetchProductDetail } from "../../redux/reducers/ProductSlice";
 const items = [
   { label: "Home", path: "/" },
   { label: "Shop", path: "/shop" },

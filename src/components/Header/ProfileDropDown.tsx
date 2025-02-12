@@ -5,7 +5,6 @@ import { BsBoxArrowRight, BsGear, BsPerson } from "react-icons/bs";
 
 import { Link } from "react-router-dom";
 import { useLogout, useUser } from "../../hooks/useAuth";
-// import { logout } from "../../redux/reducers/AuthSlice2";
 interface ProfileDropDownProps {
   classes?: string;
 }
@@ -14,7 +13,7 @@ export const ProfileDropDown = ({ classes }: ProfileDropDownProps) => {
   const [open, setOpen] = useState(false);
 
   const ProfileDivRef = useRef<HTMLDivElement>(null);
-  // const { userInfo } = useSelector((state: RootState) => state.auth);
+
   const userInfo = useUser();
   const logout = useLogout();
   useEffect(() => {
@@ -74,7 +73,7 @@ export const ProfileDropDown = ({ classes }: ProfileDropDownProps) => {
           <li>
             <a
               className="px-3 py-2 bg-none hover:bg-[#eef2fa] transition-all duration-500 ease-out flex items-center gap-2 text-xs"
-              href=""
+              href="/profile#settings"
             >
               <BsGear /> Acccount Setting
             </a>

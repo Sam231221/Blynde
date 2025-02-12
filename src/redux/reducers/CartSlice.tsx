@@ -1,10 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import {
-  CartItem,
-  CartState,
-  RootState,
-  ShippingAddress,
-} from "../../../types";
+import { CartItem, CartState, RootState, ShippingAddress } from "../../types";
 
 // Get initial cart state from localStorage
 const cartItemsFromStorage: CartItem[] = JSON.parse(

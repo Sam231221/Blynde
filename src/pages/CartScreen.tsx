@@ -7,10 +7,7 @@ import { AiOutlineDelete } from "react-icons/ai";
 import PageContainer from "../components/PageContainer";
 
 import ProductPriceInput from "../components/ProductPriceInput";
-import {
-  removeFromCart,
-  updateQuantity,
-} from "../redux/reducers/Cart/CartSlice";
+import { removeFromCart, updateQuantity } from "../redux/reducers/CartSlice";
 const items = [
   { label: "Home", path: "/" },
   { label: "Cart", path: "/cart" },

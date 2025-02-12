@@ -12,7 +12,7 @@ import { endpoint } from "../../lib/api";
 import { ShareProduct } from "./ShareProduct";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { addToCart } from "../../redux/reducers/Cart/CartSlice";
+import { addToCart } from "../../redux/reducers/CartSlice";
 import { Product } from "../../types/index";
 
 interface ProductDetailProps {

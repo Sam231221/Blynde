@@ -11,7 +11,7 @@ import ProductPriceInput from "../../ProductPriceInput";
 
 import { useModalContext } from "../../../providers/ModalProvider";
 import { ProductDetail } from "../ProductDetail";
-import { addToCart } from "../../../redux/reducers/Cart/CartSlice";
+import { addToCart } from "../../../redux/reducers/CartSlice";
 import { Product } from "../../../types";
 
 interface ProductGridShowCaseProps {

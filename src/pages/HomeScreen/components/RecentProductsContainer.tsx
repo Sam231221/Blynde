@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import ProductGridShowCase from "../../../components/reusables/ProductGridShowCase";
 import { useRecentProducts } from "../../../hooks/useFetchData";
 
-import { setRecentProducts } from "../../../redux/reducers/Product/ProductSlice";
+import { setRecentProducts } from "../../../redux/reducers/ProductSlice";
 
 export default function RecentProductsContainer() {
   const dispatch = useDispatch();

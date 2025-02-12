@@ -6,7 +6,7 @@ import { CiCircleList } from "react-icons/ci";
 import ProductGridShowCase from "../../../../../components/reusables/ProductGridShowCase";
 
 import axios from "../../../../../lib/api";
-import { addToCart } from "../../../../../redux/reducers/Cart/CartSlice";
+import { addToCart } from "../../../../../redux/reducers/CartSlice";
 
 export default function ProductGallery({
   selectedFilters,

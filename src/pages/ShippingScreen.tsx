@@ -6,7 +6,7 @@ import CheckoutSteps from "../components/CheckoutSteps";
 
 import PageContainer from "../components/PageContainer";
 import { RootState } from "../types";
-import { saveShippingAddress } from "../redux/reducers/Cart/CartSlice";
+import { saveShippingAddress } from "../redux/reducers/CartSlice";
 const items = [
   { label: "Home", path: "/" },
   { label: "Shipping", path: "/shipping" },

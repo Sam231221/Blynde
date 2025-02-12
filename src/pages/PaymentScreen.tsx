@@ -6,7 +6,7 @@ import CheckoutSteps from "../components/CheckoutSteps";
 
 import PageContainer from "../components/PageContainer";
 import FormContainer from "../components/FormContainer";
-import { savePaymentMethod } from "../redux/reducers/Cart/CartSlice";
+import { savePaymentMethod } from "../redux/reducers/CartSlice";
 
 const items = [
   { label: "Home", path: "/" },

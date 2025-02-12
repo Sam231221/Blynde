@@ -18,7 +18,7 @@ import { deliverOrder, fetchOrderById, payOrder } from "../lib/orderApi";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { queryClient } from "../lib/queryClient";
 import { toast } from "react-toastify";
-import { clearCart } from "../redux/reducers/Cart/CartSlice";
+import { clearCart } from "../redux/reducers/CartSlice";
 
 const items = [
   { label: "Home", path: "/" },
