@@ -8,6 +8,7 @@ export interface User {
   last_name: string;
   profile_pic: string;
   email: string;
+  email_verified: boolean;
   token: string;
 }
 export interface AuthState {

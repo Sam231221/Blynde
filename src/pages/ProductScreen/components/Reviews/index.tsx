@@ -11,7 +11,7 @@ import { fetchReviews } from "../../../../redux/reducers/ReviewSlice";
 
 export default function Reviews({ productId, userInfo }) {
   const dispatch = useDispatch<AppDispatch>();
-
+  console.log("useringo", userInfo);
   const { reviews, loading: reviewLoading } = useSelector(
     (state: RootState) => state.reviews
   );
@@ -24,17 +24,16 @@ export default function Reviews({ productId, userInfo }) {
   const productReviews = reviews.filter(
     (review) => review.product === Number(productId)
   );
+  console.log("dsd:", productReviews.length);
   return (
     <>
       <h1 className="text-xl font-semibold text-gray-800">
-        Reviews({reviews.length})
+        Reviews({productReviews.length})
       </h1>
       <hr />
       {reviewLoading ? (
         <p>Loading reviews...</p>
-      ) : productReviews.length === 0 ? (
-        <p>No reviews yet. Be the first to review!</p>
-      ) : (
+      ) : productReviews.length > 0 ? (
         productReviews
           .slice()
           .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
@@ -64,19 +63,21 @@ export default function Reviews({ productId, userInfo }) {
               </div>
             </div>
           ))
+      ) : (
+        <p className="text-sm my-2">No reviews yet. Be the first to review!</p>
       )}
 
       <div className="mb-4">
-        {userInfo.name ? (
+        {userInfo !== null && userInfo.name ? (
           <ReviewForm
             username={userInfo.name}
             userId={userInfo.id}
             productId={productId}
           />
         ) : (
-          <>
+          <div className="w-80">
             <Message variant="alert">You need to sigin to add a review</Message>
-          </>
+          </div>
         )}
       </div>
     </>

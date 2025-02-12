@@ -35,6 +35,7 @@ export default function ProductScreen() {
       dispatch(fetchProductDetail(Number(id))); // Fetch product data
     }
   }, [id, dispatch]);
+  console.log(productDetail);
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
   if (!productDetail) return <p>Product not found</p>;

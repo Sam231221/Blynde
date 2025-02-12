@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, setUser } from "../redux/reducers/AuthSlice";
 import { RootState } from "../types";
-import { loginUser, registerUser } from "../lib/authApi";
+import { loginUser, registerUser, resetPasswordForUser } from "../lib/authApi";
 // Login Hook
 export const useLogin = () => {
   const dispatch = useDispatch();
@@ -18,6 +18,13 @@ export const useLogin = () => {
   });
 };
 
+export const usePasswordReset = () => {
+  const dispatch = useDispatch();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: resetPasswordForUser,
+  });
+};
 // Register Hook
 export const useRegister = () => {
   const dispatch = useDispatch();

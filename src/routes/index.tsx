@@ -1,4 +1,5 @@
 import React from "react";
+
 const HomeScreen = React.lazy(() => import("../pages/HomeScreen"));
 const ShopScreen = React.lazy(() => import("../pages/ShopScreen"));
 const CartScreen = React.lazy(() => import("../pages/CartScreen"));
@@ -9,6 +10,12 @@ const LoginScreen = React.lazy(
 );
 const RegisterScreen = React.lazy(
   () => import("../pages/Authentication/RegisterScreen")
+);
+const ResetPasswordScreen = React.lazy(
+  () => import("../pages/Authentication/ResetPasswordScreen")
+);
+const ResetPasswordConfirmScreen = React.lazy(
+  () => import("../pages/Authentication/ResetPasswordConfirmScreen")
 );
 
 const ProfileScreen = React.lazy(() => import("../pages/ProfileScreen"));
@@ -78,6 +85,16 @@ const routes = [
         name: "RegisterScreen",
         path: "/register",
         component: <RegisterScreen />,
+      },
+      {
+        name: "PasswordResetScreen",
+        path: "/request-reset-password",
+        component: <ResetPasswordScreen />,
+      },
+      {
+        name: "ResetPasswordConfirmScreen",
+        path: "/request-reset-password/confirm",
+        component: <ResetPasswordConfirmScreen />,
       },
     ],
   },

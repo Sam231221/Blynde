@@ -51,7 +51,7 @@ const LoginScreen = () => {
   };
 
   useEffect(() => {
-    if (userInfo && redirect == "/") {
+    if (userInfo && userInfo.email_verified && redirect == "/") {
       navigate("/");
     }
     if (userInfo && redirect == "shipping") {
@@ -128,7 +128,10 @@ const LoginScreen = () => {
                 />
                 <span className="ml-2 text-sm text-gray-600">Remember Me</span>
               </label>
-              <a href="#" className="text-sm text-teal-600 hover:text-teal-500">
+              <a
+                href="/request-reset-password"
+                className="text-sm text-teal-600 hover:text-teal-500"
+              >
                 Forgot Password?
               </a>
             </div>

@@ -53,6 +53,10 @@ export const registerUser = (userData: {
   return apiRequest("/api/users/register/", "POST", userData);
 };
 
+export const resetPasswordForUser = (email: string): Promise<void> => {
+  return apiRequest("/api/users/password-reset/", "POST", { email });
+};
+
 export const logoutUser = () => {
   localStorage.removeItem("userInfo");
 };
