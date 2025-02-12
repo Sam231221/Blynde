@@ -64,7 +64,7 @@ export default function ShopScreen() {
       });
     }
   }, [categories, price, color, sizes, setSearchParams]);
-  console.log("asdasd");
+
   const handleCategoriesChange = (categories) => {
     setSelectedFilters((preb) => ({ ...preb, categories }));
   };

@@ -28,7 +28,6 @@ function OrderListScreen() {
     queryFn: fetchOrders,
   });
 
-  console.log("orders:", orders);
   // Create an order
   const { mutate, isPending } = useMutation({
     mutationFn: createOrder,

@@ -19,7 +19,6 @@ function UserListScreen() {
   const [filteredUsers, setfilteredUsers] = useState([]);
   const [filterRole, setFilterRole] = useState<string | null>(null);
   const { data: users, isLoading } = useUsersQuery();
-  console.log(users);
 
   const [userToDelete, setUserToDelete] = useState({
     id: "",
@@ -29,8 +28,6 @@ function UserListScreen() {
   const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false);
   const { mutate: deleteMutation } = useDeleteUserMutation();
   const handleDeleteUser = (userId: number) => {
-    // Implement your delete logic here
-    console.log("User deleted");
     deleteMutation(userId);
     setIsDeleteModalOpen(false);
   };
@@ -46,9 +43,7 @@ function UserListScreen() {
     }
   }, [users]);
   useEffect(() => {
-    if (userInfo && userInfo.isAdmin) {
-      console.log("sds");
-    } else {
+    if (!userInfo && !userInfo.isAdmin) {
       redirect("/login");
     }
   }, [dispatch, redirect, userInfo]);

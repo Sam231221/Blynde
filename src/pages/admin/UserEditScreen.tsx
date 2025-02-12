@@ -68,7 +68,6 @@ function UserEditScreen() {
   if (error) {
     return <div>Error: {error.message}</div>;
   }
-  console.log(formData);
 
   return (
     <PageContainer>

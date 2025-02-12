@@ -11,7 +11,7 @@ import { fetchReviews } from "../../../../redux/reducers/ReviewSlice";
 
 export default function Reviews({ productId, userInfo }) {
   const dispatch = useDispatch<AppDispatch>();
-  console.log("useringo", userInfo);
+
   const { reviews, loading: reviewLoading } = useSelector(
     (state: RootState) => state.reviews
   );
@@ -24,7 +24,7 @@ export default function Reviews({ productId, userInfo }) {
   const productReviews = reviews.filter(
     (review) => review.product === Number(productId)
   );
-  console.log("dsd:", productReviews.length);
+
   return (
     <>
       <h1 className="text-xl font-semibold text-gray-800">

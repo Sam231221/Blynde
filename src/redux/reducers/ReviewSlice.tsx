@@ -37,10 +37,9 @@ export const addReview = createAsyncThunk(
   async (review: Omit<Review, "createdAt">, { rejectWithValue }) => {
     try {
       const response = await apiClient.post("/api/products/reviews/", review);
-      console.log(response.data);
+
       return response.data as Review;
     } catch (error: any) {
-      console.log(error);
       return rejectWithValue(error.response?.data || "Error adding review");
     }
   }

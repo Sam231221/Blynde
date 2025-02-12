@@ -19,16 +19,10 @@ const items = [
   { label: "Place Order", path: "/placeorder" },
 ];
 function PlaceOrderScreen() {
-  // const orderCreate = useSelector((state) => state.orderCreate);
-  // const { order, error, success } = orderCreate;
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const cart = useSelector((state: RootState) => state.cart);
-
-  //since cart is not exstensible, we will use spread operator.
-  // cconsole.log(Object.isExtensible(cart))
   //FINALIZING AMOUNTS
   let itemsPrice = Number(
     Number(
@@ -61,9 +55,6 @@ function PlaceOrderScreen() {
       queryClient.invalidateQueries(["orders"]); // Example query key
       dispatch(clearCart());
       navigate(`/order/${newOrder._id}`);
-
-      // Optionally, do something with the new order data
-      console.log("Order created:", newOrder);
     },
     onError: (error) => {
       // Handle errors - display a message to the user, etc.

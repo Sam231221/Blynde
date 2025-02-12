@@ -17,7 +17,7 @@ export const deliverOrder = async ({ orderId }: { orderId: number }) => {
 };
 export const payOrder = async ({ orderId }: { orderId: number }) => {
   const data = await apiRequest(`/api/orders/${orderId}/pay/`, "PUT");
-  console.log("sdas:", data);
+
   return data;
 };
 // Fetch orders

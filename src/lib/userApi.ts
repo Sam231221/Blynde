@@ -52,7 +52,6 @@ export const useCreateUserMutation = () => {
     mutationFn: (userData) =>
       apiRequest("/api/users/create/", "POST", userData),
     onSuccess: (data) => {
-      console.log(data);
       // Invalidate the users query to trigger a refetch
       queryClient.invalidateQueries({ queryKey: ["users"] }); // Use queryClient if you have it available
       // Or refetch the query manually if you're in the component where useUsersQuery is used.
@@ -69,7 +68,6 @@ export const useUpdateUserMutation = () => {
     mutationFn: (user) =>
       apiRequest(`/api/users/update/${user.id}/`, "PUT", user),
     onSuccess: (dat) => {
-      console.log("da:", dat);
       queryClient.invalidateQueries({ queryKey: ["users"] });
     },
     onError: (error) => {
@@ -109,8 +107,6 @@ export const useUpdateProfileMutation = () => {
       apiRequest("/api/users/profile/", "PUT", userData), // Adjust endpoint as needed
     onSuccess: (data) => {
       // Handle successful profile update (e.g., update user data in Redux or local storage)
-
-      console.log("Profile updated successfully:", data);
       queryClient.invalidateQueries({ queryKey: ["profile"] });
     },
     onError: (error) => {

@@ -7,7 +7,7 @@ const ResetPasswordConfirmScreen: React.FC = () => {
   const [searchParams] = useSearchParams();
   const token = searchParams.get("token");
   const navigate = useNavigate();
-  console.log("token:", token);
+
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -52,7 +52,6 @@ const ResetPasswordConfirmScreen: React.FC = () => {
         }, 2000);
       }
     } catch (error: any) {
-      console.log("Error:", error);
       setPassword("");
       setConfirmPassword("");
     } finally {

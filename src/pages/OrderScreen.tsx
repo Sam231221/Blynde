@@ -81,7 +81,6 @@ export default function OrderScreen() {
       queryClient.invalidateQueries({ queryKey: ["order", id] });
     },
     onError: (error) => {
-      console.log("eror:", error);
       toast.error("An error occurred");
     },
   });

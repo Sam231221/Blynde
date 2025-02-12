@@ -29,7 +29,6 @@ export default function ProductGallery({
   useEffect(() => {
     async function fetchProducts() {
       try {
-        console.log(pagination.currentPage);
         const params = {
           page: pagination.currentPage,
           page_size: productQtyPerPage,

@@ -36,7 +36,7 @@ const cartSlice = createSlice({
     addToCart: (state, action: PayloadAction<CartItem>) => {
       const { productId, name, price, color, size, thumbnail, quantity } =
         action.payload;
-      console.log(action.payload);
+
       const existingItem = state.cartItems.find(
         (item) =>
           item.productId === productId &&
@@ -70,7 +70,7 @@ const cartSlice = createSlice({
       action: PayloadAction<{ id: number; quantity: number }>
     ) => {
       const { quantity, id } = action.payload;
-      console.log(action.payload);
+
       state.cartItems = state.cartItems.map((cartItem) =>
         cartItem.productId === id ? { ...cartItem, quantity } : cartItem
       );

@@ -61,7 +61,6 @@ export function AddUserModal({ isOpen, onClose }: AddUserModalProps) {
 
     if (Object.keys(newErrors).length === 0) {
       // Form is valid, handle submission here (e.g., API call)
-      console.log("New User:");
 
       addMutation.mutate(formData);
       setFormData({

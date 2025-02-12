@@ -39,9 +39,8 @@ export const ProductDetail = ({ product, openModal }: ProductDetailProps) => {
 
   const addToCartHandler = (id: number) => {
     const { quantity, size, color } = data;
-    console.log("asdasss");
+
     if (product._id === id && quantity && size && color) {
-      console.log("asdas");
       dispatch(
         addToCart({
           productId: product._id,
