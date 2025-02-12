@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { PayPalButton } from "react-paypal-button-v2";
+// import { PayPalButton } from "react-paypal-button-v2";
 import Moment from "moment";
 
 import Loader from "../components/Loader";
@@ -166,10 +166,10 @@ export default function OrderScreen() {
                 )}
                 {!selectedOrder.isPaid && sdkReady && (
                   <div>
-                    <PayPalButton
+                    {/* <PayPalButton
                       amount={selectedOrder.totalPrice}
                       onSuccess={successPaymentHandler}
-                    />
+                    /> */}
                   </div>
                 )}
               </div>
