@@ -25,7 +25,7 @@ function ProductSlider(props: ProductSliderProps) {
   const childrenArray = React.Children.toArray(children);
 
   const [autoAdvance, setAutoAdvance] = useState(timer !== undefined);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const intervalRef = useRef<number | null>(null);
 
   const prevSlideHandler = () => {
     let newPosition = sliderPosition;
@@ -224,7 +224,9 @@ function ProductSlider(props: ProductSliderProps) {
 
   const displayItems = Children.map(children, (child, index) => (
     <div
-      ref={(el) => (displayItemsRef.current[index] = el)}
+      ref={(el) => {
+        displayItemsRef.current[index] = el;
+      }}
       className="touch-none w-full h-full inline-block align-top mr-[0.1%] transition-all duration-500 ease-out"
       id={`carouselitem` + index}
     >
@@ -234,7 +236,9 @@ function ProductSlider(props: ProductSliderProps) {
 
   const positionIndicators = Children.map(children, (child, index) => (
     <div
-      ref={(el) => (indicatorsRef.current[index] = el)}
+      ref={(el) => {
+        indicatorsRef.current[index] = el;
+      }}
       id={`positionIndicator` + index}
       className={
         sliderPosition === index
