@@ -62,7 +62,7 @@ const cartSlice = createSlice({
     },
     updateQuantity: (
       state,
-      action: PayloadAction<{ id: number; quantity: number }>
+      action: PayloadAction<{ id: number | undefined; quantity: number }>
     ) => {
       const { quantity, id } = action.payload;
 

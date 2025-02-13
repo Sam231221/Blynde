@@ -2,7 +2,11 @@ import { useEffect, useState } from "react";
 import axios from "../../../../../../lib/api";
 import ColorCheckBox from "./ColorCheckBox";
 
-export default function Colors({ handleColorChange }) {
+interface ColorsProps {
+  handleColorChange: (color: string) => void;
+}
+
+export default function Colors({ handleColorChange }: ColorsProps) {
   const [colors, setColors] = useState([]);
   const loadColors = async () => {
     const { data } = await axios.get("/api/products/colors/");

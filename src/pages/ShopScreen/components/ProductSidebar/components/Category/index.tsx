@@ -2,7 +2,11 @@ import axios from "../../../../../../lib/api";
 import { useEffect, useState } from "react";
 import MultiLevelCheckbox from "./MultiLevelCheckBox";
 
-function Category({ handleCategoriesChange }) {
+interface CategoryProps {
+  handleCategoriesChange: (selectedCategories: string[]) => void;
+}
+
+function Category({ handleCategoriesChange }: CategoryProps) {
   const [categories, setCategories] = useState([]);
   const loadCategories = async () => {
     const { data } = await axios.get("/api/products/categories/");

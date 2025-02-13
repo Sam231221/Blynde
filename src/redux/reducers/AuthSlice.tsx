@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { AuthState, User } from "../../types";
 
@@ -22,8 +22,6 @@ const authSlice = createSlice({
     logout: (state) => {
       localStorage.removeItem("userInfo");
       state.userInfo = null;
-      state.loading = false;
-      state.error = null;
     },
   },
 });

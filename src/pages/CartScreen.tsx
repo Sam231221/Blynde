@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -8,6 +7,7 @@ import PageContainer from "../components/PageContainer";
 
 import ProductPriceInput from "../components/ProductPriceInput";
 import { removeFromCart, updateQuantity } from "../redux/reducers/CartSlice";
+import { RootState } from "../types";
 const items = [
   { label: "Home", path: "/" },
   { label: "Cart", path: "/cart" },
@@ -16,13 +16,14 @@ const items = [
 export default function CartScreen() {
   const dispatch = useDispatch();
   const redirect = useNavigate();
-  const handleChange = (val, id) => {
+
+  const handleChange = (val: number, id: number | undefined): void => {
     dispatch(updateQuantity({ quantity: val, id }));
   };
-  const cart = useSelector((state) => state.cart);
+  const cart = useSelector((state: RootState) => state.cart);
   const { cartItems } = cart;
 
-  const removeFromCartHandler = (id) => {
+  const removeFromCartHandler = (id: number) => {
     dispatch(removeFromCart(id));
   };
   const checkoutHandler = () => {

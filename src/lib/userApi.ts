@@ -17,12 +17,20 @@ export const useUserDetailQuery = (userId: number) =>
     enabled: !!userId, // Only run the query if userId is provided
     staleTime: Infinity,
   });
+interface CreateUserFormData {
+  first_name: string;
+  last_name: string;
+  username: string;
+  email: string;
+  password: string;
+  profile_pic: string;
+}
 
 export const useCreateUserMutation = () => {
-  return useMutation({
-    mutationFn: (userData) =>
+  return useMutation<void, Error, CreateUserFormData>({
+    mutationFn: (userData: CreateUserFormData) =>
       apiRequest("/api/users/create/", "POST", userData),
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
     },
     onError: (error) => {
@@ -31,11 +39,21 @@ export const useCreateUserMutation = () => {
   });
 };
 
+interface UpdateUserFormData {
+  id: number;
+  first_name?: string;
+  last_name?: string;
+  username?: string;
+  email?: string;
+  password?: string;
+  profile_pic?: string;
+}
+
 export const useUpdateUserMutation = () => {
-  return useMutation({
-    mutationFn: (user) =>
+  return useMutation<void, Error, UpdateUserFormData>({
+    mutationFn: (user: UpdateUserFormData) =>
       apiRequest(`/api/users/update/${user.id}/`, "PUT", user),
-    onSuccess: (dat) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
     },
     onError: (error) => {
@@ -66,10 +84,10 @@ export const useGetUserProfileQuery = () => {
 };
 
 export const useUpdateProfileMutation = () => {
-  return useMutation({
+  return useMutation<void, Error, { name: string; email: string }>({
     mutationFn: (userData) =>
       apiRequest("/api/users/profile/", "PUT", userData),
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["profile"] });
     },
     onError: (error) => {

@@ -1,13 +1,13 @@
 import { Link } from "react-router-dom";
 interface PaginateProps {
   pages: number;
-  page: number;
+
   keyword?: string;
   isAdmin?: boolean;
 }
 export default function Paginate({
   pages,
-  page,
+
   keyword = "",
   isAdmin = false,
 }: PaginateProps) {

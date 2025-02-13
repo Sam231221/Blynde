@@ -1,15 +1,18 @@
-import React, { useEffect, useState } from "react";
-
+import { useEffect } from "react";
+import Moment from "moment";
 import ReviewForm from "./ReviewForm";
 import Rating from "../../../../components/Rating";
 import { useDispatch, useSelector } from "react-redux";
 import { Message } from "../../../../components/Message";
 
-import Moment from "moment";
 import { AppDispatch, RootState } from "../../../../types";
 import { fetchReviews } from "../../../../redux/reducers/ReviewSlice";
 
-export default function Reviews({ productId, userInfo }) {
+interface ReviewsProps {
+  productId: string;
+  userInfo: { name: string; id: string } | null;
+}
+export default function Reviews({ productId, userInfo }: ReviewsProps) {
   const dispatch = useDispatch<AppDispatch>();
 
   const { reviews, loading: reviewLoading } = useSelector(
@@ -36,7 +39,10 @@ export default function Reviews({ productId, userInfo }) {
       ) : productReviews.length > 0 ? (
         productReviews
           .slice()
-          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+          .sort(
+            (a, b) =>
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          )
           .map((review, index) => (
             <div key={index}>
               <div className="flex items-center gap-4 mb-3">

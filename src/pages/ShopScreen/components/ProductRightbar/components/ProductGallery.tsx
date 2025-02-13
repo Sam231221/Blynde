@@ -1,21 +1,28 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
-import { useDispatch } from "react-redux";
+
 import { RxDashboard } from "react-icons/rx";
 import { CiCircleList } from "react-icons/ci";
 
 import ProductGridShowCase from "../../../../../components/reusables/ProductGridShowCase";
 
-import axios from "../../../../../lib/api";
-import { addToCart } from "../../../../../redux/reducers/CartSlice";
-
+import { Product } from "../../../../../types";
+import { apiRequest } from "../../../../../lib/api";
+interface ProductGalleryProps {
+  selectedFilters: {
+    categories: string[];
+    price: [number, number];
+    sizes: string[];
+    color: string[];
+  };
+  categories?: { name: string }[];
+}
 export default function ProductGallery({
   selectedFilters,
-  setSelectedFilters,
-}) {
-  const [products, setProducts] = useState([]);
+}: ProductGalleryProps) {
+  const [products, setProducts] = useState<Product[]>([]);
   const [productsDisplaytype, setProductsDisplaytype] = useState("grid");
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const [pagination, setPagination] = useState({
     currentPage: 1,
     totalPages: 1,
@@ -23,7 +30,6 @@ export default function ProductGallery({
   });
   const [productQtyPerPage, setProductQtyPerPage] = useState(8);
   const [sortOption, setSortOption] = useState("popularity");
-  const dispatch = useDispatch();
 
   // fetch products
   useEffect(() => {
@@ -35,7 +41,9 @@ export default function ProductGallery({
           sort: sortOption,
           ...selectedFilters,
         };
-        const { data } = await axios.get("/api/products/all/", { params });
+        const { data } = await apiRequest("/api/products/all/", "GET", {
+          params,
+        });
         setProducts(data.results);
         setPagination({
           currentPage: data.pagination.current_page,
@@ -56,10 +64,16 @@ export default function ProductGallery({
     fetchProducts();
   }, [pagination.currentPage, productQtyPerPage, sortOption, selectedFilters]);
 
+  interface Pagination {
+    currentPage: number;
+    totalPages: number;
+    totalItems: number;
+  }
+
   const paginate = useCallback(
-    (pageNumber) => {
+    (pageNumber: number) => {
       if (pageNumber >= 1 && pageNumber <= pagination.totalPages) {
-        setPagination((prevPagination) => ({
+        setPagination((prevPagination: Pagination) => ({
           ...prevPagination,
           currentPage: pageNumber,
         }));
@@ -68,20 +82,20 @@ export default function ProductGallery({
     [pagination.totalPages]
   );
 
-  const addToWishlistHandler = (product) => {
-    dispatch(
-      addToCart({
-        productId: product._id,
-        name: product.name,
-        price: product.sale_price ? product.sale_price : product.price,
-        color,
-        size,
-        thumbnail: product.thumbnail,
-        quantity,
-      })
-    );
-  };
-  function filterProducts(sortedProducts) {
+  interface FilterProductsParams {
+    sortedProducts: Product[];
+    selectedFilters: {
+      categories: string[];
+      price: [number, number];
+      sizes: string[];
+      color: string[];
+    };
+  }
+
+  function filterProducts({
+    sortedProducts,
+    selectedFilters,
+  }: FilterProductsParams): Product[] {
     let tempProducts = [...sortedProducts];
     const { categories, price, sizes, color } = selectedFilters;
 
@@ -99,7 +113,7 @@ export default function ProductGallery({
     // Filter by sizes
     if (sizes.length > 0) {
       tempProducts = tempProducts.filter((product) =>
-        product.size.some((size) => sizes.includes(size))
+        product.size.some((size) => sizes.includes(size.name))
       );
     }
 
@@ -121,23 +135,29 @@ export default function ProductGallery({
           return b.price - a.price;
         case "latest":
           return new Date(b.date).getTime() - new Date(a.date).getTime();
-        case "popularity":
-          return b.popularity - a.popularity;
+        // case "popularity":
+        //   return b.popularity - a.popularity;
         default:
           return 0;
       }
     });
 
-    return filterProducts(sorted);
+    return filterProducts({ sortedProducts: sorted, selectedFilters });
   }, [pagination.currentPage, products, sortOption, selectedFilters]);
 
-  const handleProductQtyPerPageChange = useCallback((event) => {
-    setProductQtyPerPage(Number(event.target.value));
-  }, []);
+  const handleProductQtyPerPageChange = useCallback(
+    (event: React.ChangeEvent<HTMLSelectElement>) => {
+      setProductQtyPerPage(Number(event.target.value));
+    },
+    []
+  );
 
-  const handleSortChange = useCallback((event) => {
-    setSortOption(event.target.value);
-  }, []);
+  const handleSortChange = useCallback(
+    (event: React.ChangeEvent<HTMLSelectElement>) => {
+      setSortOption(event.target?.value);
+    },
+    []
+  );
 
   if (loading) {
     return (
@@ -246,7 +266,6 @@ export default function ProductGallery({
         <ProductGridShowCase
           showtype={productsDisplaytype}
           productheight={`h-[200px] sm:h-[300px]`}
-          addToWishlistHandler={addToWishlistHandler}
           products={sortedAndFilteredProducts}
         />
       )}

@@ -24,23 +24,23 @@ const ShippingScreen = React.lazy(() => import("../pages/ShippingScreen"));
 const PaymentScreen = React.lazy(() => import("../pages/PaymentScreen"));
 const PlaceOrderScreen = React.lazy(() => import("../pages/PlaceOrderScreen"));
 const OrderScreen = React.lazy(() => import("../pages/OrderScreen"));
-
-const OrderListScreen = React.lazy(
-  () => import("../pages/admin/OrderListScreen")
-);
-const ProductEditScreen = React.lazy(
-  () => import("../pages/admin/ProductEditScreen")
-);
-const ProductListScreen = React.lazy(
-  () => import("../pages/admin/ProductListScreen")
-);
-const UserListScreen = React.lazy(
-  () => import("../pages/admin/UserListScreen")
-);
-const UserEditScreen = React.lazy(
-  () => import("../pages/admin/UserEditScreen")
-);
 const WishlistScreen = React.lazy(() => import("../pages/WishlistScreen"));
+
+// const OrderListScreen = React.lazy(
+//   () => import("../pages/admin/OrderListScreen")
+// );
+// const ProductEditScreen = React.lazy(
+//   () => import("../pages/admin/ProductEditScreen")
+// );
+// const ProductListScreen = React.lazy(
+//   () => import("../pages/admin/ProductListScreen")
+// );
+// const UserListScreen = React.lazy(
+//   () => import("../pages/admin/UserListScreen")
+// );
+// const UserEditScreen = React.lazy(
+//   () => import("../pages/admin/UserEditScreen")
+// );
 
 const routes = [
   {
@@ -139,35 +139,35 @@ const routes = [
       },
     ],
   },
-  {
-    title: "Dashboard",
-    items: [
-      {
-        name: "UserListScreen",
-        path: "/admin/userlist",
-        component: <UserListScreen />,
-      },
-      {
-        name: "UserEditScreen",
-        path: "/admin/userlist/:id/",
-        component: <UserEditScreen />,
-      },
-      {
-        name: "ProductListScreen",
-        path: "/admin/productlist",
-        component: <ProductListScreen />,
-      },
-      {
-        name: "ProductEditScreen",
-        path: "/admin/product/:id/edit",
-        component: <ProductEditScreen />,
-      },
-      {
-        name: "OrderListScreen",
-        path: "/admin/orderlist",
-        component: <OrderListScreen />,
-      },
-    ],
-  },
+  // {
+  //   title: "Dashboard",
+  //   items: [
+  //     {
+  //       name: "UserListScreen",
+  //       path: "/admin/userlist",
+  //       component: <UserListScreen />,
+  //     },
+  //     {
+  //       name: "UserEditScreen",
+  //       path: "/admin/userlist/:id/",
+  //       component: <UserEditScreen />,
+  //     },
+  //     {
+  //       name: "ProductListScreen",
+  //       path: "/admin/productlist",
+  //       component: <ProductListScreen />,
+  //     },
+  //     {
+  //       name: "ProductEditScreen",
+  //       path: "/admin/product/:id/edit",
+  //       component: <ProductEditScreen />,
+  //     },
+  //     {
+  //       name: "OrderListScreen",
+  //       path: "/admin/orderlist",
+  //       component: <OrderListScreen />,
+  //     },
+  //   ],
+  // },
 ];
 export default routes;

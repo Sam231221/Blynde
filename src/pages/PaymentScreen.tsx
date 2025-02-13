@@ -7,6 +7,7 @@ import CheckoutSteps from "../components/CheckoutSteps";
 import PageContainer from "../components/PageContainer";
 import FormContainer from "../components/FormContainer";
 import { savePaymentMethod } from "../redux/reducers/CartSlice";
+import { RootState } from "../types";
 
 const items = [
   { label: "Home", path: "/" },
@@ -15,7 +16,7 @@ const items = [
 ];
 
 function PaymentScreen() {
-  const cart = useSelector((state) => state.cart);
+  const cart = useSelector((state: RootState) => state.cart);
   const { shippingAddress } = cart;
 
   const dispatch = useDispatch();
@@ -23,11 +24,11 @@ function PaymentScreen() {
 
   const [paymentMethod, setPaymentMethod] = useState("PayPal");
 
-  if (!shippingAddress.address) {
+  if (!shippingAddress?.address) {
     navigate("/shipping");
   }
 
-  const submitHandler = (e) => {
+  const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     dispatch(savePaymentMethod(paymentMethod));
     navigate("/placeorder");

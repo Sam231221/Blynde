@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,7 +18,6 @@ import { deliverOrder, fetchOrderById, payOrder } from "../lib/orderApi";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { queryClient } from "../lib/queryClient";
 import { toast } from "react-toastify";
-import { clearCart } from "../redux/reducers/CartSlice";
 
 const items = [
   { label: "Home", path: "/" },
@@ -48,13 +47,17 @@ export default function OrderScreen() {
       dispatch(setSelectedOrder(fetchedOrders));
     }
   }, [fetchedOrders, dispatch]);
-  let finalOrder = {};
+  let finalOrder: {
+    itemsPrice?: string;
+    totalPrice?: number;
+  } = {};
   if (!isLoading && !error) {
     finalOrder = {
       ...selectedOrder,
       itemsPrice: selectedOrder?.orderItems
         .reduce((acc, item) => acc + item.price * item.qty, 0)
         .toFixed(2),
+      totalPrice: selectedOrder?.totalPrice,
     };
   }
 
@@ -75,12 +78,12 @@ export default function OrderScreen() {
     },
   });
 
-  const { mutate: payUserOrder, isPending: isPaying } = useMutation({
+  const { mutate: payUserOrder } = useMutation({
     mutationFn: payOrder,
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["order", id] });
     },
-    onError: (error) => {
+    onError: () => {
       toast.error("An error occurred");
     },
   });
@@ -90,7 +93,7 @@ export default function OrderScreen() {
   };
 
   const successPaymentHandler = () => {
-    payUserOrder({ orderId: selectedOrder._id });
+    payUserOrder({ orderId: Number(selectedOrder?._id) });
   };
 
   useEffect(() => {
@@ -166,6 +169,7 @@ export default function OrderScreen() {
                 )}
                 {!selectedOrder.isPaid && sdkReady && (
                   <div>
+                    <button onClick={successPaymentHandler}>Pay</button>
                     {/* <PayPalButton
                       amount={selectedOrder.totalPrice}
                       onSuccess={successPaymentHandler}
@@ -190,15 +194,17 @@ export default function OrderScreen() {
                     <Message variant="alert">Not Delivered</Message>
                   </>
                 )}
+                {/* inlcude userInfo.isAdmin later on && */}
                 {userInfo &&
-                  userInfo.isAdmin &&
                   selectedOrder.isPaid &&
                   !selectedOrder.isDelivered && (
                     <div className="mb-3 ms-2">
                       <button
                         type="button"
                         className="text-white bg-sky-500 hover:bg-sky-600 px-5 text-xs font-medium py-2"
-                        onClick={() => handleUpdateStatus(selectedOrder._id)}
+                        onClick={() =>
+                          handleUpdateStatus(Number(selectedOrder._id))
+                        }
                       >
                         Mark As Delivered
                       </button>
@@ -291,7 +297,7 @@ export default function OrderScreen() {
               </h1>
               <p className="text-sm text-gray-700 my-1">
                 <label className="font-medium mr-3">Name:</label>
-                <span>{selectedOrder.user.name}</span>
+                <span>{selectedOrder.user.first_name}</span>
               </p>
               <p className="text-sm text-gray-700 my-1">
                 <label className="font-medium mr-3">Email:</label>

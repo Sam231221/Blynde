@@ -1,16 +1,23 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import PageContainer from "../../components/PageContainer";
 import ProductSidebar from "./components/ProductSidebar";
 import ProductRightbar from "./components/ProductRightbar";
-import { Link } from "react-router-dom";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
+
 const items = [
   { label: "Home", path: "/" },
   { label: "Shop", path: "/shop" },
 ];
 
+interface SelectedFilters {
+  categories: string[];
+  price: [number, number];
+  sizes: string[];
+  color: string;
+}
+
 export default function ShopScreen() {
-  const [selectedFilters, setSelectedFilters] = useState({
+  const [selectedFilters, setSelectedFilters] = useState<SelectedFilters>({
     categories: [],
     price: [0, 500],
     sizes: [],
@@ -18,70 +25,52 @@ export default function ShopScreen() {
   });
   const [searchParams, setSearchParams] = useSearchParams();
   const { categories, price, sizes, color } = selectedFilters;
+
   useEffect(() => {
-    // Update query params when categories change
+    const params = new URLSearchParams(searchParams.toString());
+
     if (categories.length > 0) {
-      setSearchParams((prevParams) => {
-        const params = new URLSearchParams(prevParams);
-        params.set("categories", categories.join(","));
-        return params;
-      });
+      params.set("categories", categories.join(","));
     } else {
-      setSearchParams((prevParams) => {
-        const params = new URLSearchParams(prevParams);
-        params.delete("categories"); // Remove the categories param if no categories are selected
-        return params;
-      });
+      params.delete("categories");
     }
 
-    setSearchParams((prevParams) => {
-      const params = new URLSearchParams(prevParams);
-      if (color) {
-        params.set("colors", color);
-      } else {
-        params.delete("colors");
-      }
-      return params;
-    });
+    if (color) {
+      params.set("colors", color);
+    } else {
+      params.delete("colors");
+    }
 
-    setSearchParams((prevParams) => {
-      const params = new URLSearchParams(prevParams);
-      if (sizes.length > 0) {
-        params.set("sizes", sizes.map(encodeURIComponent).join(","));
-      } else {
-        params.delete("sizes"); // Remove the sizes param if no sizes are selected
-      }
-      return params;
-    });
+    if (sizes.length > 0) {
+      params.set("sizes", sizes.map(encodeURIComponent).join(","));
+    } else {
+      params.delete("sizes");
+    }
 
     if (price) {
       const [minValue, maxValue] = price;
-      setSearchParams((prevParams) => {
-        const params = new URLSearchParams(prevParams);
-        params.set("minPrice", minValue);
-        params.set("maxPrice", maxValue);
-        return params;
-      });
+      params.set("minPrice", minValue.toString());
+      params.set("maxPrice", maxValue.toString());
     }
+
+    setSearchParams(params);
   }, [categories, price, color, sizes, setSearchParams]);
 
-  const handleCategoriesChange = (categories) => {
-    setSelectedFilters((preb) => ({ ...preb, categories }));
-  };
-  const handlePriceChange = (price) => {
+  const handleCategoriesChange = useCallback((categories: string[]) => {
+    setSelectedFilters((prev) => ({ ...prev, categories }));
+  }, []);
+
+  const handlePriceChange = useCallback((price: [number, number]) => {
     setSelectedFilters((prev) => ({ ...prev, price }));
-  };
+  }, []);
 
-  const handleSizeChange = (size) => {
-    setSelectedFilters((prev) => ({ ...prev, sizes: size }));
-  };
+  const handleSizeChange = useCallback((sizes: string[]) => {
+    setSelectedFilters((prev) => ({ ...prev, sizes }));
+  }, []);
 
-  const handleColorChange = (color) => {
-    setSelectedFilters((prev) => ({
-      ...prev,
-      color,
-    }));
-  };
+  const handleColorChange = useCallback((color: string) => {
+    setSelectedFilters((prev) => ({ ...prev, color }));
+  }, []);
 
   return (
     <PageContainer>
@@ -104,8 +93,6 @@ export default function ShopScreen() {
           </ol>
         </nav>
         <div className="mt-5 flex flex-col md:flex-row ">
-          {/* Breadcrumbs */}
-
           <ProductSidebar
             handleCategoriesChange={handleCategoriesChange}
             handlePriceChange={handlePriceChange}

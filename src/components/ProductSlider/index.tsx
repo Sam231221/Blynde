@@ -1,9 +1,16 @@
-import React, { Children, useEffect, useState } from "react";
-import classes from "./ProductSlider.module.css";
+import React, { Children, useEffect, useState, useRef } from "react";
 
 const widthSpan = 100.1;
-
-function ProductSlider(props) {
+interface ProductSliderProps {
+  children: React.ReactNode;
+  infinite?: boolean;
+  timer?: number;
+  stopOnManual?: boolean;
+}
+function ProductSlider(props: ProductSliderProps) {
+  const sliderRef = useRef<HTMLDivElement>(null);
+  const displayItemsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const indicatorsRef = useRef<(HTMLDivElement | null)[]>([]);
   const [sliderPosition, setSliderPosition] = useState(0);
   const [touchStartPosition, setTouchStartPosition] = useState(0);
   const [touchEndPosition, setTouchEndPosition] = useState(0);
@@ -15,14 +22,18 @@ function ProductSlider(props) {
   const [mouseSwiped, setMouseSwiped] = useState(false);
 
   const { children, infinite, timer, stopOnManual } = props;
+  const childrenArray = React.Children.toArray(children);
+
   const [autoAdvance, setAutoAdvance] = useState(timer !== undefined);
-  let interval;
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
   const prevSlideHandler = () => {
     let newPosition = sliderPosition;
     if (newPosition > 0) {
       newPosition = newPosition - 1;
     } else if (infinite || newPosition === 0) {
-      newPosition = children.length - 1 || 0;
+      // ensure that children is treated as an array of React nodes by using React.Children.toArray.
+      newPosition = childrenArray.length - 1 || 0;
     }
     translateFullSlides(newPosition);
     setSliderPosition(newPosition);
@@ -30,22 +41,24 @@ function ProductSlider(props) {
 
   const nextSlideHandler = () => {
     let newPosition = sliderPosition;
-    if (newPosition < children.length - 1) {
+    if (newPosition < childrenArray.length - 1) {
       newPosition = newPosition + 1;
-    } else if (infinite || newPosition === children.length - 1) {
+    } else if (infinite || newPosition === childrenArray.length - 1) {
       newPosition = 0;
     }
     translateFullSlides(newPosition);
     setSliderPosition(newPosition);
   };
 
-  const jumpToSlideHandler = (id) => {
+  const jumpToSlideHandler = (id: number) => {
     translateFullSlides(id);
     setSliderPosition(id);
   };
 
   const manageTimer = () => {
-    clearInterval(interval);
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
     if (stopOnManual) {
       setAutoAdvance(false);
     }
@@ -61,7 +74,7 @@ function ProductSlider(props) {
     nextSlideHandler();
   };
 
-  const keyPressHandler = (event) => {
+  const keyPressHandler = (event: KeyboardEvent) => {
     manageTimer();
     if (event.key === "ArrowLeft") {
       event.preventDefault();
@@ -77,39 +90,40 @@ function ProductSlider(props) {
     }
     if (49 <= event.keyCode && event.keyCode <= 57) {
       const arrayPos = event.keyCode - 49;
-      if (arrayPos < children.length) {
+      if (arrayPos < childrenArray.length) {
         jumpToSlideHandler(arrayPos);
       }
       return;
     }
     if (event.keyCode === 48) {
-      if (children.length >= 10) jumpToSlideHandler(9);
+      if (childrenArray.length >= 10) jumpToSlideHandler(9);
     }
   };
 
   const speedUpAnimation = () => {
     for (
       let i = Math.max(0, sliderPosition - 2);
-      i < (Math.min(children.length, sliderPosition + 3) || 1);
+      i < (Math.min(childrenArray.length, sliderPosition + 3) || 1);
       i++
     ) {
-      let elem = document.getElementById(`carouselitem` + i);
-      elem.classList.add(classes.FastAnimation);
+      const elem = displayItemsRef.current[i];
+      //add fast transition
+      elem?.classList.add("transition-all duration-100 linear");
     }
   };
 
   const slowDownAnimation = () => {
     for (
       let i = Math.max(0, sliderPosition - 2);
-      i < (Math.min(children.length, sliderPosition + 3) || 1);
+      i < (Math.min(childrenArray.length, sliderPosition + 3) || 1);
       i++
     ) {
-      let elem = document.getElementById(`carouselitem` + i);
-      elem.classList.remove(classes.FastAnimation);
+      const elem = displayItemsRef.current[i];
+      elem?.classList.remove("transition-all duration-100 linear");
     }
   };
 
-  const touchStartHandler = (e) => {
+  const touchStartHandler = (e: React.TouchEvent) => {
     manageTimer();
     speedUpAnimation();
     setTouchStartPosition(e.targetTouches[0].clientX);
@@ -117,9 +131,9 @@ function ProductSlider(props) {
     setTouched(true);
   };
 
-  const touchMoveHandler = (e) => {
+  const touchMoveHandler = (e: React.TouchEvent) => {
     setTouchEndPosition(e.targetTouches[0].clientX);
-    const frameWidth = document.getElementById("DisplayFrame").offsetWidth;
+    const frameWidth = sliderRef.current?.offsetWidth || 1;
     const translateDist =
       ((touchEndPosition - touchStartPosition) / frameWidth) * 100;
     translatePartialSlides(translateDist);
@@ -128,7 +142,7 @@ function ProductSlider(props) {
     }
   };
 
-  const touchEndHandler = (e) => {
+  const touchEndHandler = () => {
     if (swiped) {
       slowDownAnimation();
       if (touchStartPosition - touchEndPosition > 75) {
@@ -143,7 +157,7 @@ function ProductSlider(props) {
     setSwiped(false);
   };
 
-  const mouseStartHandler = (e) => {
+  const mouseStartHandler = (e: React.MouseEvent) => {
     manageTimer();
     e.preventDefault();
     speedUpAnimation();
@@ -152,19 +166,19 @@ function ProductSlider(props) {
     setMouseClicked(true);
   };
 
-  const mouseMoveHandler = (e) => {
+  const mouseMoveHandler = (e: React.MouseEvent) => {
     e.preventDefault();
-    var frameWidth = document.getElementById("DisplayFrame").offsetWidth;
+    const frameWidth = sliderRef.current ? sliderRef.current.offsetWidth : 1;
     if (mouseClicked === true) {
       setMouseEndPosition(e.clientX);
-      let translateDist =
+      const translateDist =
         ((mouseEndPosition - mouseStartPosition) / frameWidth) * 100;
       translatePartialSlides(translateDist);
       setMouseSwiped(true);
     }
   };
 
-  const mouseEndHandler = (e) => {
+  const mouseEndHandler = () => {
     slowDownAnimation();
     if (mouseSwiped === true) {
       if (mouseStartPosition - mouseEndPosition > 100) {
@@ -180,38 +194,54 @@ function ProductSlider(props) {
   };
 
   const wheelHandler = () => {
-    document.getElementById("DisplayFrame").scrollLeft = 0;
-  };
-
-  const translatePartialSlides = (toTranslate) => {
-    let currentTranslation = -sliderPosition * widthSpan;
-    let totalTranslation = currentTranslation + toTranslate;
-    for (var i = 0; i < (children.length || 1); i++) {
-      let elem = document.getElementById(`carouselitem` + i);
-      elem.style.transform = `translateX(` + totalTranslation + `%)`;
+    if (sliderRef.current) {
+      sliderRef.current.scrollLeft = 0;
     }
   };
 
-  const translateFullSlides = (newPosition) => {
-    let toTranslate = -widthSpan * newPosition;
-    for (var i = 0; i < (children.length || 1); i++) {
-      let elem = document.getElementById(`carouselitem` + i);
-      elem.style.transform = `translateX(` + toTranslate + `%)`;
+  const translatePartialSlides = (toTranslate: number) => {
+    const currentTranslation = -sliderPosition * widthSpan;
+    const totalTranslation = currentTranslation + toTranslate;
+    for (let i = 0; i < (childrenArray.length || 1); i++) {
+      const elem = indicatorsRef.current[i];
+      const displayItem = displayItemsRef.current[i];
+      if (elem && displayItem) {
+        displayItem.style.transform = `translateX(` + totalTranslation + `%)`;
+      }
+    }
+  };
+
+  const translateFullSlides = (newPosition: number) => {
+    const toTranslate = -widthSpan * newPosition;
+    for (let i = 0; i < (childrenArray.length || 1); i++) {
+      const elem = indicatorsRef.current[i];
+      const displayItem = displayItemsRef.current[i];
+      if (elem && displayItem) {
+        displayItem.style.transform = `translateX(` + toTranslate + `%)`;
+      }
     }
   };
 
   const displayItems = Children.map(children, (child, index) => (
-    <div className={classes.CarouselItem} id={`carouselitem` + index}>
+    <div
+      ref={(el) => (displayItemsRef.current[index] = el)}
+      className="touch-none w-full h-full inline-block align-top mr-[0.1%] transition-all duration-500 ease-out"
+      id={`carouselitem` + index}
+    >
       {child}
     </div>
   ));
 
   const positionIndicators = Children.map(children, (child, index) => (
     <div
+      ref={(el) => (indicatorsRef.current[index] = el)}
+      id={`positionIndicator` + index}
       className={
         sliderPosition === index
-          ? classes.PositionIndicator.concat(" " + classes.CurrentPosition)
-          : classes.PositionIndicator
+          ? "w-[150px] h-[150px] box-border mb-1 border border-[#e6e6e6]".concat(
+              " " + "border-[4px] border-[#0080ff]"
+            )
+          : "w-[150px] h-[150px] box-border mb-1 border border-[#e6e6e6]"
       }
       onClick={() => jumpToSlideHandler(index)}
     >
@@ -222,42 +252,56 @@ function ProductSlider(props) {
   useEffect(() => {
     window.addEventListener("keydown", keyPressHandler);
     if (autoAdvance && !mouseClicked && !touched) {
-      interval = setInterval(() => {
+      intervalRef.current = setInterval(() => {
         nextSlideHandler();
       }, timer);
     }
     return () => {
       window.removeEventListener("keydown", keyPressHandler);
-      clearInterval(interval);
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
     };
   });
 
   return (
     <div className="flex flex-col-reverse md:flex-row gap-3">
       <div className="flex md:flex-col gap-2 z-[10] ">{positionIndicators}</div>
-      <div className={classes.Container}>
-        {children.length > 1 && (
-          <div className={classes.LeftArrow} onClick={prevClickHandler}>
+      <div
+        id="container"
+        className="relative flex w-full h-screen align-middle items-center overflow-hidden"
+      >
+        {childrenArray.length > 1 && (
+          <div
+            id="left-arrow"
+            className="absolute left-[1%] px-[2px] text-lg text-[#aabbcc] hover:text-[#bbccdd] select-none z-[2]"
+            onClick={prevClickHandler}
+          >
             ❰
           </div>
         )}
 
         <div
-          className={classes.DisplayFrame}
+          ref={sliderRef}
+          className="w-full h-full touch-none m-auto text-center caret-transparent z-[1] whitespace-nowrap"
           id="DisplayFrame"
           onTouchStart={(e) => touchStartHandler(e)}
           onTouchMove={(e) => touchMoveHandler(e)}
-          onTouchEnd={(e) => touchEndHandler(e)}
+          onTouchEnd={touchEndHandler}
           onMouseDown={(e) => mouseStartHandler(e)}
           onMouseMove={(e) => mouseMoveHandler(e)}
-          onMouseUp={(e) => mouseEndHandler(e)}
-          onMouseLeave={(e) => mouseEndHandler(e)}
+          onMouseUp={mouseEndHandler}
+          onMouseLeave={mouseEndHandler}
           onWheel={() => wheelHandler()}
         >
           {displayItems}
         </div>
-        {children.length > 1 && (
-          <div className={classes.RightArrow} onClick={nextClickHandler}>
+        {childrenArray.length > 1 && (
+          <div
+            id="right-arrow"
+            className="absolute right-[1%] px-[2px] text-lg text-[#aabbcc] hover:text-[#bbccdd] select-none z-[2]"
+            onClick={nextClickHandler}
+          >
             ❱
           </div>
         )}

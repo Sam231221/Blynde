@@ -1,8 +1,3 @@
-const items = [
-  { label: "Home", path: "/" },
-  { label: "UserProfile", path: "/profile" },
-];
-
 import { useEffect, useState } from "react";
 import { MapPin, Mail, Package, Heart } from "lucide-react";
 import PageContainer from "../components/PageContainer";
@@ -46,12 +41,12 @@ export default function ProfileScreen() {
       setUser({ ...user, name: data.name, email: data.email });
     }
   }, [data]);
-  const handleProfileUpdate = (e) => {
+  const handleProfileUpdate = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     updateUserProfile(user);
   };
   if (isLoading) return <p>Loading...</p>;
-  if (error) return <p>Error fetching data profile</p>;
+  if (error) return <p>{error.message}</p>;
   return (
     <PageContainer>
       <div className="container mx-auto mt-14 px-4 py-8">
@@ -180,7 +175,7 @@ export default function ProfileScreen() {
             <p className="text-gray-600 mb-4">
               Manage your account details and preferences.
             </p>
-            <form className="space-y-4">
+            <form className="space-y-4" onSubmit={handleProfileUpdate}>
               <div>
                 <label
                   htmlFor="name"
@@ -213,11 +208,10 @@ export default function ProfileScreen() {
               </div>
 
               <button
-                onClick={(e) => handleProfileUpdate(e)}
                 type="submit"
                 className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
               >
-                Save Changes
+                {isPending ? "Updating..." : "Update Profile"}
               </button>
             </form>
           </div>

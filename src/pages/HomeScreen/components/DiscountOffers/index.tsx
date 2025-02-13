@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios, { endpoint } from "../../../../lib/api";
-
+import axios, { apiRequest, endpoint } from "../../../../lib/api";
 import { Link } from "react-router-dom";
 import {
   differenceInDays,
@@ -10,7 +9,7 @@ import {
 } from "date-fns";
 
 //based on end date, calculate remaining time i.e days, hours, minutes, seconds
-const calculateRemainingTime = (endDate) => {
+const calculateRemainingTime = (endDate: Date) => {
   const now = new Date();
   const diffInDays = differenceInDays(endDate, now);
   const diffInHours = differenceInHours(endDate, now) % 24;
@@ -25,18 +24,36 @@ const calculateRemainingTime = (endDate) => {
   };
 };
 
-const DiscountOffers = () => {
-  const [offers, setOffers] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+interface Offer {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  sale_price: number;
+  thumbnail: string;
+  countInStock: number;
+  end_date: string;
+  remainingDays: number;
+  remainingHours: number;
+  remainingMinutes: number;
+  remainingSeconds: number;
+}
+
+const DiscountOffers: React.FC = () => {
+  const [offers, setOffers] = useState<Offer[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       setError(null);
       try {
-        const response = await axios.get(`/api/products/discountoffers/`); // Replace with your API endpoint
-        const updatedOffers = response.data.map((offer) => {
+        const response = await apiRequest(
+          `/api/products/discountoffers/`,
+          "GET"
+        ); // Replace with your API endpoint
+        const updatedOffers = response.map((offer: Offer) => {
           const endDate = new Date(offer.end_date);
           return {
             ...offer,
@@ -45,7 +62,10 @@ const DiscountOffers = () => {
         });
         setOffers(updatedOffers);
       } catch (error) {
-        setError(error);
+        if (error instanceof Error) {
+          console.error(error);
+          setError(new Error("An error occured while loading offers"));
+        }
       } finally {
         setIsLoading(false);
       }
@@ -76,7 +96,7 @@ const DiscountOffers = () => {
 
             return { ...offer, ...newRemainingTime };
           })
-          .filter((offer) => offer !== null);
+          .filter((offer) => offer !== null) as Offer[];
       });
     }, 1000);
 
@@ -90,10 +110,9 @@ const DiscountOffers = () => {
           Don&apos;t Miss Our Deals
         </h2>
         <p className="text-zinc-500 md:w-2/3 text-sm tracking-wider">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum
-          suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan
-          lacus vel facilisis.
+          Get the best value for your money with our exclusive discount offers.
+          We're committed to providing high-quality products at unbeatable
+          prices.
         </p>
       </div>
       <div className="container">

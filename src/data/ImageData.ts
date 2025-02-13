@@ -1,8 +1,14 @@
 import pic1 from "/images/slides/slide-01.jpg";
 import pic2 from "/images/slides/slide-02.jpg";
 import pic3 from "/images/slides/slide-03.jpg";
-
-const imageData = [
+export interface ImageDataProps {
+  btnShow: boolean;
+  buttonLabel: string;
+  headline: string;
+  description: string;
+  img: string;
+}
+export const imageData = [
   {
     btnShow: true,
     buttonLabel: "Shop Now",
@@ -25,5 +31,3 @@ const imageData = [
     img: pic3,
   },
 ];
-
-export default imageData;

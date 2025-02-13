@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import apiClient from "../../lib/api";
 import { Review } from "../../types";
+import { toast } from "react-toastify";
 
 // Define the state structure
 interface ReviewState {
@@ -19,31 +20,37 @@ const initialState: ReviewState = {
 
 // Async thunk to fetch reviews for a product
 // Fetch all reviews (since your API lists all reviews together)
-export const fetchReviews = createAsyncThunk(
-  "reviews/fetchReviews",
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await apiClient.get("/api/products/reviews/");
-      return response.data as Review[];
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data || "Error fetching reviews");
-    }
+export const fetchReviews = createAsyncThunk<
+  Review[],
+  void,
+  { rejectValue: string }
+>("reviews/fetchReviews", async (_, { rejectWithValue }) => {
+  try {
+    const response = await apiClient.get("/api/products/reviews/");
+    return response.data as Review[];
+  } catch (error) {
+    console.error(error);
+    toast.error("Something went wrong while fetching reviews.");
+    return rejectWithValue("Error fetching reviews");
   }
-);
+});
 
 // Async thunk to add a new review
-export const addReview = createAsyncThunk(
-  "reviews/addReview",
-  async (review: Omit<Review, "createdAt">, { rejectWithValue }) => {
-    try {
-      const response = await apiClient.post("/api/products/reviews/", review);
-
-      return response.data as Review;
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data || "Error adding review");
-    }
+export const addReview = createAsyncThunk<
+  Review,
+  Omit<Review, "createdAt">,
+  { rejectValue: string }
+>("reviews/addReview", async (review, { rejectWithValue }) => {
+  try {
+    const response = await apiClient.post("/api/products/reviews/", review);
+    return response.data as Review;
+  } catch (error) {
+    console.error(error);
+    toast.error("Something went wrong while fetching reviews.");
+    return rejectWithValue("Error adding reviews");
   }
-);
+});
+
 const reviewSlice = createSlice({
   name: "reviews",
   initialState,
@@ -68,13 +75,16 @@ const reviewSlice = createSlice({
       )
       .addCase(fetchReviews.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string;
+        state.error = { message: action.payload as string };
       })
       .addCase(addReview.pending, (state, action) => {
         state.loading = true;
         state.error = null;
         // Optimistic update: Add the review immediately (assuming it will succeed)
-        state.reviews.push(action.meta.arg); // action.meta.arg contains the review data
+        state.reviews.push({
+          ...action.meta.arg,
+          createdAt: new Date().toISOString(),
+        }); // action.meta.arg contains the review data
       })
       .addCase(addReview.fulfilled, (state, action) => {
         state.loading = false;
@@ -89,7 +99,7 @@ const reviewSlice = createSlice({
       })
       .addCase(addReview.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string;
+        state.error = { message: action.payload as string };
         // Revert the optimistic update: Remove the review from the state
         state.reviews = state.reviews.filter(
           (review) => review !== action.meta.arg

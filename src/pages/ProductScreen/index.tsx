@@ -9,23 +9,20 @@ import PageContainer from "../../components/PageContainer";
 import Reviews from "./components/Reviews";
 import { ProductDetail } from "../../components/reusables/ProductDetail";
 
-import { useModalContext } from "../../providers/ModalProvider";
-import { RootState } from "../../types";
+import { AppDispatch, RootState } from "../../types";
 import { fetchProductDetail } from "../../redux/reducers/ProductSlice";
 const items = [
   { label: "Home", path: "/" },
   { label: "Shop", path: "/shop" },
 ];
 export default function ProductScreen() {
-  const { openModal } = useModalContext();
-  const dispatch = useDispatch();
-
+  const dispatch: AppDispatch = useDispatch();
   const { id } = useParams<{ id: string }>();
 
   const { productDetail, loading, error } = useSelector(
     (state: RootState) => state.product
   );
-  const userLogin = useSelector((state) => state.auth);
+  const userLogin = useSelector((state: RootState) => state.auth);
   const { userInfo } = userLogin;
 
   // const { success } = useSelector((state) => state.reviews);

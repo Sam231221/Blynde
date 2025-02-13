@@ -1,12 +1,14 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { FaCaretRight, FaCaretLeft } from "react-icons/fa6";
 
-export const ImageSlider = ({ slides, autoplay = false, timeout = 5000 }) => {
+interface ImageSliderProps {
+  slides: { img: string; headline: string; description: string }[];
+  timeOut?: number;
+}
+const ImageSlider = ({ slides, timeOut = 5000 }: ImageSliderProps) => {
   const [current, setCurrent] = useState(0);
-  const nextSlide = () => {
-    setCurrent(current === slides.length - 1 ? 0 : current + 1);
-  };
+
   const previousSlide = () => {
     //reaches last slide
     if (current === slides.length - 1) {
@@ -15,18 +17,22 @@ export const ImageSlider = ({ slides, autoplay = false, timeout = 5000 }) => {
     //clicks previous btn on being slide 1(index 0)
     if (current <= 0) {
       setCurrent(slides.length - 1);
-    } else {
-      //somewhere between
+    }
+    //somewhere between
+    else {
       setCurrent(current - 1);
     }
   };
+  const nextSlide = useCallback(() => {
+    setCurrent(current === slides.length - 1 ? 0 : current + 1);
+  }, [current, slides.length]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       nextSlide();
-    }, timeout);
+    }, timeOut);
     return () => clearTimeout(timer);
-  }, [current]);
+  }, [current, slides.length, timeOut, nextSlide]);
 
   return (
     <>
@@ -81,3 +87,4 @@ export const ImageSlider = ({ slides, autoplay = false, timeout = 5000 }) => {
     </>
   );
 };
+export default ImageSlider;

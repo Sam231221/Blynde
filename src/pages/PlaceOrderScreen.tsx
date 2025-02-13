@@ -1,13 +1,10 @@
-import { useEffect } from "react";
-
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { CiBookmark } from "react-icons/ci";
 import { Message } from "../components/Message";
 import PageContainer from "../components/PageContainer";
 
-import { endpoint } from "../lib/api";
-import { Order, RootState } from "../types";
+import { RootState } from "../types";
 import { createOrder } from "../lib/orderApi";
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "../lib/queryClient";
@@ -24,7 +21,7 @@ function PlaceOrderScreen() {
 
   const cart = useSelector((state: RootState) => state.cart);
   //FINALIZING AMOUNTS
-  let itemsPrice = Number(
+  const itemsPrice: number = Number(
     Number(
       cart.cartItems
         .reduce((acc, item) => acc + item.price * item.quantity, 0)
@@ -32,11 +29,13 @@ function PlaceOrderScreen() {
     )
   );
   //You could set shipping price in backend too.
-  let shippingPrice = Number(Number(itemsPrice > 100 ? 10 : 0).toFixed(3));
-  let taxPrice = Number(Number(0.082 * itemsPrice).toFixed(3));
-  let totalPrice = itemsPrice + shippingPrice + taxPrice;
+  const shippingPrice: number = Number(
+    Number(itemsPrice > 100 ? 10 : 0).toFixed(3)
+  );
+  const taxPrice: number = Number(Number(0.082 * itemsPrice).toFixed(3));
+  const totalPrice: number = itemsPrice + shippingPrice + taxPrice;
 
-  let FinalCart = {
+  const FinalCart = {
     ...cart,
     itemsPrice: itemsPrice,
     shippingPrice: shippingPrice,
@@ -52,7 +51,7 @@ function PlaceOrderScreen() {
     mutationFn: createOrder,
     onSuccess: (newOrder) => {
       // Invalidate the relevant query so it refetches and shows the new order
-      queryClient.invalidateQueries(["orders"]); // Example query key
+      queryClient.invalidateQueries({ queryKey: ["orders"] }); // Example query key
       dispatch(clearCart());
       navigate(`/order/${newOrder._id}`);
     },
@@ -64,19 +63,23 @@ function PlaceOrderScreen() {
   });
 
   //on clicking PlaceOrderButton dispatch createOrder() that will also create Order Instance in backend
-  const placeOrder = () => {
+  const placeOrder = (): void => {
     if (cart.cartItems.length === 0) {
       alert("Your cart is empty");
     } else {
-      placeUserOrder({
-        orderItems: cart.cartItems,
-        shippingAddress: cart.shippingAddress,
-        paymentMethod: cart.paymentMethod,
-        itemsPrice: itemsPrice,
-        shippingPrice: shippingPrice,
-        taxPrice: taxPrice,
-        totalPrice: totalPrice,
-      });
+      if (cart.shippingAddress && cart.paymentMethod) {
+        placeUserOrder({
+          orderItems: cart.cartItems,
+          shippingAddress: cart.shippingAddress,
+          paymentMethod: cart.paymentMethod,
+          itemsPrice: itemsPrice,
+          shippingPrice: shippingPrice,
+          taxPrice: taxPrice,
+          totalPrice: totalPrice,
+        });
+      } else {
+        alert("Shipping address nd Payment method is missing");
+      }
     }
   };
   return (
@@ -158,7 +161,7 @@ function PlaceOrderScreen() {
                 <button
                   type="button"
                   className="uppercase bg-zinc-800 hover:bg-sky-600 my-4 text-white  font-medium text-sm px-3 py-2"
-                  disabled={cart.cartItems === 0}
+                  disabled={cart.cartItems.length === 0}
                   onClick={placeOrder}
                 >
                   Place Order
@@ -177,25 +180,25 @@ function PlaceOrderScreen() {
                   <label className=" font-medium mr-3" htmlFor="">
                     Address:
                   </label>
-                  <span>{cart.shippingAddress.address}</span>
+                  <span>{cart.shippingAddress?.address}</span>
                 </p>
                 <p className="text-sm my-1">
                   <label className=" font-medium mr-3" htmlFor="">
                     City:
                   </label>
-                  <span>{cart.shippingAddress.city}</span>
+                  <span>{cart.shippingAddress?.city}</span>
                 </p>
                 <p className="text-sm my-1">
                   <label className=" font-medium mr-3" htmlFor="">
                     Postal Code:
                   </label>
-                  <span>{cart.shippingAddress.postalCode}</span>
+                  <span>{cart.shippingAddress?.postalCode}</span>
                 </p>
                 <p className="text-sm my-1">
                   <label className=" font-medium mr-3" htmlFor="">
                     Country:
                   </label>
-                  <span>{cart.shippingAddress.country}</span>
+                  <span>{cart.shippingAddress?.country}</span>
                 </p>
                 <p className="text-sm my-1">
                   <label className=" font-medium mr-3" htmlFor="">

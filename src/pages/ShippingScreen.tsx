@@ -14,20 +14,24 @@ const items = [
 
 function ShippingScreen() {
   const cart = useSelector((state: RootState) => state.cart);
-  const { shippingAddress } = cart;
+  const shippingAddress = cart.shippingAddress || {
+    address: "",
+    city: "",
+    postalCode: "",
+    country: "",
+  };
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  /*
-    Either we load the shipping address for user(user have alread defined) or make it empty
-    */
-  const [address, setAddress] = useState(shippingAddress.address);
-  const [city, setCity] = useState(shippingAddress.city);
-  const [postalCode, setPostalCode] = useState(shippingAddress.postalCode);
-  const [country, setCountry] = useState(shippingAddress.country);
+  const [address, setAddress] = useState<string>(shippingAddress.address || "");
+  const [city, setCity] = useState<string>(shippingAddress.city || "");
+  const [postalCode, setPostalCode] = useState<string>(
+    shippingAddress.postalCode || ""
+  );
+  const [country, setCountry] = useState<string>(shippingAddress.country || "");
 
-  const submitHandler = (e) => {
+  const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     dispatch(saveShippingAddress({ address, city, postalCode, country }));

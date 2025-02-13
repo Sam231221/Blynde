@@ -2,11 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { useSelector } from "react-redux";
-import { columns2 } from "lucide-react";
-import { RootState, AppDispatch } from "../../types";
+import { RootState } from "../../types";
 import { useRegister } from "../../hooks/useAuth";
 import Spinner from "../../components/Spinner";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 const RegistrationScreen = () => {
   const [formData, setFormData] = useState({
@@ -40,10 +39,13 @@ const RegistrationScreen = () => {
         navigate("/login");
         toast.success("You have successfully created an Account!");
       }, // Redirect on success
-      onError: (err: any) => {
-        console.error("Registration error (in component):", err);
-        if (err.response?.data?.errors) {
-          setErrors(err.response.data.errors); // Store field-specific errors
+      onError: (err) => {
+        const errorResponse = err as {
+          response?: { data?: { errors?: { general?: string } } };
+        };
+
+        if (errorResponse.response?.data?.errors) {
+          setErrors(errorResponse.response.data.errors); // Store field-specific errors
         } else {
           toast.error("Something went wrong. Please try again.");
         }

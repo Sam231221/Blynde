@@ -2,12 +2,22 @@ import { useCallback, useEffect, useState } from "react";
 import axios from "../../../../../../lib/api";
 import Checkbox from "../../../../../../components/reusables/Checkbox";
 
-export default function FilterBySize({ handleSizeChange }) {
-  const [sizes, setSizes] = useState([]);
-  const [selectedSizes, setSelectedSizes] = useState([]);
-  const [loading, setLoading] = useState(true);
+interface Size {
+  id: string;
+  name: string;
+  product_count: number;
+}
 
-  const loadSizes = async () => {
+interface FilterBySizeProps {
+  handleSizeChange: (selectedSizes: string[]) => void;
+}
+
+const FilterBySize: React.FC<FilterBySizeProps> = ({ handleSizeChange }) => {
+  const [sizes, setSizes] = useState<Size[]>([]);
+  const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const loadSizes = useCallback(async () => {
     try {
       const { data } = await axios.get("/api/products/sizes/");
       setSizes(data);
@@ -16,22 +26,24 @@ export default function FilterBySize({ handleSizeChange }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   const handleChange = useCallback(
-    (size) => {
-      const newSelected = selectedSizes.includes(size)
-        ? selectedSizes.filter((s) => s !== size)
-        : [...selectedSizes, size];
-      setSelectedSizes(newSelected);
-      handleSizeChange(newSelected);
+    (size: string) => {
+      setSelectedSizes((prevSelectedSizes) => {
+        const newSelected = prevSelectedSizes.includes(size)
+          ? prevSelectedSizes.filter((s) => s !== size)
+          : [...prevSelectedSizes, size];
+        handleSizeChange(newSelected);
+        return newSelected;
+      });
     },
-    [selectedSizes, handleSizeChange]
+    [handleSizeChange]
   );
 
   useEffect(() => {
     loadSizes();
-  }, []);
+  }, [loadSizes]);
 
   return (
     <div className="w-full mb-4">
@@ -39,20 +51,25 @@ export default function FilterBySize({ handleSizeChange }) {
         Filter By Size
       </h2>
       <div className="px-3">
-        {sizes.map((size) => {
-          return (
+        {loading ? (
+          <p>Loading sizes...</p>
+        ) : (
+          sizes.map((size) => (
             <div key={size.id} className="flex items-center justify-between">
               <Checkbox
-                key={size.id}
+                id={size.id}
+                value={size.name}
                 label={size.name}
                 checked={selectedSizes.includes(size.name)}
                 onChange={() => handleChange(size.name)}
               />
               <span className="text-gray-400">({size.product_count})</span>
             </div>
-          );
-        })}
+          ))
+        )}
       </div>
     </div>
   );
-}
+};
+
+export default FilterBySize;

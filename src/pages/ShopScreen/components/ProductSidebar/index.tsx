@@ -5,7 +5,14 @@ import {
   FilterBySize,
 } from "./components";
 
-const ProductSidebar = ({
+interface ProductSidebarProps {
+  handleCategoriesChange: (categories: string[]) => void;
+  handlePriceChange: (min: number, max: number) => void;
+  handleSizeChange: (size: string) => void;
+  handleColorChange: (color: string) => void;
+}
+
+const ProductSidebar: React.FC<ProductSidebarProps> = ({
   handleCategoriesChange,
   handlePriceChange,
   handleSizeChange,

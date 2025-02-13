@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { AlertTriangle, X } from "lucide-react";
+import { X } from "lucide-react";
 
 import { useCreateUserMutation } from "../../lib/userApi";
 
@@ -34,11 +34,11 @@ export function AddUserModal({ isOpen, onClose }: AddUserModalProps) {
 
   if (!isAnimating && !isOpen) return null;
 
-  const handleChange = (e) => {
-    const { name, value, type } = e.target;
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, files } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: type === "file" ? e.target.files[0] : value,
+      [name]: type === "file" && files ? files[0] : value,
     }));
   };
   const handleSubmit = (e: React.FormEvent) => {
@@ -116,6 +116,11 @@ export function AddUserModal({ isOpen, onClose }: AddUserModalProps) {
                       className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                       required
                     />
+                    {errors["first_name"] && (
+                      <p className="text-red-500 text-sm">
+                        {errors["firstName"]}
+                      </p>
+                    )}
                   </div>
                   <div className="mb-4">
                     <label
@@ -150,6 +155,11 @@ export function AddUserModal({ isOpen, onClose }: AddUserModalProps) {
                       className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                       required
                     />
+                    {errors["username"] && (
+                      <p className="text-red-500 text-sm">
+                        {errors["username"]}
+                      </p>
+                    )}
                   </div>
                   <div className="mb-4">
                     <label

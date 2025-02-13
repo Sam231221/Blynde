@@ -10,8 +10,6 @@ const ResetPasswordConfirmScreen: React.FC = () => {
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   if (!token) {
@@ -25,10 +23,9 @@ const ResetPasswordConfirmScreen: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
 
     if (password !== confirmPassword) {
-      setError("Passwords do not match.");
+      toast.error("Passwords do not match.");
       return;
     }
 
@@ -51,7 +48,8 @@ const ResetPasswordConfirmScreen: React.FC = () => {
           navigate("/login"); // Redirect to login (adjust as needed)
         }, 2000);
       }
-    } catch (error: any) {
+    } catch {
+      toast.error("An error occurred on the back.");
       setPassword("");
       setConfirmPassword("");
     } finally {
@@ -62,11 +60,6 @@ const ResetPasswordConfirmScreen: React.FC = () => {
   return (
     <div className="container mx-auto p-4">
       <h2 className="text-2xl font-bold mb-4">Password Reset</h2>
-
-      {error && <div className="text-red-500 mb-4">{error}</div>}
-      {successMessage && (
-        <div className="text-green-500 mb-4">{successMessage}</div>
-      )}
 
       <form onSubmit={handleSubmit} className="max-w-sm mx-auto">
         <div className="mb-4">

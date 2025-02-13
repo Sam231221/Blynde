@@ -7,7 +7,7 @@ import { setRecentProducts } from "../../../redux/reducers/ProductSlice";
 
 export default function RecentProductsContainer() {
   const dispatch = useDispatch();
-  const { isPending, error, data, isFetching } = useRecentProducts();
+  const { isPending, error, data } = useRecentProducts();
   useEffect(() => {
     if (data) {
       dispatch(setRecentProducts(data));
@@ -16,14 +16,6 @@ export default function RecentProductsContainer() {
   if (isPending) return "Loading...";
 
   if (error) return "An error has occurred: " + error.message;
-
-  const addToCartHandler = (id: number, quantity = 1) => {
-    // dispatch(addToCart(id, quantity));
-  };
-
-  const addToWishlistHandler = (id: number) => {
-    // dispatch(addToWishList(id));
-  };
 
   return (
     <div className="container mx-auto my-12">
@@ -40,8 +32,6 @@ export default function RecentProductsContainer() {
 
       <ProductGridShowCase
         productheight={`h-[300px] sm:h-[400px]`}
-        addToCartHandler={addToCartHandler}
-        addToWishlistHandler={addToWishlistHandler}
         products={data}
       />
     </div>

@@ -4,12 +4,11 @@ import { useSelector } from "react-redux";
 import { useLogin } from "../../hooks/useAuth";
 import Spinner from "../../components/Spinner";
 import { RootState } from "../../types";
-import { toast, ToastContainer } from "react-toastify";
-import { columns2 } from "lucide-react";
+import { toast } from "react-toastify";
 
 const LoginScreen = () => {
   const [formData, setFormData] = useState({
-    email: "",
+    username: "",
     password: "",
     rememberMe: false,
   });
@@ -38,12 +37,14 @@ const LoginScreen = () => {
         toast.success("Login successfully.");
       },
       onError: (err) => {
-        console.error("Registration error (in component):", err);
-        if (err.response?.data?.errors) {
-          if (err.response.data.errors.general) {
-            toast.error(err.response.data.errors.general);
+        const errorResponse = err as {
+          response?: { data?: { errors?: { general?: string } } };
+        };
+        if (errorResponse.response?.data?.errors) {
+          if (errorResponse.response.data.errors.general) {
+            toast.error(errorResponse.response.data.errors.general);
           } else {
-            setErrors(err.response.data.errors);
+            setErrors(errorResponse.response.data.errors);
           }
         }
       },
@@ -85,8 +86,8 @@ const LoginScreen = () => {
               <input
                 type="email"
                 id="email"
-                name="email"
-                value={formData.email}
+                name="username"
+                value={formData.username}
                 onChange={handleChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
                 placeholder="momohhalima42@gmail.com"
@@ -147,8 +148,7 @@ const LoginScreen = () => {
               type="button"
               className="w-full border border-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-50 transition duration-200 flex items-center justify-center gap-2"
             >
-              <columns2 size={20} />
-              Sign In with columns2
+              Sign In with Google
             </button>
 
             <p className="text-center text-sm text-gray-600">

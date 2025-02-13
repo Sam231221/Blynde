@@ -1,19 +1,30 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Rating from "../../../../components/Rating";
 import { addReview } from "../../../../redux/reducers/ReviewSlice";
 import { AppDispatch, RootState } from "../../../../types";
 import DOMPurify from "dompurify";
-const ReviewForm = ({ productId, userId, username }) => {
+interface ReviewFormProps {
+  productId: string;
+  userId: string;
+  username: string;
+}
+const ReviewForm = ({ productId, userId, username }: ReviewFormProps) => {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
 
   const dispatch: AppDispatch = useDispatch();
-  const { loading, error, success } = useSelector(
-    (state: RootState) => state.reviews
-  );
+  const { loading, error } = useSelector((state: RootState) => state.reviews);
 
-  const handleSubmit = (e) => {
+  interface ReviewData {
+    product: number;
+    user: number;
+    name: string;
+    rating: number;
+    comment: string;
+  }
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const sanitizedComment = DOMPurify.sanitize(comment);
 
@@ -34,15 +45,15 @@ const ReviewForm = ({ productId, userId, username }) => {
       return;
     }
 
-    dispatch(
-      addReview({
-        product: productIdNumber,
-        user: userId,
-        name: username,
-        rating: rating,
-        comment: sanitizedComment,
-      })
-    );
+    const reviewData: ReviewData = {
+      product: productIdNumber,
+      user: Number(userId),
+      name: username,
+      rating: rating,
+      comment: sanitizedComment,
+    };
+
+    dispatch(addReview(reviewData));
     setRating(0);
     setComment("");
   };
@@ -55,7 +66,7 @@ const ReviewForm = ({ productId, userId, username }) => {
       <hr />
       <br />
       {error && <p>Error: {error.message}</p>}
-      {success && <p>Review submitted successfully!</p>}
+
       <div className="flex flex-col mb-2">
         <label className="text-xs mb-1" htmlFor="comment">
           Your rating: <span>*</span>
@@ -67,7 +78,7 @@ const ReviewForm = ({ productId, userId, username }) => {
             value={rating}
             hoverEnabled
             onChange={setRating}
-            fontSize="14px"
+            fontSize={14}
           />
         </div>
       </div>
@@ -81,9 +92,9 @@ const ReviewForm = ({ productId, userId, username }) => {
           className="border text-xs border-gray-300/40 focus:outline-none p-2"
           id="comment"
           name="comment"
-          cols="45"
-          rows="8"
-          required=""
+          cols={45}
+          rows={8}
+          required
         ></textarea>
       </div>
       <button

@@ -19,8 +19,6 @@ export const useLogin = () => {
 };
 
 export const usePasswordReset = () => {
-  const dispatch = useDispatch();
-  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: resetPasswordForUser,
   });

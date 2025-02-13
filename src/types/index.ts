@@ -37,6 +37,7 @@ export interface CartItem {
   productId: number;
   name: string;
   price: number;
+
   color: string;
   size: string;
   thumbnail: string;
@@ -46,7 +47,7 @@ export interface CartItem {
 export interface Order {
   _id: string; // Use _id to match Django's default PK
   user: User; // Or a more specific user type
-  orderItems: CartItem[];
+  orderItems: OrderItem[];
   shippingAddress: ShippingAddress;
   paymentMethod: string;
   itemsPrice: number;
@@ -82,6 +83,10 @@ export type Size = {
   name: string;
   stock: number;
 };
+export type Category = {
+  id: number;
+  name: string;
+};
 export type Product = {
   _id: number;
   name: string;
@@ -90,6 +95,8 @@ export type Product = {
   sale_price?: number;
   badge: string;
   size: Size[];
+  date: Date;
+  categories: Category[];
   review_count: number;
   countInStock: number;
   rating: number;

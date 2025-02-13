@@ -21,11 +21,26 @@ export const payOrder = async ({ orderId }: { orderId: number }) => {
   return data;
 };
 // Fetch orders
-export const fetchOrders = async (): Promise<Order[]> => {
-  const data = await apiRequest("/api/orders/myorders/", "GET");
-  return data;
-};
+export const fetchOrders = async ({
+  pageIndex,
+  pageSize,
+  sorting,
+}: {
+  pageIndex: number;
+  pageSize: number;
+  sorting: { id: string; desc: boolean }[];
+}) => {
+  const response = await apiRequest(`/api/orders/myorders/`, "GET", {
+    params: {
+      page: pageIndex + 1,
+      limit: pageSize,
+      sortBy: sorting[0]?.id,
+      sortOrder: sorting[0]?.desc ? "desc" : "asc",
+    },
+  });
 
+  return response;
+};
 // Fetch order by ID
 export const fetchOrderById = async (id: number): Promise<Order> => {
   const response = await apiRequest(`/api/orders/${id}/`, "GET");
@@ -35,5 +50,11 @@ export const fetchOrderById = async (id: number): Promise<Order> => {
 // Create an order
 export const createOrder = (order: Partial<Order>) => {
   const data = apiRequest("/api/orders/add/", "POST", order);
+  return data;
+};
+
+// delete an order
+export const deleteOrder = (order: Partial<Order>) => {
+  const data = apiRequest("/api/orders/", "POST", order);
   return data;
 };

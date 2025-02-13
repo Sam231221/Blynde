@@ -15,7 +15,7 @@ interface RatingProps {
 const Rating: React.FC<RatingProps> = ({
   color = "gold",
   count = 5,
-  fontSize = "24px",
+  fontSize = 24,
   value = 0,
   text,
   className = "",
@@ -24,25 +24,22 @@ const Rating: React.FC<RatingProps> = ({
   onChange,
 }) => {
   const [hoverValue, setHoverValue] = useState<number | null>(null);
-  const [currentValue, setCurrentValue] = useState(value);
+  const [currentValue, setCurrentValue] = useState<number>(value);
 
   useEffect(() => {
     setCurrentValue(value);
   }, [value]);
 
-  const handleClick = (index: number | null) => {
-    if (index !== null) {
-      // Handle potential null from hover
-      setCurrentValue(index);
-      if (onChange) {
-        onChange(index);
-      }
+  const handleClick = (index: number) => {
+    setCurrentValue(index);
+    if (onChange) {
+      onChange(index);
     }
   };
 
   const handleMouseMove = (e: MouseEvent<HTMLSpanElement>, index: number) => {
     if (hoverEnabled) {
-      const { left, width } = e.currentTarget.getBoundingClientRect(); // Use currentTarget
+      const { left, width } = e.currentTarget.getBoundingClientRect();
       const x = e.clientX - left;
       const isHalf = x < width / 2;
       setHoverValue(isHalf ? index - 0.5 : index);
@@ -76,8 +73,8 @@ const Rating: React.FC<RatingProps> = ({
           key={i}
           onMouseMove={(e) => handleMouseMove(e, i)}
           onMouseLeave={handleMouseLeave}
-          onClick={() => handleClick(hoverValue ?? i)} //Click on hover value or current star
-          style={{ cursor: hoverEnabled ? "pointer" : "default" }} // Add cursor style
+          onClick={() => handleClick(hoverValue ?? i)}
+          style={{ cursor: hoverEnabled ? "pointer" : "default" }}
         >
           <i
             className={`${starClass} ${className}`}

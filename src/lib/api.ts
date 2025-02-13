@@ -16,7 +16,7 @@ export type { AxiosRequestConfig };
 export const apiRequest = async (
   url: string,
   method: string = "GET",
-  body: any = null
+  body: unknown = null
 ) => {
   const token = store.getState().auth.userInfo?.token; // Get token from Redux store
 
@@ -38,6 +38,7 @@ export const apiRequest = async (
     config.data = body; // Use 'data' for the request body in axios
   }
   const response = await apiClient(config);
+
   return response.data;
 };
 export default apiClient;
