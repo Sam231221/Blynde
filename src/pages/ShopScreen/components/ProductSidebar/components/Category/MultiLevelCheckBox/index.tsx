@@ -11,12 +11,13 @@ interface Category {
 }
 
 interface MultiLevelCheckboxProps {
-  handleCategoriesChange?: (selectedCategories: string[]) => void;
+  handleCategoriesChange: (selectedCategories: string[]) => void;
   categories: Category[];
 }
 
 const MultiLevelCheckbox: React.FC<MultiLevelCheckboxProps> = ({
   categories,
+  handleCategoriesChange,
 }) => {
   const [expanded, setExpanded] = useState<string[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
@@ -33,7 +34,7 @@ const MultiLevelCheckbox: React.FC<MultiLevelCheckboxProps> = ({
       ? selectedCategories.filter((cat) => cat !== category)
       : [...selectedCategories, category];
     setSelectedCategories(newSelected);
-    // handleCategoriesChange(newSelected);
+    handleCategoriesChange(newSelected);
   };
 
   const renderCategory = (category: Category) => (

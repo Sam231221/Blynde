@@ -22,7 +22,7 @@ export default function ShopScreen() {
     const params = new URLSearchParams(searchParams.toString());
 
     if (categories.length > 0) {
-      params.set("categories", categories.join(","));
+      params.set("categories", categories.map(encodeURIComponent).join(","));
     } else {
       params.delete("categories");
     }

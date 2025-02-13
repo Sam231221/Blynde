@@ -18,7 +18,7 @@ const filterSlice = createSlice({
   name: "productfilters",
   initialState,
   reducers: {
-    setCategories: (state, action: PayloadAction<string[]>) => {
+    setFilterCategories: (state, action: PayloadAction<string[]>) => {
       state.categories = action.payload;
     },
     setPrice: (state, action: PayloadAction<[number, number]>) => {
@@ -38,7 +38,7 @@ const filterSlice = createSlice({
 });
 
 export const {
-  setCategories,
+  setFilterCategories,
   setPrice,
   setFilterSizes,
   setColor,
