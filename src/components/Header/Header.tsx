@@ -48,8 +48,8 @@ function Header() {
         className={clsx(
           "z-[997] md:pt-3 sm:pb-3 h-16 fixed transition-all duration-500 w-full flex items-center",
           navbar
-            ? "justify-between top-0 right-0 left-0 bg-white drop-shadow-lg"
-            : "bg-transparent top-[0px] md:top-11"
+            ? "justify-between top-0 md:top-0 right-0 left-0 bg-white drop-shadow-lg"
+            : "bg-transparent top-22 md:top-11"
         )}
       >
         <div className="flex justify-between w-full h-full items-center">
