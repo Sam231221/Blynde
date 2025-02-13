@@ -61,7 +61,7 @@ export default function CartRightBar({
                   {item.name}
                 </h1>
                 <p className="text-xs text-zinc-400">
-                  {item.quantity} x ${item.price}
+                  {item.qty} x ${item.price}
                 </p>
               </div>
             </div>
@@ -73,7 +73,7 @@ export default function CartRightBar({
             Total:$
             {cartItems
               .reduce(
-                (accumulator, item) => accumulator + item.quantity * item.price,
+                (accumulator, item) => accumulator + item.qty * item.price,
                 0
               )
               .toFixed(2)}

@@ -1,6 +1,12 @@
 import ctabanner from "/images/cta-banner.jpg";
 import avatar from "/images/testimonial-1.jpg";
-
+import {
+  IoRocketOutline,
+  IoCallOutline,
+  IoArrowUndoOutline,
+  IoTicketOutline,
+  IoBoatOutline,
+} from "react-icons/io5";
 export default function Testimonials() {
   return (
     <div className="container mx-auto">
@@ -47,7 +53,7 @@ export default function Testimonials() {
           <div className="service-container">
             <a href="#" className="service-item">
               <div className="service-icon">
-                <ion-icon name="boat-outline"></ion-icon>
+                <IoBoatOutline size={35} />
               </div>
 
               <div className="service-content">
@@ -58,7 +64,7 @@ export default function Testimonials() {
 
             <a href="#" className="service-item">
               <div className="service-icon">
-                <ion-icon name="rocket-outline"></ion-icon>
+                <IoRocketOutline size={35} />
               </div>
 
               <div className="service-content">
@@ -69,7 +75,7 @@ export default function Testimonials() {
 
             <a href="#" className="service-item">
               <div className="service-icon">
-                <ion-icon name="call-outline"></ion-icon>
+                <IoCallOutline size={35} />
               </div>
 
               <div className="service-content">
@@ -80,7 +86,7 @@ export default function Testimonials() {
 
             <a href="#" className="service-item">
               <div className="service-icon">
-                <ion-icon name="arrow-undo-outline"></ion-icon>
+                <IoArrowUndoOutline size={35} />
               </div>
 
               <div className="service-content">
@@ -91,7 +97,7 @@ export default function Testimonials() {
 
             <a href="#" className="service-item">
               <div className="service-icon">
-                <ion-icon name="ticket-outline"></ion-icon>
+                <IoTicketOutline size={35} />
               </div>
 
               <div className="service-content">

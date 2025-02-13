@@ -233,7 +233,7 @@ export default function OrderScreen() {
                           <div>
                             <Link
                               className="nav-links link-dark"
-                              to={`/product/${item.product}`}
+                              to={`/product/${item._id}`}
                             >
                               {item.name} x {item.qty}
                             </Link>

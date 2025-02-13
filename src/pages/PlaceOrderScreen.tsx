@@ -24,7 +24,7 @@ function PlaceOrderScreen() {
   const itemsPrice: number = Number(
     Number(
       cart.cartItems
-        .reduce((acc, item) => acc + item.price * item.quantity, 0)
+        .reduce((acc, item) => acc + item.price * item.qty, 0)
         .toFixed(3)
     )
   );
@@ -231,7 +231,7 @@ function PlaceOrderScreen() {
                           className="text-xs nav-links link-dark"
                           to={`/product/${item.productId}`}
                         >
-                          {item.name} X {item.quantity}
+                          {item.name} X {item.qty}
                         </Link>
                       </div>
                       <div className="flex py-1 text-xs">
@@ -240,8 +240,7 @@ function PlaceOrderScreen() {
                       </div>
                       <div className="text-xs py-1">
                         {" "}
-                        Altogether Cost: $
-                        {(item.quantity * item.price).toFixed(2)}
+                        Altogether Cost: ${(item.qty * item.price).toFixed(2)}
                       </div>
                     </div>
                   ))}

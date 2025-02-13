@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Rating from "../../../../components/Rating";
 import { addReview } from "../../../../redux/reducers/ReviewSlice";
-import { AppDispatch, RootState } from "../../../../types";
+import { AppDispatch, Review, RootState } from "../../../../types";
 import DOMPurify from "dompurify";
 interface ReviewFormProps {
   productId: string;
@@ -15,14 +15,6 @@ const ReviewForm = ({ productId, userId, username }: ReviewFormProps) => {
 
   const dispatch: AppDispatch = useDispatch();
   const { loading, error } = useSelector((state: RootState) => state.reviews);
-
-  interface ReviewData {
-    product: number;
-    user: number;
-    name: string;
-    rating: number;
-    comment: string;
-  }
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -45,9 +37,9 @@ const ReviewForm = ({ productId, userId, username }: ReviewFormProps) => {
       return;
     }
 
-    const reviewData: ReviewData = {
+    const reviewData: Review = {
       product: productIdNumber,
-      user: Number(userId),
+      user: userId,
       name: username,
       rating: rating,
       comment: sanitizedComment,

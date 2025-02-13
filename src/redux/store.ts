@@ -8,12 +8,14 @@ import ProductReducer from "./reducers/ProductSlice";
 import CartReducer from "./reducers/CartSlice";
 import ReviewReducer from "./reducers/ReviewSlice";
 import OrderReducer from "./reducers/OrderSlice";
+import FilterProductReducer from "./reducers/FilterProductSlice";
 
 const store = configureStore({
   reducer: {
     auth: AuthReducer,
     users: UserReducer,
     product: ProductReducer,
+    productfilters: FilterProductReducer,
     cart: CartReducer,
     reviews: ReviewReducer,
     orders: OrderReducer,

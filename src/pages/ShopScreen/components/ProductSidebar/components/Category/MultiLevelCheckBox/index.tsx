@@ -11,12 +11,11 @@ interface Category {
 }
 
 interface MultiLevelCheckboxProps {
-  handleCategoriesChange: (selectedCategories: string[]) => void;
+  handleCategoriesChange?: (selectedCategories: string[]) => void;
   categories: Category[];
 }
 
 const MultiLevelCheckbox: React.FC<MultiLevelCheckboxProps> = ({
-  handleCategoriesChange,
   categories,
 }) => {
   const [expanded, setExpanded] = useState<string[]>([]);
@@ -34,7 +33,7 @@ const MultiLevelCheckbox: React.FC<MultiLevelCheckboxProps> = ({
       ? selectedCategories.filter((cat) => cat !== category)
       : [...selectedCategories, category];
     setSelectedCategories(newSelected);
-    handleCategoriesChange(newSelected);
+    // handleCategoriesChange(newSelected);
   };
 
   const renderCategory = (category: Category) => (
@@ -59,8 +58,8 @@ const MultiLevelCheckbox: React.FC<MultiLevelCheckboxProps> = ({
       </div>
       {expanded.includes(category.id) && category.genres.length > 0 && (
         <div className="pl-6 bg-white">
-          {category.genres.map((genre) => (
-            <div key={genre.id} className="flex items-center">
+          {category.genres.map((genre, key) => (
+            <div key={key} className="flex items-center">
               <Checkbox
                 id={genre.id}
                 value={genre.name}
@@ -79,8 +78,8 @@ const MultiLevelCheckbox: React.FC<MultiLevelCheckboxProps> = ({
     <div className="w-full px-3 max-w-md text-[14px] overflow-hidden">
       {categories
         .filter((category) => category.parent === null)
-        .map((parentCategory) => (
-          <React.Fragment key={parentCategory.id}>
+        .map((parentCategory, key) => (
+          <React.Fragment key={key}>
             {renderCategory(parentCategory)}
             {categories
               .filter((category) => category.parent === parentCategory.id)

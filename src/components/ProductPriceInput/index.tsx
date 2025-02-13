@@ -2,8 +2,8 @@ import { useState } from "react";
 import { FiMinus, FiPlus } from "react-icons/fi";
 interface ProductPriceInputProps {
   qty?: number;
-  id?: number;
-  handleChange?: (qty: number, id: number | undefined) => void;
+  id?: string;
+  handleChange?: (qty: number, id: string | undefined) => void;
 }
 function ProductPriceInput({
   qty = 1,

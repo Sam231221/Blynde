@@ -238,8 +238,7 @@ const RegistrationScreen = () => {
               type="button"
               className="w-full border border-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-50 transition duration-200 flex items-center justify-center gap-2"
             >
-              <columns2 size={20} />
-              Sign Up with columns2
+              Sign Up with Google
             </button>
 
             <p className="text-center text-sm text-gray-600">

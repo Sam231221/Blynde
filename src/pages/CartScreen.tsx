@@ -17,13 +17,13 @@ export default function CartScreen() {
   const dispatch = useDispatch();
   const redirect = useNavigate();
 
-  const handleChange = (val: number, id: number | undefined): void => {
-    dispatch(updateQuantity({ quantity: val, id }));
+  const handleChange = (val: number, _id: string | undefined): void => {
+    dispatch(updateQuantity({ qty: val, _id }));
   };
   const cart = useSelector((state: RootState) => state.cart);
   const { cartItems } = cart;
 
-  const removeFromCartHandler = (id: number) => {
+  const removeFromCartHandler = (id: string) => {
     dispatch(removeFromCart(id));
   };
   const checkoutHandler = () => {
@@ -96,7 +96,7 @@ export default function CartScreen() {
               <tbody>
                 {cartItems.length > 0 ? (
                   <>
-                    {cartItems.map((product, i) => (
+                    {cartItems.map((cartItem, i) => (
                       <tr className="border-b " key={i + 1}>
                         <td className="p-2 text-center text-sm text-gray-700">
                           <a
@@ -108,29 +108,29 @@ export default function CartScreen() {
                         </td>
                         <td className="p-2 border-b-0 text-sm  text-gray-700">
                           <img
-                            src={product.thumbnail}
+                            src={cartItem.thumbnail}
                             className="w-12 inline h-12 object-contain"
                           />
-                          <span>{product.name}</span>
+                          <span>{cartItem.name}</span>
                         </td>
 
                         <td className="p-2   text-sm text-gray-700">
-                          ${product.price}
+                          ${cartItem.price}
                         </td>
                         <td className="p-2 text-sm text-gray-700">
                           <ProductPriceInput
-                            id={product.productId}
-                            qty={product.quantity}
+                            id={cartItem.productId}
+                            qty={cartItem.qty}
                             handleChange={handleChange}
                           />
                         </td>
                         <td className="p-2 text-sm text-gray-700">
-                          ${(product.quantity * product.price).toFixed(2)}
+                          ${(cartItem.qty * cartItem.price).toFixed(2)}
                         </td>
                         <td className="p-2 text-xs text-center">
                           <AiOutlineDelete
                             onClick={() =>
-                              removeFromCartHandler(product.productId)
+                              removeFromCartHandler(cartItem.productId)
                             }
                             className="text-red-500 cursor-pointer"
                             size={20}
@@ -153,7 +153,7 @@ export default function CartScreen() {
             <div className="flex border-b py-2 border-gray-200 justify-between text-sm my-3">
               <span> Total Items:</span>
               <span>
-                {cartItems.reduce((acc, item) => acc + item.quantity, 0)} items
+                {cartItems.reduce((acc, item) => acc + item.qty, 0)} items
               </span>
             </div>
             <div className="flex border-b py-2 border-gray-200 justify-between text-sm my-3">
@@ -162,8 +162,7 @@ export default function CartScreen() {
                 $
                 {cartItems
                   .reduce(
-                    (accumulator, item) =>
-                      accumulator + item.quantity * item.price,
+                    (accumulator, item) => accumulator + item.qty * item.price,
                     0
                   )
                   .toFixed(2)}

@@ -17,7 +17,10 @@ const Checkbox: React.FC<CheckboxProps> = ({
   id,
 }) => {
   return (
-    <div className="mr-2 checkbox-wrapper-13 flex items-center gap-2 mb-1">
+    <div
+      data-key={id}
+      className="mr-2 checkbox-wrapper-13 flex items-center gap-2 mb-1"
+    >
       <input
         type="checkbox"
         value={value}

@@ -1,30 +1,22 @@
-import { useEffect, useState, useCallback } from "react";
 import PageContainer from "../../components/PageContainer";
 import ProductSidebar from "./components/ProductSidebar";
 import ProductRightbar from "./components/ProductRightbar";
 import { Link, useSearchParams } from "react-router-dom";
+import { RootState } from "../../types";
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
 
 const items = [
   { label: "Home", path: "/" },
   { label: "Shop", path: "/shop" },
 ];
 
-interface SelectedFilters {
-  categories: string[];
-  price: [number, number];
-  sizes: string[];
-  color: string;
-}
-
 export default function ShopScreen() {
-  const [selectedFilters, setSelectedFilters] = useState<SelectedFilters>({
-    categories: [],
-    price: [0, 500],
-    sizes: [],
-    color: "",
-  });
+  const productfilters = useSelector(
+    (state: RootState) => state.productfilters
+  );
   const [searchParams, setSearchParams] = useSearchParams();
-  const { categories, price, sizes, color } = selectedFilters;
+  const { categories, price, sizes, color } = productfilters;
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams.toString());
@@ -54,23 +46,7 @@ export default function ShopScreen() {
     }
 
     setSearchParams(params);
-  }, [categories, price, color, sizes, setSearchParams]);
-
-  const handleCategoriesChange = useCallback((categories: string[]) => {
-    setSelectedFilters((prev) => ({ ...prev, categories }));
-  }, []);
-
-  const handlePriceChange = useCallback((price: [number, number]) => {
-    setSelectedFilters((prev) => ({ ...prev, price }));
-  }, []);
-
-  const handleSizeChange = useCallback((sizes: string[]) => {
-    setSelectedFilters((prev) => ({ ...prev, sizes }));
-  }, []);
-
-  const handleColorChange = useCallback((color: string) => {
-    setSelectedFilters((prev) => ({ ...prev, color }));
-  }, []);
+  }, [categories, price, color, sizes, searchParams, setSearchParams]);
 
   return (
     <PageContainer>
@@ -93,16 +69,8 @@ export default function ShopScreen() {
           </ol>
         </nav>
         <div className="mt-5 flex flex-col md:flex-row ">
-          <ProductSidebar
-            handleCategoriesChange={handleCategoriesChange}
-            handlePriceChange={handlePriceChange}
-            handleSizeChange={handleSizeChange}
-            handleColorChange={handleColorChange}
-          />
-          <ProductRightbar
-            selectedFilters={selectedFilters}
-            setSelectedFilters={setSelectedFilters}
-          />
+          <ProductSidebar />
+          <ProductRightbar />
         </div>
       </div>
     </PageContainer>

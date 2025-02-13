@@ -6,7 +6,7 @@ export default function CodeSnippet({
   language = "javascript",
 }: {
   code: string;
-  language: string;
+  language?: string;
 }) {
   const [isCopied, setIsCopied] = useState(false);
 

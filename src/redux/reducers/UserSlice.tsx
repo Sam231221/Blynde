@@ -22,16 +22,16 @@ export const createUser = createAsyncThunk<User, User>(
 export const updateUser = createAsyncThunk<User, User>(
   "users/updateUser",
   async (user) => {
-    const response = await apiRequest(`/api/users/${user.id}`, "PUT", user); // Assuming user object has an ID
+    const response = await apiRequest(`/api/users/${user._id}`, "PUT", user); // Assuming user object has an ID
     return response.data;
   }
 );
 
 export const deleteUser = createAsyncThunk<string, string>(
   "users/deleteUser",
-  async (id) => {
-    await apiRequest(`/api/users/${id}`, "DELETE");
-    return id;
+  async (_id) => {
+    await apiRequest(`/api/users/${_id}`, "DELETE");
+    return _id;
   }
 );
 
@@ -73,16 +73,14 @@ const userSlice = createSlice({
       })
       .addCase(updateUser.fulfilled, (state, action: PayloadAction<User>) => {
         const index = state.users.findIndex(
-          (user) => user.id === action.payload.id
+          (user) => user._id === action.payload._id
         );
         if (index !== -1) {
           state.users[index] = action.payload;
         }
       })
       .addCase(deleteUser.fulfilled, (state, action: PayloadAction<string>) => {
-        state.users = state.users.filter(
-          (user) => user.id !== Number(action.payload)
-        );
+        state.users = state.users.filter((user) => user._id !== action.payload);
       });
   },
 });

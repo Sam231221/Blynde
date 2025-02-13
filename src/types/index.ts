@@ -2,7 +2,7 @@ import store from "../redux/store";
 
 export interface User {
   refresh: string;
-  id: number;
+  _id: string;
   username: string;
   first_name: string;
   last_name: string;
@@ -16,7 +16,7 @@ export interface AuthState {
 }
 
 export interface UserInfo {
-  id: string;
+  _id?: string;
   name: string;
   email: string;
   token: string;
@@ -33,21 +33,20 @@ export interface CartState {
 }
 
 export interface CartItem {
-  // id: string;
-  productId: number;
+  _id?: string;
+  productId: string;
   name: string;
   price: number;
-
+  qty: number;
   color: string;
   size: string;
   thumbnail: string;
-  quantity: number;
 }
 
 export interface Order {
-  _id: string; // Use _id to match Django's default PK
+  _id?: string; // Use _id to match Django's default PK
   user: User; // Or a more specific user type
-  orderItems: OrderItem[];
+  orderItems: OrderItem[] | CartItem[];
   shippingAddress: ShippingAddress;
   paymentMethod: string;
   itemsPrice: number;
@@ -62,7 +61,7 @@ export interface Order {
 }
 
 export interface OrderItem {
-  _id: string;
+  _id?: string;
   product: Product; // Or a more specific product type
   order: string; // Or the Order type itself if you prefer
   name: string;
@@ -73,18 +72,20 @@ export interface OrderItem {
   thumbnail: string;
 }
 export interface ShippingAddress {
+  _id?: string;
   address: string;
   city: string;
   postalCode: string;
   country: string;
 }
 export type Size = {
-  id: number;
+  _id: string;
   name: string;
+  product_count: number;
   stock: number;
 };
 export type Category = {
-  id: number;
+  _id?: string;
   name: string;
 };
 export type Product = {
@@ -113,13 +114,13 @@ export type Product = {
 };
 
 export type Review = {
+  _id?: string;
   product: number; // Product ID
-  user: number | null; // User ID (nullable)
+  user: string | null;
   name: string;
   rating: number; // 1 to 5 stars
   comment: string;
-  createdAt: string; // ISO date string
-  // other review properties...
+  createdAt?: string;
 };
 export interface ProductState {
   allProducts: Product[];

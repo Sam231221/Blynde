@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { IoCloseOutline } from "react-icons/io5";
+import { Size } from "../../types";
 interface SizeVariantProps {
   handleSizeChange: (size: string) => void;
-  sizes: { id: number; name: string; stock: number }[];
+  sizes: Size[];
 }
 function SizeVariant({ handleSizeChange, sizes }: SizeVariantProps) {
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
@@ -20,7 +21,7 @@ function SizeVariant({ handleSizeChange, sizes }: SizeVariantProps) {
       <div className="flex">
         {sizes.map((size) => (
           <button
-            key={size.id}
+            key={size._id}
             className={`mr-3 border rounded px-6 py-1 hover:bg-blue-500 hover:text-white ${
               selectedSize === size.name ? "bg-blue-500 text-white" : ""
             } `}

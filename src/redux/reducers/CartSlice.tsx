@@ -29,7 +29,7 @@ const cartSlice = createSlice({
   initialState,
   reducers: {
     addToCart: (state, action: PayloadAction<CartItem>) => {
-      const { productId, name, price, color, size, thumbnail, quantity } =
+      const { productId, name, price, color, size, thumbnail, qty } =
         action.payload;
 
       const existingItem = state.cartItems.find(
@@ -39,22 +39,23 @@ const cartSlice = createSlice({
           item.size === size
       );
       if (existingItem) {
-        existingItem.quantity += quantity;
+        existingItem.qty += qty;
       } else {
         // If item doesn't exist, add it to the cart
         state.cartItems.push({
+          _id: String(productId),
           productId,
           name,
           price,
+          qty,
           color,
           size,
           thumbnail,
-          quantity,
         });
       }
       localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
     },
-    removeFromCart: (state, action: PayloadAction<number>) => {
+    removeFromCart: (state, action: PayloadAction<string>) => {
       state.cartItems = state.cartItems.filter(
         (cartItem) => cartItem.productId !== action.payload
       );
@@ -62,12 +63,12 @@ const cartSlice = createSlice({
     },
     updateQuantity: (
       state,
-      action: PayloadAction<{ id: number | undefined; quantity: number }>
+      action: PayloadAction<{ _id: string | undefined; qty: number }>
     ) => {
-      const { quantity, id } = action.payload;
+      const { qty, _id } = action.payload;
 
       state.cartItems = state.cartItems.map((cartItem) =>
-        cartItem.productId === id ? { ...cartItem, quantity } : cartItem
+        cartItem.productId === _id ? { ...cartItem, qty } : cartItem
       );
       localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
     },

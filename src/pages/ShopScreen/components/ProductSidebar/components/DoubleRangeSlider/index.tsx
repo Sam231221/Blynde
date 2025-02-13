@@ -1,23 +1,18 @@
 import { useState } from "react";
 import "./style.css";
-import DoubleSlider from "../../../../../../components/reusables/DoubleSlider";
+import DoubleSlider from "./DoubleSlider";
+import { AppDispatch } from "../../../../../../types";
+import { useDispatch } from "react-redux";
+import { setPrice } from "../../../../../../redux/reducers/FilterProductSlice";
 
-interface DoubleRangeSliderProps {
-  handlePriceChange: (range: [number, number]) => void;
-  min: number;
-  max: number;
-}
+export default function DoubleRangePriceSlider() {
+  const dispatch: AppDispatch = useDispatch();
 
-export default function DoubleRangePriceSlider({
-  handlePriceChange,
-  min = 0,
-  max = 100,
-}: DoubleRangeSliderProps) {
-  const [values, setValues] = useState<[number, number]>([min, max]);
+  const [values, setValues] = useState<[number, number]>([0, 600]);
 
   const handleSliderChange = (minValue: number, maxValue: number) => {
     setValues([minValue, maxValue]);
-    handlePriceChange([minValue, maxValue]);
+    dispatch(setPrice([minValue, maxValue]));
   };
 
   return (
@@ -35,8 +30,8 @@ export default function DoubleRangePriceSlider({
 
         <DoubleSlider
           className="slider"
-          min={min}
-          max={max}
+          min={0}
+          max={600}
           defaultMinValue={values[0]}
           defaultMaxValue={values[1]}
           onChange={handleSliderChange}

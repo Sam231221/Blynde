@@ -2,11 +2,7 @@ import axios from "../../../../../../lib/api";
 import { useEffect, useState } from "react";
 import MultiLevelCheckbox from "./MultiLevelCheckBox";
 
-interface CategoryProps {
-  handleCategoriesChange: (selectedCategories: string[]) => void;
-}
-
-function Category({ handleCategoriesChange }: CategoryProps) {
+function Category() {
   const [categories, setCategories] = useState([]);
   const loadCategories = async () => {
     const { data } = await axios.get("/api/products/categories/");
@@ -21,10 +17,7 @@ function Category({ handleCategoriesChange }: CategoryProps) {
       <h2 className="text-lg tracking-wide font-medium text-gray-900">
         Category
       </h2>
-      <MultiLevelCheckbox
-        handleCategoriesChange={handleCategoriesChange}
-        categories={categories}
-      />
+      <MultiLevelCheckbox categories={categories} />
     </div>
   );
 }

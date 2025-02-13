@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { IoCloseOutline } from "react-icons/io5";
 interface ProductColorSelectProps {
-  handleColorChange?: (color: string) => void;
+  handleColorChange: (color: string) => void;
   colors: { hex_code: string; name: string; stock?: number }[];
   direction?: "horizontal" | "vertical";
 }
@@ -10,11 +10,11 @@ const ColorCheckBox: React.FC<ProductColorSelectProps> = ({
   colors,
   direction = "horizontal",
 }) => {
-  const [selectedColor, setSelectedColor] = useState<string | null>(null);
+  const [selectedColor, setSelectedColor] = useState<string>("");
 
   const handleColorClick = (color: string) => {
     setSelectedColor(color);
-    if (handleColorChange) handleColorChange(color);
+    handleColorChange(color);
   };
 
   return (
@@ -49,7 +49,10 @@ const ColorCheckBox: React.FC<ProductColorSelectProps> = ({
       {selectedColor && (
         <button
           className="flex items-center mb-3"
-          onClick={() => setSelectedColor(null)}
+          onClick={() => {
+            setSelectedColor("");
+            handleColorChange("");
+          }}
         >
           <IoCloseOutline fontSize={15} />
           <span className="ml-2 text-xs"> Clear</span>

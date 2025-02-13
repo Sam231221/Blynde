@@ -15,11 +15,19 @@ import { useDispatch } from "react-redux";
 import { addToCart } from "../../redux/reducers/CartSlice";
 import { Product } from "../../types/index";
 
-interface ProductDetailProps {
+//  openModal?: (content: JSX.Element) => void;
+export interface ProductDetailProps {
   product: Product;
-  openModal?: (content: JSX.Element) => void;
+  handleColorChange?: (color: string) => void;
+  handleSizeChange?: (size: string) => void;
+  handleQuantityChange?: (quantity: number) => void;
+  data?: {
+    quantity: number;
+    color: string;
+    size: string;
+  };
+  openModal?: (content: React.ReactNode) => void;
 }
-
 export const ProductDetail = ({ product, openModal }: ProductDetailProps) => {
   const [data, setData] = useState({
     quantity: 1,
@@ -43,13 +51,14 @@ export const ProductDetail = ({ product, openModal }: ProductDetailProps) => {
     if (product._id === id && quantity && size && color) {
       dispatch(
         addToCart({
-          productId: product._id,
+          _id: String(product._id),
+          productId: String(product._id),
           name: product.name,
           price: product.sale_price ? product.sale_price : product.price,
           color,
           size,
           thumbnail: product.thumbnail,
-          quantity,
+          qty: quantity,
         })
       );
     } else {

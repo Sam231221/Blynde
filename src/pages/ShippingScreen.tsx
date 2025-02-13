@@ -34,7 +34,17 @@ function ShippingScreen() {
   const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    dispatch(saveShippingAddress({ address, city, postalCode, country }));
+    const shippingAddressId =
+      "_id" in shippingAddress ? shippingAddress._id : "";
+    dispatch(
+      saveShippingAddress({
+        _id: shippingAddressId,
+        address,
+        city,
+        postalCode,
+        country,
+      })
+    );
     navigate("/payment");
   };
 

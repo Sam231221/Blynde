@@ -72,8 +72,8 @@ export default function ProductScreen() {
           <Message variant="danger">{error}</Message>
         ) : (
           <>
-            <ProductDetail product={productDetail} openModal={openModal} />
-            <Reviews userInfo={userInfo} productId={productDetail._id} />
+            <ProductDetail product={productDetail} />
+            {userInfo && id && <Reviews productId={id} userInfo={userInfo} />}
           </>
         )}
       </div>

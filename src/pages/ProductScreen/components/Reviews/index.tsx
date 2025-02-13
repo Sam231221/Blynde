@@ -5,12 +5,12 @@ import Rating from "../../../../components/Rating";
 import { useDispatch, useSelector } from "react-redux";
 import { Message } from "../../../../components/Message";
 
-import { AppDispatch, RootState } from "../../../../types";
+import { AppDispatch, RootState, User } from "../../../../types";
 import { fetchReviews } from "../../../../redux/reducers/ReviewSlice";
 
 interface ReviewsProps {
   productId: string;
-  userInfo: { name: string; id: string } | null;
+  userInfo: User | null;
 }
 export default function Reviews({ productId, userInfo }: ReviewsProps) {
   const dispatch = useDispatch<AppDispatch>();
@@ -41,7 +41,8 @@ export default function Reviews({ productId, userInfo }: ReviewsProps) {
           .slice()
           .sort(
             (a, b) =>
-              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+              new Date(b.createdAt ?? "").getTime() -
+              new Date(a.createdAt ?? "").getTime()
           )
           .map((review, index) => (
             <div key={index}>
@@ -74,10 +75,10 @@ export default function Reviews({ productId, userInfo }: ReviewsProps) {
       )}
 
       <div className="mb-4">
-        {userInfo !== null && userInfo.name ? (
+        {userInfo !== null && userInfo.username ? (
           <ReviewForm
-            username={userInfo.name}
-            userId={userInfo.id}
+            username={userInfo.username}
+            userId={String(userInfo._id)}
             productId={productId}
           />
         ) : (

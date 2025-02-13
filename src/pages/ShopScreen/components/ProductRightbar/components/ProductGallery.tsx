@@ -5,20 +5,28 @@ import { CiCircleList } from "react-icons/ci";
 
 import ProductGridShowCase from "../../../../../components/reusables/ProductGridShowCase";
 
-import { Product } from "../../../../../types";
+import { Product, RootState } from "../../../../../types";
 import { apiRequest } from "../../../../../lib/api";
-interface ProductGalleryProps {
+import { useSelector } from "react-redux";
+interface Pagination {
+  currentPage: number;
+  totalPages: number;
+  totalItems: number;
+}
+interface FilterProductsParams {
+  sortedProducts: Product[];
   selectedFilters: {
     categories: string[];
     price: [number, number];
     sizes: string[];
-    color: string[];
+    color: string;
   };
-  categories?: { name: string }[];
 }
-export default function ProductGallery({
-  selectedFilters,
-}: ProductGalleryProps) {
+export default function ProductGallery() {
+  const selectedFilters = useSelector(
+    (state: RootState) => state.productfilters
+  );
+
   const [products, setProducts] = useState<Product[]>([]);
   const [productsDisplaytype, setProductsDisplaytype] = useState("grid");
   const [loading, setLoading] = useState(true);
@@ -41,7 +49,7 @@ export default function ProductGallery({
           sort: sortOption,
           ...selectedFilters,
         };
-        const { data } = await apiRequest("/api/products/all/", "GET", {
+        const data = await apiRequest("/api/products/all/", "GET", {
           params,
         });
         setProducts(data.results);
@@ -64,12 +72,6 @@ export default function ProductGallery({
     fetchProducts();
   }, [pagination.currentPage, productQtyPerPage, sortOption, selectedFilters]);
 
-  interface Pagination {
-    currentPage: number;
-    totalPages: number;
-    totalItems: number;
-  }
-
   const paginate = useCallback(
     (pageNumber: number) => {
       if (pageNumber >= 1 && pageNumber <= pagination.totalPages) {
@@ -81,16 +83,6 @@ export default function ProductGallery({
     },
     [pagination.totalPages]
   );
-
-  interface FilterProductsParams {
-    sortedProducts: Product[];
-    selectedFilters: {
-      categories: string[];
-      price: [number, number];
-      sizes: string[];
-      color: string[];
-    };
-  }
 
   function filterProducts({
     sortedProducts,
@@ -143,7 +135,7 @@ export default function ProductGallery({
     });
 
     return filterProducts({ sortedProducts: sorted, selectedFilters });
-  }, [pagination.currentPage, products, sortOption, selectedFilters]);
+  }, [products, sortOption, selectedFilters]);
 
   const handleProductQtyPerPageChange = useCallback(
     (event: React.ChangeEvent<HTMLSelectElement>) => {

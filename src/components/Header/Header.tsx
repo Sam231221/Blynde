@@ -137,7 +137,7 @@ function Header() {
             >
               <FaCartShopping className="text-[15px] md:text-[20px]" />
               <div className="absolute  aspect-square -top-3 -right-3 w-4 h-4 flex items-center justify-center text-white text-[12px] font-medium bg-[#717FE0]">
-                {cartItems.reduce((acc, item) => acc + item.quantity, 0)}
+                {cartItems.reduce((acc, item) => acc + item.qty, 0)}
               </div>
             </div>
 
