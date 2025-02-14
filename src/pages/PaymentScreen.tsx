@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -16,6 +16,7 @@ const items = [
 ];
 
 function PaymentScreen() {
+  const { userInfo } = useSelector((state: RootState) => state.auth);
   const cart = useSelector((state: RootState) => state.cart);
   const { shippingAddress } = cart;
 
@@ -24,6 +25,11 @@ function PaymentScreen() {
 
   const [paymentMethod, setPaymentMethod] = useState("PayPal");
 
+  useEffect(() => {
+    if (!userInfo) {
+      navigate("/login?redirect=payment");
+    }
+  }, [userInfo, navigate]);
   if (!shippingAddress?.address) {
     navigate("/shipping");
   }

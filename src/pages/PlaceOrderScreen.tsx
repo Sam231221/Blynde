@@ -9,6 +9,8 @@ import { createOrder } from "../lib/orderApi";
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "../lib/queryClient";
 import { clearCart } from "../redux/reducers/CartSlice";
+import { useEffect } from "react";
+import { toast } from "react-toastify";
 const items = [
   { label: "Home", path: "/" },
   { label: "Shipping", path: "/shipping" },
@@ -16,10 +18,11 @@ const items = [
   { label: "Place Order", path: "/placeorder" },
 ];
 function PlaceOrderScreen() {
+  const cart = useSelector((state: RootState) => state.cart);
+  const { userInfo } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const cart = useSelector((state: RootState) => state.cart);
   //FINALIZING AMOUNTS
   const itemsPrice: number = Number(
     Number(
@@ -28,7 +31,7 @@ function PlaceOrderScreen() {
         .toFixed(3)
     )
   );
-  //You could set shipping price in backend too.
+  //logic for shipping price
   const shippingPrice: number = Number(
     Number(itemsPrice > 100 ? 10 : 0).toFixed(3)
   );
@@ -42,7 +45,11 @@ function PlaceOrderScreen() {
     taxPrice: taxPrice,
     totalPrice: totalPrice,
   };
-
+  useEffect(() => {
+    if (!userInfo) {
+      navigate("/login?redirect=placeorder");
+    }
+  }, [userInfo, navigate]);
   if (!cart.paymentMethod) {
     navigate("/payment");
   }
@@ -57,8 +64,8 @@ function PlaceOrderScreen() {
     },
     onError: (error) => {
       // Handle errors - display a message to the user, etc.
-      console.error("Error creating order:", error);
-      alert("There was an error creating your order.");
+      console.error(error);
+      toast.error("There was an error while creating your order.");
     },
   });
 
@@ -118,8 +125,8 @@ function PlaceOrderScreen() {
         <div className="p-3">
           <div className="flex flex-col py-4 px-5  border border-gray-200">
             <p className="text-sm">
-              Add <span className="font-medium text-sky-500">$300</span> to cart
-              and get free shipping!
+              Add <span className="font-medium text-sky-500">up to $100</span>{" "}
+              to cart and get free shipping!
             </p>
             <div className="relative mb-3">
               <div

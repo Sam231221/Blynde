@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import FormContainer from "../components/FormContainer";
@@ -13,6 +13,7 @@ const items = [
 ];
 
 function ShippingScreen() {
+  const { userInfo } = useSelector((state: RootState) => state.auth);
   const cart = useSelector((state: RootState) => state.cart);
   const shippingAddress = cart.shippingAddress || {
     address: "",
@@ -30,7 +31,11 @@ function ShippingScreen() {
     shippingAddress.postalCode || ""
   );
   const [country, setCountry] = useState<string>(shippingAddress.country || "");
-
+  useEffect(() => {
+    if (!userInfo) {
+      navigate("/login?redirect=shipping");
+    }
+  }, [userInfo, navigate]);
   const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 

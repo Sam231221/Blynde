@@ -33,8 +33,15 @@ const LoginScreen = () => {
     e.preventDefault();
     login(formData, {
       onSuccess: () => {
-        navigate("/");
         toast.success("Login successfully.");
+        if (redirect === "shipping") {
+          navigate("/shipping");
+        }
+        if (redirect === "/") {
+          navigate("/");
+        } else {
+          navigate("/" + redirect);
+        }
       },
       onError: (err) => {
         const errorResponse = err as {
@@ -53,14 +60,15 @@ const LoginScreen = () => {
     });
   };
 
-  useEffect(() => {
-    if (userInfo && userInfo.email_verified && redirect == "/") {
-      navigate("/");
-    }
-    if (userInfo && redirect == "shipping") {
-      navigate("/" + redirect);
-    }
-  }, [userInfo, navigate, redirect]);
+  // useEffect(() => {
+  //   if (userInfo && redirect == "shipping") {
+  //     console.log("Redirecting to shipping");
+  //     navigate("/shipping");
+  //   }
+  //   if (userInfo && userInfo.email_verified && redirect == "/") {
+  //     navigate("/");
+  //   }
+  // }, [userInfo, navigate, redirect]);
 
   return (
     <div className="min-h-screen bg-zinc-200/20 flex items-center justify-center p-4">

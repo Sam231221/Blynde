@@ -12,11 +12,11 @@ export default function CartRightBar({
   sideCartNav,
   setSideCartNav,
 }: CartRightBarProps) {
-  const redirect = useNavigate();
+  const naviagte = useNavigate();
   const cart = useSelector((state: RootState) => state.cart);
   const { cartItems } = cart;
   const checkoutHandler = () => {
-    redirect("/login?redirect=shipping");
+    naviagte("/shipping");
   };
 
   const showSideCartNav = () => {
