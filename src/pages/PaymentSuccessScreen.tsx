@@ -5,7 +5,6 @@ import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "../lib/queryClient";
 import { payOrder } from "../lib/orderApi";
 import { toast } from "react-toastify";
-import { Order } from "../types/index";
 
 interface PaymentData {
   transaction_code?: string;

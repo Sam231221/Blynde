@@ -14,9 +14,8 @@ import {
   selectSelectedOrder,
   setSelectedOrder,
 } from "../redux/reducers/OrderSlice";
-import { deliverOrder, fetchOrderById } from "../lib/orderApi";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { queryClient } from "../lib/queryClient";
+import { fetchOrderById } from "../lib/orderApi";
+import { useQuery } from "@tanstack/react-query";
 
 import { EsewaPaymentForm } from "./EsewaPaymentForm";
 
@@ -72,16 +71,16 @@ export default function OrderScreen() {
     document.body.appendChild(script);
   };
 
-  const { mutate: deliverUserOrder, isPending: isDelivering } = useMutation({
-    mutationFn: deliverOrder,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["order", id] });
-    },
-  });
+  // const { mutate: deliverUserOrder, isPending: isDelivering } = useMutation({
+  //   mutationFn: deliverOrder,
+  //   onSuccess: () => {
+  //     queryClient.invalidateQueries({ queryKey: ["order", id] });
+  //   },
+  // });
 
-  const handleUpdateStatus = (orderId: number) => {
-    deliverUserOrder({ orderId });
-  };
+  // const handleUpdateStatus = (orderId: number) => {
+  //   deliverUserOrder({ orderId });
+  // };
 
   useEffect(() => {
     if (!userInfo) {
@@ -167,7 +166,7 @@ export default function OrderScreen() {
                 <h1 className="font-medium text-lg border-b mb-2 pb-2">
                   Status
                 </h1>
-                {isDelivering && <Loader />}
+
                 {selectedOrder.isDelivered ? (
                   <Message variant="success">
                     Delivered on{" "}
