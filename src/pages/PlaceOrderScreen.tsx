@@ -28,22 +28,22 @@ function PlaceOrderScreen() {
     Number(
       cart.cartItems
         .reduce((acc, item) => acc + item.price * item.qty, 0)
-        .toFixed(3)
+        .toFixed(2)
     )
   );
   //logic for shipping price
   const shippingPrice: number = Number(
-    Number(itemsPrice > 100 ? 10 : 0).toFixed(3)
+    Number(itemsPrice > 100 ? 10 : 0).toFixed(2)
   );
-  const taxPrice: number = Number(Number(0.082 * itemsPrice).toFixed(3));
+  const taxPrice: number = Number(Number(0.082 * itemsPrice).toFixed(2));
   const totalPrice: number = itemsPrice + shippingPrice + taxPrice;
-
+  console.log("itemsPrice:", itemsPrice);
   const FinalCart = {
     ...cart,
     itemsPrice: itemsPrice,
     shippingPrice: shippingPrice,
     taxPrice: taxPrice,
-    totalPrice: totalPrice,
+    totalPrice: totalPrice.toFixed(2),
   };
   useEffect(() => {
     if (!userInfo) {
@@ -140,7 +140,9 @@ function PlaceOrderScreen() {
             </div>
           </div>
         </div>
+
         <div className="flex flex-col md:flex-row gap-3 mt-5 mb-5">
+          {/* Order Summary */}
           <div className="md:w-1/4 ">
             <div className="m-3 p-3 border shadow">
               <h1 className="text-xl font-medium py-2 border-b border-gray-200 uppercase">
@@ -216,7 +218,9 @@ function PlaceOrderScreen() {
               </div>
             </div>
           </div>
-          <div className="md:w-1/6">
+
+          {/* Order Items */}
+          <div className="md:w-1/4">
             <div className="m-3 p-3 border shadow">
               <h1 className="text-lg font-medium">Order Items</h1>
               <hr />
@@ -225,7 +229,7 @@ function PlaceOrderScreen() {
               ) : (
                 <>
                   {cart.cartItems.map((item, index) => (
-                    <div key={index} className="flex  flex-col">
+                    <div key={index} className="flex gap-2 mb-1 border-b">
                       <div className="w-14 h-14">
                         <img
                           className="w-full h-full object-contain"
@@ -233,21 +237,23 @@ function PlaceOrderScreen() {
                           alt={item.name}
                         />
                       </div>
-                      <div>
-                        <Link
-                          className="text-xs nav-links link-dark"
-                          to={`/product/${item.productId}`}
-                        >
-                          {item.name} X {item.qty}
-                        </Link>
-                      </div>
-                      <div className="flex py-1 text-xs">
-                        <span>Color:{item.color}</span>,
-                        <span className="ml-1">Size:{item.size}</span>
-                      </div>
-                      <div className="text-xs py-1">
-                        {" "}
-                        Altogether Cost: ${(item.qty * item.price).toFixed(2)}
+                      <div className="flex flex-col">
+                        <div>
+                          <Link
+                            className="text-sm font-medium nav-links link-dark"
+                            to={`/product/${item.productId}`}
+                          >
+                            {item.name} X {item.qty}
+                          </Link>
+                        </div>
+                        <div className="flex py-1 text-xs">
+                          <span>Color:{item.color}</span>,
+                          <span className="ml-1">Size:{item.size}</span>
+                        </div>
+                        <div className="text-xs py-1">
+                          {" "}
+                          Altogether Cost: ${(item.qty * item.price).toFixed(2)}
+                        </div>
                       </div>
                     </div>
                   ))}

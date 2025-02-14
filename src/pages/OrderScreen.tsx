@@ -14,10 +14,11 @@ import {
   selectSelectedOrder,
   setSelectedOrder,
 } from "../redux/reducers/OrderSlice";
-import { deliverOrder, fetchOrderById, payOrder } from "../lib/orderApi";
+import { deliverOrder, fetchOrderById } from "../lib/orderApi";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { queryClient } from "../lib/queryClient";
-import { toast } from "react-toastify";
+
+import { EsewaPaymentForm } from "./EsewaPaymentForm";
 
 const items = [
   { label: "Home", path: "/" },
@@ -32,11 +33,11 @@ export default function OrderScreen() {
   const userInfo = useUser();
 
   const [sdkReady, setSdkReady] = useState(false);
-
+  console.log("selectedOrder", selectedOrder);
   const {
     data: fetchedOrders,
     isLoading,
-    error,
+    error: fetchOrdersError,
   } = useQuery({
     queryKey: ["order", id],
     queryFn: () => fetchOrderById(Number(id)),
@@ -51,7 +52,7 @@ export default function OrderScreen() {
     itemsPrice?: string;
     totalPrice?: number;
   } = {};
-  if (!isLoading && !error) {
+  if (!isLoading && !fetchOrdersError) {
     finalOrder = {
       ...selectedOrder,
       itemsPrice: selectedOrder?.orderItems
@@ -78,22 +79,8 @@ export default function OrderScreen() {
     },
   });
 
-  const { mutate: payUserOrder } = useMutation({
-    mutationFn: payOrder,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["order", id] });
-    },
-    onError: () => {
-      toast.error("An error occurred");
-    },
-  });
-
   const handleUpdateStatus = (orderId: number) => {
     deliverUserOrder({ orderId });
-  };
-
-  const successPaymentHandler = () => {
-    payUserOrder({ orderId: Number(selectedOrder?._id) });
   };
 
   useEffect(() => {
@@ -106,7 +93,6 @@ export default function OrderScreen() {
   }, [userInfo, id, redirect, selectedOrder?.isPaid, sdkReady]);
 
   if (isLoading) return <Loader />;
-  if (error) return <p>An error occurred</p>;
 
   return (
     <PageContainer>
@@ -129,7 +115,11 @@ export default function OrderScreen() {
             ))}
           </ol>
         </nav>
-
+        {fetchOrdersError && (
+          <div className="text-center my-6">
+            <Message variant="alert">{fetchOrdersError.message}</Message>
+          </div>
+        )}
         {selectedOrder !== null && (
           <>
             <div className="mt-3 flex flex-col gap-2 md:flex-row">
@@ -169,11 +159,7 @@ export default function OrderScreen() {
                 )}
                 {!selectedOrder.isPaid && sdkReady && (
                   <div>
-                    <button onClick={successPaymentHandler}>Pay</button>
-                    {/* <PayPalButton
-                      amount={selectedOrder.totalPrice}
-                      onSuccess={successPaymentHandler}
-                    /> */}
+                    <EsewaPaymentForm order={selectedOrder} />
                   </div>
                 )}
               </div>
@@ -191,11 +177,11 @@ export default function OrderScreen() {
                   </Message>
                 ) : (
                   <>
-                    <Message variant="alert">Not Delivered</Message>
+                    <Message variant="alert">Delivering...</Message>
                   </>
                 )}
                 {/* inlcude userInfo.isAdmin later on && */}
-                {userInfo &&
+                {/* {userInfo &&
                   selectedOrder.isPaid &&
                   !selectedOrder.isDelivered && (
                     <div className="mb-3 ms-2">
@@ -209,7 +195,7 @@ export default function OrderScreen() {
                         Mark As Delivered
                       </button>
                     </div>
-                  )}
+                  )} */}
               </div>
             </div>
 

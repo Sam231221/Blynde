@@ -1,5 +1,4 @@
 import React from "react";
-
 const HomeScreen = React.lazy(() => import("../pages/HomeScreen"));
 const ShopScreen = React.lazy(() => import("../pages/ShopScreen"));
 const CartScreen = React.lazy(() => import("../pages/CartScreen"));
@@ -22,6 +21,12 @@ const ProfileScreen = React.lazy(() => import("../pages/ProfileScreen"));
 
 const ShippingScreen = React.lazy(() => import("../pages/ShippingScreen"));
 const PaymentScreen = React.lazy(() => import("../pages/PaymentScreen"));
+const PaymentSuccessScreen = React.lazy(
+  () => import("../pages/PaymentSuccessScreen")
+);
+const PaymentErrorScreen = React.lazy(
+  () => import("../pages/PaymentErrorScreen")
+);
 const PlaceOrderScreen = React.lazy(() => import("../pages/PlaceOrderScreen"));
 const OrderScreen = React.lazy(() => import("../pages/OrderScreen"));
 const WishlistScreen = React.lazy(() => import("../pages/WishlistScreen"));
@@ -136,6 +141,16 @@ const routes = [
         name: "PaymentScreen",
         path: "/payment/",
         component: <PaymentScreen />,
+      },
+      {
+        name: "PaymentErrorScreen",
+        path: "/payment/success/",
+        component: <PaymentSuccessScreen />,
+      },
+      {
+        name: "PaymentErrorScreen",
+        path: "/payment/error/",
+        component: <PaymentErrorScreen />,
       },
     ],
   },

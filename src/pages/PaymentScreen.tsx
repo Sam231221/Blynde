@@ -23,8 +23,7 @@ function PaymentScreen() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [paymentMethod, setPaymentMethod] = useState("PayPal");
-
+  const [paymentMethod, setPaymentMethod] = useState("Esewa");
   useEffect(() => {
     if (!userInfo) {
       navigate("/login?redirect=payment");
@@ -77,11 +76,12 @@ function PaymentScreen() {
                     className="text-sm p-2 font-semibold  text-zinc-700"
                     htmlFor=""
                   >
-                    PayPal or Credit Card
+                    Esewa
                   </label>
                   <input
                     type="radio"
-                    id="paypal"
+                    id="esewa"
+                    value="Esewa"
                     name="paymentMethod"
                     checked
                     onChange={(e) => setPaymentMethod(e.target.value)}

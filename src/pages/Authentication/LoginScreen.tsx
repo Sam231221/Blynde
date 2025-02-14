@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
 import { useLogin } from "../../hooks/useAuth";
 import Spinner from "../../components/Spinner";
-import { RootState } from "../../types";
 import { toast } from "react-toastify";
 
 const LoginScreen = () => {
@@ -23,7 +21,6 @@ const LoginScreen = () => {
 
   const navigate = useNavigate();
   const { mutate: login, isPending } = useLogin();
-  const { userInfo } = useSelector((state: RootState) => state.auth);
 
   const params = new URLSearchParams(window.location.search);
 

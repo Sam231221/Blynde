@@ -1,0 +1,156 @@
+import React, { useEffect, useState, useCallback } from "react";
+import { v4 as uuidv4 } from "uuid";
+import CryptoJS from "crypto-js";
+import {
+  AmountData,
+  ConvertedAmounts,
+  convertUSDToNPR,
+} from "../lib/exchangeRateApi";
+import { Order } from "../types";
+
+const ESEWA_SECRET = "8gBm/:&EnhH.1/q"; // Move secret out of state
+const PRODUCT_CODE = "EPAYTEST";
+
+export const EsewaPaymentForm = ({ order }: { order: Order }) => {
+  const [formData, setFormData] = useState({
+    amount: order.itemsPrice.toString(),
+    tax_amount: order.taxPrice.toString(),
+    total_amount: order.totalPrice.toString(),
+    transaction_uuid: uuidv4(),
+    product_service_charge: "0",
+    product_delivery_charge: "0",
+    product_code: PRODUCT_CODE,
+    success_url: "http://localhost:5173/paymentsuccess",
+    failure_url: "http://localhost:5173/paymentfailure",
+    signed_field_names: "total_amount,transaction_uuid,product_code",
+    signature: "",
+  });
+
+  const [convertedAmounts, setConvertedAmounts] =
+    useState<ConvertedAmounts | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const generateSignature = useCallback(
+    (total_amount: string, transaction_uuid: string) => {
+      const hashString = `total_amount=${total_amount},transaction_uuid=${transaction_uuid},product_code=${PRODUCT_CODE}`;
+      const hash = CryptoJS.HmacSHA256(hashString, ESEWA_SECRET);
+      return CryptoJS.enc.Base64.stringify(hash);
+    },
+    []
+  );
+
+  useEffect(() => {
+    let isMounted = true;
+    const calculateSignature = async () => {
+      try {
+        const conversionData: AmountData = {
+          amount: formData.amount,
+          tax_amount: formData.tax_amount,
+          total_amount: formData.total_amount,
+        };
+
+        const converted = await convertUSDToNPR(conversionData);
+
+        if (!isMounted) return;
+
+        if (converted.error) {
+          setError(converted.error);
+          return;
+        }
+
+        setConvertedAmounts(converted);
+        const hashedSignature = generateSignature(
+          converted.total_amount_npr,
+          formData.transaction_uuid
+        );
+
+        setFormData((prev) => ({
+          ...prev,
+          amount: converted.amount_npr,
+          tax_amount: converted.tax_amount_npr,
+          total_amount: converted.total_amount_npr,
+          signature: hashedSignature,
+        }));
+      } catch (error) {
+        console.error("Error calculating signature:", error);
+        if (isMounted) setError("Failed to process payment details");
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    };
+
+    calculateSignature();
+    return () => {
+      isMounted = false;
+    };
+  }, [
+    formData.amount,
+    formData.tax_amount,
+    formData.total_amount,
+    formData.transaction_uuid,
+    generateSignature,
+  ]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    if (loading || error) {
+      e.preventDefault();
+    }
+  };
+
+  return (
+    <form
+      action="https://rc-epay.esewa.com.np/api/epay/main/v2/form"
+      method="POST"
+      onSubmit={handleSubmit}
+    >
+      {/* Hidden inputs - removed unnecessary onChange handlers */}
+      <input type="hidden" name="amount" value={formData.amount} />
+      <input type="hidden" name="tax_amount" value={formData.tax_amount} />
+      <input type="hidden" name="total_amount" value={formData.total_amount} />
+      <input
+        type="hidden"
+        name="transaction_uuid"
+        value={formData.transaction_uuid}
+      />
+      <input type="hidden" name="product_code" value={formData.product_code} />
+      <input
+        type="hidden"
+        name="product_service_charge"
+        value={formData.product_service_charge}
+      />
+      <input
+        type="hidden"
+        name="product_delivery_charge"
+        value={formData.product_delivery_charge}
+      />
+      <input type="hidden" name="success_url" value={formData.success_url} />
+      <input type="hidden" name="failure_url" value={formData.failure_url} />
+      <input
+        type="hidden"
+        name="signed_field_names"
+        value={formData.signed_field_names}
+      />
+      <input type="hidden" name="signature" value={formData.signature} />
+
+      {error && <div className="text-red-500 mb-2">{error}</div>}
+
+      <button
+        type="submit"
+        disabled={loading || !!error}
+        className={`bg-green-500 hover:bg-green-600 transition-colors duration-200 justify-center ease-out mt-2 w-full flex items-center rounded-md font-medium px-3 py-1 text-white ${
+          loading || error ? "opacity-50 cursor-not-allowed" : ""
+        }`}
+      >
+        <img
+          src="/esewa.png"
+          className="w-10 h-10 rounded-full"
+          alt="eSewa Logo"
+        />
+        <span className="ml-2">
+          {loading ? "Processing..." : "Pay With Esewa"}
+        </span>
+      </button>
+    </form>
+  );
+};
