@@ -4,6 +4,7 @@ import Checkbox from "../../../../../../components/reusables/Checkbox";
 import { AppDispatch, Size } from "../../../../../../types";
 import { useDispatch } from "react-redux";
 import { setFilterSizes } from "../../../../../../redux/reducers/FilterProductSlice";
+import { IoCloseOutline } from "react-icons/io5";
 
 export default function FilterBySize() {
   const [sizes, setSizes] = useState<Size[]>([]);
@@ -44,6 +45,26 @@ export default function FilterBySize() {
         Filter By Size
       </h2>
       <div className="px-3">
+        {selectedSizes.length > 0 && (
+          <div className="flex items-center">
+            <h1 className="font-medium mr-1">Selected:</h1>
+            {selectedSizes.map((size, key) => (
+              <span key={key} className="text-gray-600 rounded-md mr-1">
+                {size.name},
+              </span>
+            ))}
+            <button
+              className="flex bg-red-500 hover:bg-red-400 rounded-md px-2 py-1 text-white items-center my-2"
+              onClick={() => {
+                setSelectedSizes([]);
+                dispatch(setFilterSizes([]));
+              }}
+            >
+              <IoCloseOutline fontSize={15} />
+              <span className="ml-2 text-xs"> Clear</span>
+            </button>
+          </div>
+        )}
         {sizes.length > 0 &&
           sizes.map((size, key) => {
             return (

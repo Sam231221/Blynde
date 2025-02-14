@@ -28,9 +28,9 @@ export default function ShopScreen() {
     }
 
     if (color) {
-      params.set("colors", color);
+      params.set("color", color);
     } else {
-      params.delete("colors");
+      params.delete("color");
     }
 
     if (sizes.length > 0) {
@@ -41,8 +41,8 @@ export default function ShopScreen() {
 
     if (price) {
       const [minValue, maxValue] = price;
-      params.set("minPrice", minValue.toString());
-      params.set("maxPrice", maxValue.toString());
+      params.set("min_price", minValue.toString());
+      params.set("max_price", maxValue.toString());
     }
 
     setSearchParams(params);

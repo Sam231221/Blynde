@@ -85,8 +85,18 @@ export type Size = {
   stock: number;
 };
 export type Category = {
-  _id?: string;
+  _id: string;
   name: string;
+  slug: string;
+  parent?: string;
+  product_count: number;
+  children: Category[];
+};
+export type Color = {
+  hex_code: string;
+  name: string;
+  stock?: number;
+  product_count: number;
 };
 export type Product = {
   _id: number;
@@ -101,7 +111,7 @@ export type Product = {
   review_count: number;
   countInStock: number;
   rating: number;
-  colors: { hex_code: string; name: string; stock?: number }[];
+  colors: [];
   priceBadge: string;
   discount_percentage: number;
   description: string;

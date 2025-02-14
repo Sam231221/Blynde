@@ -112,7 +112,7 @@ export default function ProductGallery() {
     // Filter by colors
     if (color.length > 0) {
       tempProducts = tempProducts.filter((product) =>
-        product.colors.some((c) => color.includes(c.name))
+        product.colors.some((c) => color.includes(c))
       );
     }
     return tempProducts;
