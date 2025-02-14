@@ -146,19 +146,32 @@ export default function OrderScreen() {
                 <h1 className="font-medium text-lg border-b mb-2 pb-2">
                   Payment Options
                 </h1>
-                {selectedOrder.isPaid ? (
+                {selectedOrder.isPaid && (
                   <Message variant="success">
                     Paid on{" "}
                     {Moment(selectedOrder.paidAt).format(
                       "MMMM Do YYYY, h:mm a"
                     )}
                   </Message>
-                ) : (
-                  <Message variant="alert">Not Paid</Message>
                 )}
                 {!selectedOrder.isPaid && sdkReady && (
                   <div>
                     <EsewaPaymentForm order={selectedOrder} />
+                    <div className=" bg-sky-200 p-3 rounded-md mt-2">
+                      <h1>
+                        {" "}
+                        <a
+                          className="text-sky-400 hover:text-sky-500"
+                          target="__blank"
+                          href="https://developer.esewa.com.np/pages/Epay#transactionflow"
+                        >
+                          Test only, Click here
+                        </a>
+                      </h1>
+                      <span>eSewa ID: 9806800001/2/3/4/5 </span>
+                      <span>Password: Nepal@123 MPIN: 1122</span>
+                      <span>Token:123456</span>
+                    </div>
                   </div>
                 )}
               </div>
@@ -176,7 +189,7 @@ export default function OrderScreen() {
                   </Message>
                 ) : (
                   <>
-                    <Message variant="alert">Delivering...</Message>
+                    <Message variant="alert">Processing...</Message>
                   </>
                 )}
                 {/* inlcude userInfo.isAdmin later on && */}
