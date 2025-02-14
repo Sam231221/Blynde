@@ -3,7 +3,7 @@ import { apiRequest } from "./api";
 
 // Login User
 export const loginUser = (userData: {
-  username: string;
+  email: string;
   password: string;
   rememberMe: boolean;
 }): Promise<User> => {

@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 
 const LoginScreen = () => {
   const [formData, setFormData] = useState({
-    username: "",
+    email: "",
     password: "",
     rememberMe: false,
   });
@@ -46,6 +46,8 @@ const LoginScreen = () => {
           } else {
             setErrors(errorResponse.response.data.errors);
           }
+        } else {
+          toast.error("Something went wrong on the backend.");
         }
       },
     });
@@ -86,8 +88,8 @@ const LoginScreen = () => {
               <input
                 type="email"
                 id="email"
-                name="username"
-                value={formData.username}
+                name="email"
+                value={formData.email}
                 onChange={handleChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
                 placeholder="momohhalima42@gmail.com"
