@@ -5,25 +5,33 @@ import { User } from "../../types";
 // Async Thunks for CRUD operations (if you want to manage state in Redux as well) - Optional
 export const fetchUsers = createAsyncThunk<User[]>(
   "users/fetchUsers",
-  async () => {
+  async (): Promise<User[]> => {
     const response = await apiRequest("/api/users", "GET");
-    return response.data;
+    return response as User[];
   }
 );
 
 export const createUser = createAsyncThunk<User, User>(
   "users/createUser",
-  async (user) => {
-    const response = await apiRequest("/api/users", "POST", user);
-    return response.data;
+  async (user, { rejectWithValue }) => {
+    try {
+      const response = await apiRequest("/api/users", "POST", user);
+      return response as User;
+    } catch {
+      return rejectWithValue("Error creating user");
+    }
   }
 );
 
 export const updateUser = createAsyncThunk<User, User>(
   "users/updateUser",
-  async (user) => {
-    const response = await apiRequest(`/api/users/${user._id}`, "PUT", user); // Assuming user object has an ID
-    return response.data;
+  async (user, { rejectWithValue }) => {
+    try {
+      const response = await apiRequest(`/api/users/${user._id}`, "PUT", user); // Assuming user object has an ID
+      return response as User;
+    } catch {
+      return rejectWithValue("Error updating user");
+    }
   }
 );
 

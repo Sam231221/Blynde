@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { MapPin, Mail, Package, Heart } from "lucide-react";
+import { Mail, Package, Heart } from "lucide-react";
 import PageContainer from "../components/PageContainer";
 import {
   useGetUserProfileQuery,
@@ -9,7 +9,7 @@ import {
 export default function ProfileScreen() {
   const [activeTab, setActiveTab] = useState("orders");
   const [user, setUser] = useState({
-    name: "",
+    first_name: "",
     email: "",
   });
 
@@ -38,7 +38,7 @@ export default function ProfileScreen() {
   const { mutate: updateUserProfile, isPending } = useUpdateProfileMutation();
   useEffect(() => {
     if (data) {
-      setUser({ ...user, name: data.name, email: data.email });
+      setUser({ ...user, first_name: data.first_name, email: data.email });
     }
   }, [data]);
   const handleProfileUpdate = (e: React.FormEvent<HTMLFormElement>) => {
@@ -54,22 +54,18 @@ export default function ProfileScreen() {
           <div className="w-32 h-32 rounded-full overflow-hidden">
             <img
               src={
-                data.profile_pic || "https://ui-avatars.com/api/?name=John+Doe"
+                data?.profile_pic || "https://ui-avatars.com/api/?name=John+Doe"
               }
-              alt={data.name}
+              alt={data?.first_name}
               className="w-full h-full object-cover"
             />
           </div>
           <div>
-            <h1 className="text-3xl font-bold mb-2">{data.name}</h1>
+            <h1 className="text-3xl font-bold mb-2">{data?.first_name}</h1>
             <div className="flex items-center gap-4 text-gray-600">
               <div className="flex items-center gap-1">
                 <Mail className="w-4 h-4" />
-                <span>{data.email}</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <MapPin className="w-4 h-4" />
-                <span>{data.location}</span>
+                <span>{data?.email}</span>
               </div>
             </div>
           </div>
@@ -181,14 +177,16 @@ export default function ProfileScreen() {
                   htmlFor="name"
                   className="block text-sm font-medium text-gray-700 mb-1"
                 >
-                  Name
+                  First Name
                 </label>
                 <input
                   type="text"
-                  id="name"
+                  id="first_name"
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-                  value={user.name}
-                  onChange={(e) => setUser({ ...user, name: e.target.value })}
+                  value={user.first_name}
+                  onChange={(e) =>
+                    setUser({ ...user, first_name: e.target.value })
+                  }
                 />
               </div>
               <div>

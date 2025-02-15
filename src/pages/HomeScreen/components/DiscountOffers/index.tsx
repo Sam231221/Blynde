@@ -53,7 +53,7 @@ const DiscountOffers: React.FC = () => {
           `/api/products/discountoffers/`,
           "GET"
         ); // Replace with your API endpoint
-        const updatedOffers = response.map((offer: Offer) => {
+        const updatedOffers = (response as Offer[]).map((offer: Offer) => {
           const endDate = new Date(offer.end_date);
           return {
             ...offer,

@@ -1,6 +1,7 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { queryClient } from "./queryClient";
 import { apiRequest } from "./api";
+import { User } from "../types";
 
 export const useUsersQuery = () =>
   useQuery({
@@ -76,15 +77,15 @@ export const useDeleteUserMutation = () => {
 };
 
 export const useGetUserProfileQuery = () => {
-  return useQuery({
+  return useQuery<User>({
     queryKey: ["profile"],
-    queryFn: () => apiRequest("/api/users/profile/"),
+    queryFn: () => apiRequest("/api/users/profile/", "GET"),
     staleTime: Infinity,
   });
 };
 
 export const useUpdateProfileMutation = () => {
-  return useMutation<void, Error, { name: string; email: string }>({
+  return useMutation<void, Error, { first_name: string; email: string }>({
     mutationFn: (userData) =>
       apiRequest("/api/users/profile/", "PUT", userData),
     onSuccess: () => {

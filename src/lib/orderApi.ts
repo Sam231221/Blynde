@@ -9,7 +9,7 @@ export const updateOrder = async ({
   updates: Partial<Order>;
 }): Promise<Order> => {
   const data = await apiRequest(`/api/orders/${id}/`, "PUT", updates);
-  return data;
+  return data as Order;
 };
 export const deliverOrder = async ({ orderId }: { orderId: number }) => {
   const data = await apiRequest(`/api/orders/${orderId}/deliver/`, "PUT");
@@ -44,12 +44,14 @@ export const fetchOrders = async ({
 // Fetch order by ID
 export const fetchOrderById = async (id: number): Promise<Order> => {
   const response = await apiRequest(`/api/orders/${id}/`, "GET");
-  return response;
+  return response as Order;
 };
 
 // Create an order
-export const createOrder = (order: Partial<Order>) => {
-  const data = apiRequest("/api/orders/add/", "POST", order);
+export const createOrder = (order: Partial<Order>): Promise<Partial<Order>> => {
+  const data = apiRequest("/api/orders/add/", "POST", order) as Promise<
+    Partial<Order>
+  >;
   return data;
 };
 

@@ -34,7 +34,8 @@ export default function ProductGallery() {
     pagination: Pagination;
   }>({
     queryKey: ["products", debouncedFilters], // Query key and debounced filters
-    queryFn: () => fetchProducts(debouncedFilters), // Fetch function
+    queryFn: () =>
+      fetchProducts(debouncedFilters as unknown as Record<string, string>), // Fetch function
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 

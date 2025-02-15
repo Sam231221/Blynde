@@ -4,7 +4,7 @@ import { CiBookmark } from "react-icons/ci";
 import { Message } from "../components/Message";
 import PageContainer from "../components/PageContainer";
 
-import { RootState } from "../types";
+import { Order, RootState } from "../types";
 import { createOrder } from "../lib/orderApi";
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "../lib/queryClient";
@@ -37,7 +37,7 @@ function PlaceOrderScreen() {
   );
   const taxPrice: number = Number(Number(0.082 * itemsPrice).toFixed(2));
   const totalPrice: number = itemsPrice + shippingPrice + taxPrice;
-  console.log("itemsPrice:", itemsPrice);
+
   const FinalCart = {
     ...cart,
     itemsPrice: itemsPrice,
@@ -56,7 +56,7 @@ function PlaceOrderScreen() {
 
   const { mutate: placeUserOrder, isError: error } = useMutation({
     mutationFn: createOrder,
-    onSuccess: (newOrder) => {
+    onSuccess: (newOrder: Partial<Order>) => {
       // Invalidate the relevant query so it refetches and shows the new order
       queryClient.invalidateQueries({ queryKey: ["orders"] }); // Example query key
       dispatch(clearCart());

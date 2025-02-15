@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-// import { PayPalButton } from "react-paypal-button-v2";
 import Moment from "moment";
 
 import Loader from "../components/Loader";
@@ -32,7 +31,7 @@ export default function OrderScreen() {
   const userInfo = useUser();
 
   const [sdkReady, setSdkReady] = useState(false);
-  console.log("selectedOrder", selectedOrder);
+
   const {
     data: fetchedOrders,
     isLoading,

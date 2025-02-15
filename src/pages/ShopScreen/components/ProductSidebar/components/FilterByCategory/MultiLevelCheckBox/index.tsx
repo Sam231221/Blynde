@@ -4,10 +4,10 @@ import { useDispatch } from "react-redux";
 import { AppDispatch, Category } from "../../../../../../../types";
 import { setFilterCategories } from "../../../../../../../redux/reducers/FilterProductSlice";
 
-interface MultiLevelCheckboxProps {
+type MultiLevelCheckboxProps = {
   data: Category[];
-}
-
+  handleChange: (newSelectedCategory: string[]) => void;
+};
 const MultiLevelCheckbox: React.FC<MultiLevelCheckboxProps> = ({ data }) => {
   const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>(
     {}

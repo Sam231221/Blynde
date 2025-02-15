@@ -57,16 +57,6 @@ const LoginScreen = () => {
     });
   };
 
-  // useEffect(() => {
-  //   if (userInfo && redirect == "shipping") {
-  //     console.log("Redirecting to shipping");
-  //     navigate("/shipping");
-  //   }
-  //   if (userInfo && userInfo.email_verified && redirect == "/") {
-  //     navigate("/");
-  //   }
-  // }, [userInfo, navigate, redirect]);
-
   return (
     <div className="min-h-screen bg-zinc-200/20 flex items-center justify-center p-4">
       <div className="w-full max-w-6xl bg-white rounded-lg shadow-lg overflow-hidden flex">
