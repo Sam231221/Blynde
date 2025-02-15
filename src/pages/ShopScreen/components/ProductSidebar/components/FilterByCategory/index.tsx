@@ -9,7 +9,10 @@ function FilterByCategory() {
   const [categories, setCategories] = useState<Category[]>([]);
   const dispatch: AppDispatch = useDispatch();
   const loadCategories = async () => {
-    const data = await apiRequest("/api/products/categories/", "GET");
+    const data: Category[] = await apiRequest(
+      "/api/products/categories/",
+      "GET"
+    );
     setCategories(data);
   };
   useEffect(() => {

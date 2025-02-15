@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-
+import React, { useState, useCallback } from "react";
 import { IoCloseOutline } from "react-icons/io5";
 import { useDispatch } from "react-redux";
 import { AppDispatch, Category } from "../../../../../../../types";
@@ -7,73 +6,79 @@ import { setFilterCategories } from "../../../../../../../redux/reducers/FilterP
 
 interface MultiLevelCheckboxProps {
   data: Category[];
-  handleChange: (checkedItems: string[]) => void;
 }
 
-const MultiLevelCheckbox: React.FC<MultiLevelCheckboxProps> = ({
-  data,
-  handleChange,
-}) => {
+const MultiLevelCheckbox: React.FC<MultiLevelCheckboxProps> = ({ data }) => {
   const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>(
     {}
   );
   const [checkedItems, setCheckedItems] = useState<string[]>([]);
   const dispatch: AppDispatch = useDispatch();
+
   // Find parent categories (items with children)
   const parentCategories = data.filter(
     (item) => item.children && item.children.length > 0
   );
 
-  const toggleExpand = (id: string) => {
+  const toggleExpand = useCallback((id: string) => {
     setExpandedItems((prev) => ({
       ...prev,
       [id]: !prev[id],
     }));
-  };
+  }, []);
 
-  const handleCheckboxChange = (slug: string) => {
-    setCheckedItems((prev) => {
-      if (prev.includes(slug)) {
-        return prev.filter((item) => item !== slug);
-      }
-      return [...prev, slug];
-    });
-    handleChange(checkedItems);
-  };
+  const handleCheckboxChange = useCallback(
+    (slug: string) => {
+      setCheckedItems((prev) => {
+        const newCheckedItems = prev.includes(slug)
+          ? prev.filter((item) => item !== slug)
+          : [...prev, slug];
+        dispatch(setFilterCategories(newCheckedItems));
+        return newCheckedItems;
+      });
+    },
+    [dispatch]
+  );
 
-  const findProductCount = (slug: string) => {
-    const item = data.find((item) => item.slug === slug);
-    return item ? item.product_count : 0;
-  };
+  const findProductCount = useCallback(
+    (slug: string) => {
+      const item = data.find((item) => item.slug === slug);
+      return item ? item.product_count : 0;
+    },
+    [data]
+  );
 
-  const renderCheckbox = (
-    label: string,
-    slug: string,
-    isChecked: boolean,
-    onChange: () => void,
-    productCount = 0
-  ) => (
-    <label
-      key={slug}
-      className="flex items-center space-x-2 cursor-pointer group"
-    >
-      <div className="relative">
-        <input
-          type="checkbox"
-          checked={isChecked}
-          onChange={onChange}
-          className="w-4 h-4 border-2 border-gray-300 rounded appearance-none checked:bg-blue-500 checked:border-transparent focus:outline-none transition-colors duration-200 ease-in-out hover:border-blue-400"
-        />
-      </div>
-      <span className="text-sm font-medium text-gray-700 group-hover:text-gray-900 transition-colors duration-200">
-        {label}
-      </span>
-      {productCount > 0 && (
-        <span className="text-xs font-medium text-gray-500 group-hover:text-gray-700 transition-colors duration-200">
-          ({productCount})
+  const renderCheckbox = useCallback(
+    (
+      label: string,
+      slug: string,
+      isChecked: boolean,
+      onChange: () => void,
+      productCount = 0
+    ) => (
+      <label
+        key={slug}
+        className="flex items-center space-x-2 cursor-pointer group"
+      >
+        <div className="relative">
+          <input
+            type="checkbox"
+            checked={isChecked}
+            onChange={onChange}
+            className="w-4 h-4 border-2 border-gray-300 rounded appearance-none checked:bg-blue-500 checked:border-transparent focus:outline-none transition-colors duration-200 ease-in-out hover:border-blue-400"
+          />
+        </div>
+        <span className="text-sm font-medium text-gray-700 group-hover:text-gray-900 transition-colors duration-200">
+          {label}
         </span>
-      )}
-    </label>
+        {productCount > 0 && (
+          <span className="text-xs font-medium text-gray-500 group-hover:text-gray-700 transition-colors duration-200">
+            ({productCount})
+          </span>
+        )}
+      </label>
+    ),
+    []
   );
 
   return (

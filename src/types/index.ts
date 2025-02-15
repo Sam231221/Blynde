@@ -98,6 +98,14 @@ export type Color = {
   stock?: number;
   product_count: number;
 };
+export interface Pagination {
+  current_page: 1;
+  total_pages: 12;
+  total_items: 23;
+  page_size: 2;
+  next: null;
+  previous: null;
+}
 export type Product = {
   _id: number;
   name: string;
