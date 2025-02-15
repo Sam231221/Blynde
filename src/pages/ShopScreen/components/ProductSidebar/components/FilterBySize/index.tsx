@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import axios from "../../../../../../lib/api";
+import { apiRequest } from "../../../../../../lib/api";
 import Checkbox from "../../../../../../components/reusables/Checkbox";
 import { AppDispatch, Size } from "../../../../../../types";
 import { useDispatch } from "react-redux";
@@ -13,7 +13,7 @@ export default function FilterBySize() {
   const dispatch: AppDispatch = useDispatch();
   const loadSizes = async () => {
     try {
-      const { data } = await axios.get("/api/products/sizes/");
+      const data: Size[] = await apiRequest("/api/products/sizes/", "GET");
       setSizes(data);
     } catch (error) {
       console.error("Error fetching sizes:", error);

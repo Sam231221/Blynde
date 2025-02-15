@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios, { apiRequest, endpoint } from "../../../../lib/api";
+import { apiRequest, endpoint } from "../../../../lib/api";
 import { Link } from "react-router-dom";
 import {
   differenceInDays,
@@ -86,11 +86,10 @@ const DiscountOffers: React.FC = () => {
               newRemainingTime.remainingMinutes <= 0 &&
               newRemainingTime.remainingSeconds <= 0
             ) {
-              axios
-                .delete(`/api/products/discountoffers/${offer.id}/delete/`)
-                .catch((error) =>
-                  console.error("Error deleting offer:", error)
-                );
+              apiRequest(
+                `/api/products/discountoffers/${offer.id}/delete/`,
+                "DELETE"
+              ).catch((error) => console.error("Error deleting offer:", error));
               return null;
             }
 

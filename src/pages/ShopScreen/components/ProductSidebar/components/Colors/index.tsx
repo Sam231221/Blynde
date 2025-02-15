@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
-import axios from "../../../../../../lib/api";
+import { apiRequest } from "../../../../../../lib/api";
 import ColorCheckBox from "./ColorCheckBox";
 import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../../../../../types";
+import { AppDispatch, Color } from "../../../../../../types";
 import { setColor } from "../../../../../../redux/reducers/FilterProductSlice";
 
 export default function Colors() {
-  const [colors, setColors] = useState([]);
+  const [colors, setColors] = useState<Color[]>([]);
   const dispatch: AppDispatch = useDispatch();
 
   const loadColors = async () => {
-    const { data } = await axios.get("/api/products/colors/");
+    const data: Color[] = await apiRequest("/api/products/colors/", "GET");
     setColors(data);
   };
   useEffect(() => {

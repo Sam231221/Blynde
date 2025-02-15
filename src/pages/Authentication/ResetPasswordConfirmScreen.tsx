@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import axios from "axios";
 import { toast } from "react-toastify";
+import { apiRequest } from "../../lib/api";
 
 const ResetPasswordConfirmScreen: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -32,14 +32,15 @@ const ResetPasswordConfirmScreen: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const { data } = await axios.post(
-        "http://127.0.0.1:8000/api/users/password-reset/confirm/",
+      const data = (await apiRequest(
+        `${import.meta.env.VITE_APP_API}/api/users/password-reset/confirm/`,
+        "POST",
         {
           token: token,
           new_password: password,
           confirm_password: confirmPassword,
         }
-      );
+      )) as { detail?: string };
       if (data.detail) {
         setPassword("");
         setConfirmPassword("");

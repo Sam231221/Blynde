@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDebounce } from "../../hooks/useDebounce";
-import axios, { endpoint } from "../../lib/api";
+import { apiRequest, endpoint } from "../../lib/api";
 import { GoSearch } from "react-icons/go";
 import { Link } from "react-router-dom";
 import { Product } from "../../types";
@@ -24,9 +24,10 @@ export default function Searchbar() {
       setError(null);
 
       try {
-        const { data } = await axios.get(
-          `/api/products/all/?search=${debouncedSearch}`
-        );
+        const data = (await apiRequest(
+          `/api/products/all/?search=${debouncedSearch}`,
+          "GET"
+        )) as { results: Product[] };
         setProducts(data.results || []);
       } catch (err) {
         setError(
