@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { endpoint } from "../../../lib/api";
+import { endpoint } from "../../../lib/axiosClient";
 interface ProductImageTransitionProps {
   name: string;
   img_albums: { image: string }[];

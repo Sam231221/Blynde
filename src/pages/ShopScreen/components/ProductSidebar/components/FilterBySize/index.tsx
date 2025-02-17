@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { apiRequest } from "../../../../../../lib/api";
+import { apiRequest } from "../../../../../../lib/axiosClient";
 import Checkbox from "../../../../../../components/reusables/Checkbox";
 import { AppDispatch, Size } from "../../../../../../types";
 import { useDispatch } from "react-redux";

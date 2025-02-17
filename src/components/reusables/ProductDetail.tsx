@@ -8,7 +8,7 @@ import Rating from "../Rating";
 import ProductColorSelect from "../ProductColorSelect";
 import SizeVariant from "../SizeVariant";
 import ProductPriceInput from "../ProductPriceInput";
-import { endpoint } from "../../lib/api";
+import { endpoint } from "../../lib/axiosClient";
 import { ShareProduct } from "./ShareProduct";
 import { useState } from "react";
 import { useDispatch } from "react-redux";

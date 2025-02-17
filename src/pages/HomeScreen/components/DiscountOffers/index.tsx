@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { apiRequest, endpoint } from "../../../../lib/api";
+import { apiRequest, endpoint } from "../../../../lib/axiosClient";
 import { Link } from "react-router-dom";
 import {
   differenceInDays,

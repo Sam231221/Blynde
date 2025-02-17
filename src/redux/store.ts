@@ -3,7 +3,7 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../types";
 
 import AuthReducer from "./reducers/AuthSlice";
-import UserReducer from "./reducers/UserSlice";
+
 import ProductReducer from "./reducers/ProductSlice";
 import CartReducer from "./reducers/CartSlice";
 import ReviewReducer from "./reducers/ReviewSlice";
@@ -13,7 +13,6 @@ import FilterProductReducer from "./reducers/FilterProductSlice";
 const store = configureStore({
   reducer: {
     auth: AuthReducer,
-    users: UserReducer,
     product: ProductReducer,
     productfilters: FilterProductReducer,
     cart: CartReducer,

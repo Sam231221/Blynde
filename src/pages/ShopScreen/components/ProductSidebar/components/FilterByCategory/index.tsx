@@ -1,4 +1,4 @@
-import { apiRequest } from "../../../../../../lib/api";
+import { apiRequest } from "../../../../../../lib/axiosClient";
 import { useEffect, useState } from "react";
 import MultiLevelCheckbox from "./MultiLevelCheckBox";
 import { AppDispatch, Category } from "../../../../../../types";

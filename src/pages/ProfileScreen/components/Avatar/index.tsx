@@ -1,28 +1,37 @@
-"use client";
-
 import type React from "react";
 import { useState, useCallback } from "react";
 import Cropper from "react-easy-crop";
 
 interface AvatarProps {
-  initialImage?: string;
+  initialImage: string;
   size?: number;
-  handleChange?: (imageData: { file: Blob; url: string }) => void;
+  handleChange: (imageData: { file: File; url: string }) => void;
 }
 
 const Avatar: React.FC<AvatarProps> = ({
-  initialImage = "/placeholder.svg",
+  initialImage,
   size = 100,
   handleChange,
 }) => {
   const [image, setImage] = useState<string>(initialImage);
+  const [originalFile, setOriginalFile] = useState<File | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
-  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState<{
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  } | null>(null);
 
   const onCropComplete = useCallback(
-    (croppedArea: any, croppedAreaPixels: any) => {
+    (croppedAreaPixels: {
+      x: number;
+      y: number;
+      width: number;
+      height: number;
+    }) => {
       setCroppedAreaPixels(croppedAreaPixels);
     },
     []
@@ -30,7 +39,13 @@ const Avatar: React.FC<AvatarProps> = ({
 
   const showCroppedImage = useCallback(async () => {
     try {
-      const { file, url } = await getCroppedImg(image, croppedAreaPixels);
+      if (!originalFile) return; // Ensure we have an original file
+      if (!croppedAreaPixels) return; // Ensure we have cropped area pixels
+      const { file, url } = await getCroppedImg(
+        image,
+        croppedAreaPixels,
+        originalFile
+      );
       setImage(url);
       if (handleChange) {
         handleChange({ file, url });
@@ -39,11 +54,12 @@ const Avatar: React.FC<AvatarProps> = ({
     } catch (e) {
       console.error(e);
     }
-  }, [croppedAreaPixels, image, handleChange]);
+  }, [croppedAreaPixels, image, originalFile, handleChange]);
 
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
+      setOriginalFile(file);
       const url = URL.createObjectURL(file);
       setImage(url);
       if (handleChange) {
@@ -52,7 +68,6 @@ const Avatar: React.FC<AvatarProps> = ({
       setIsModalOpen(true);
     }
   };
-
   const openEditModal = () => {
     setIsModalOpen(true);
   };
@@ -67,11 +82,7 @@ const Avatar: React.FC<AvatarProps> = ({
         style={{ width: `${size}px`, height: `${size}px` }}
         onClick={() => document.getElementById("fileInput")?.click()}
       >
-        <img
-          src={image || "/placeholder.svg"}
-          alt="Avatar"
-          className="w-full h-full object-cover"
-        />
+        <img src={image} alt="Avatar" className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-full">
           <span className="text-white text-sm font-semibold">Change Photo</span>
         </div>
@@ -140,7 +151,6 @@ const Avatar: React.FC<AvatarProps> = ({
 
 export default Avatar;
 
-// Helper function to crop the image
 const createImage = (url: string): Promise<HTMLImageElement> =>
   new Promise((resolve, reject) => {
     const image = new Image();
@@ -152,8 +162,9 @@ const createImage = (url: string): Promise<HTMLImageElement> =>
 
 const getCroppedImg = async (
   imageSrc: string,
-  pixelCrop: any
-): Promise<{ file: Blob; url: string }> => {
+  pixelCrop: { x: number; y: number; width: number; height: number },
+  originalFile: File
+): Promise<{ file: File; url: string }> => {
   const image = await createImage(imageSrc);
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d");
@@ -183,11 +194,10 @@ const getCroppedImg = async (
         reject(new Error("Canvas is empty"));
         return;
       }
-      const file = new File([blob], "cropped-image.jpg", {
-        type: "image/jpeg",
-      });
+      const fileType = originalFile.type || "image/jpeg";
+      const file = new File([blob], originalFile.name, { type: fileType });
       const url = URL.createObjectURL(file);
       resolve({ file, url });
-    }, "image/jpeg");
+    }, originalFile.type);
   });
 };

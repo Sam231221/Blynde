@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { apiRequest } from "../../../../../../lib/api";
+import { apiRequest } from "../../../../../../lib/axiosClient";
 import ColorCheckBox from "./ColorCheckBox";
 import { useDispatch } from "react-redux";
 import { AppDispatch, Color } from "../../../../../../types";

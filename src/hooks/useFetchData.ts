@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { apiRequest } from "../lib/api";
-import { Product } from "../types";
+import { apiRequest } from "../lib/axiosClient";
 
 const fetchAllProducts = async () => {
   const response = await apiRequest({

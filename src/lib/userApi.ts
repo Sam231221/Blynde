@@ -1,38 +1,34 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { queryClient } from "./queryClient";
-import { apiRequest } from "./api";
+import { apiRequest, RequestBody } from "./axiosClient";
 import { User } from "../types";
-import store from "../redux/store";
-const token = store.getState().auth.userInfo?.token;
-
 export const useUsersQuery = () =>
   useQuery({
     queryKey: ["users"],
-    queryFn: () => apiRequest("/api/users/list/"),
-
+    queryFn: () => apiRequest({ url: "/api/users/", method: "GET" }),
     staleTime: Infinity, // Data will not be refetched if the query is considered fresh, even if the query is not active.
   });
 export const useUserDetailQuery = (userId: number) =>
   useQuery({
     queryKey: ["user", userId],
-    queryFn: () => apiRequest(`/api/users/${userId}/`),
+    queryFn: () =>
+      apiRequest({
+        url: `/api/users/detail/${userId}/`,
+        method: "GET",
+        requiresToken: true,
+      }),
 
     enabled: !!userId, // Only run the query if userId is provided
     staleTime: Infinity,
   });
-interface CreateUserFormData {
-  first_name: string;
-  last_name: string;
-  username: string;
-  email: string;
-  password: string;
-  profile_pic: string;
-}
-
 export const useCreateUserMutation = () => {
-  return useMutation<void, Error, CreateUserFormData>({
-    mutationFn: (userData: CreateUserFormData) =>
-      apiRequest("/api/users/create/", "POST", userData),
+  return useMutation<void, Error, RequestBody>({
+    mutationFn: (userData: RequestBody) =>
+      apiRequest({
+        url: "/api/users/create/",
+        method: "POST",
+        data: userData,
+      }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
     },
@@ -42,21 +38,14 @@ export const useCreateUserMutation = () => {
   });
 };
 
-interface UpdateUserFormData {
-  id: number;
-  first_name?: string;
-  last_name?: string;
-  username?: string;
-  email?: string;
-  password?: string;
-  profile_pic?: string;
-  avatarFile?: File | null;
-}
-
 export const useUpdateUserMutation = () => {
-  return useMutation<void, Error, UpdateUserFormData>({
-    mutationFn: (user: UpdateUserFormData) =>
-      apiRequest(`/api/users/update/${user.id}/`, "PUT", user),
+  return useMutation<void, Error, RequestBody>({
+    mutationFn: (userId) =>
+      apiRequest({
+        url: `/api/users/update/${userId}/`,
+        method: "PUT",
+        data: userId,
+      }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
     },
@@ -69,7 +58,10 @@ export const useUpdateUserMutation = () => {
 export const useDeleteUserMutation = () => {
   return useMutation({
     mutationFn: (id: number) =>
-      apiRequest(`/api/users/delete/${id}/`, "DELETE"),
+      apiRequest({
+        url: `/api/users/delete/${id}/`,
+        method: "DELETE",
+      }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
     },
@@ -93,8 +85,8 @@ export const useGetUserProfileQuery = () => {
 };
 
 export const useUpdateProfileMutation = () => {
-  return useMutation({
-    mutationFn: (formData) =>
+  return useMutation<void, Error, RequestBody>({
+    mutationFn: (formData: RequestBody) =>
       apiRequest({
         url: "/api/users/profile/", // Adjust to your Django backend endpoint
         method: "PUT",

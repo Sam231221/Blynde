@@ -1,5 +1,5 @@
 import { User } from "../types";
-import { apiRequest } from "./api";
+import { apiRequest } from "./axiosClient";
 
 // Login User
 export const loginUser = (userData: {
@@ -31,7 +31,11 @@ export const registerUser = (userData: {
 };
 
 export const resetPasswordForUser = (email: string): Promise<void> => {
-  return apiRequest("/api/users/password-reset/", "POST", { email });
+  return apiRequest({
+    url: "/api/users/reset-password/",
+    method: "POST",
+    data: { email },
+  });
 };
 
 export const logoutUser = () => {

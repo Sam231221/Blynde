@@ -10,7 +10,7 @@ declare module "axios" {
   }
 }
 
-type RequestBody = Record<string, any> | FormData;
+export type RequestBody = Record<string, unknown> | FormData;
 
 const axiosClient: AxiosInstance = axios.create({
   baseURL: endpoint,
@@ -19,7 +19,6 @@ const axiosClient: AxiosInstance = axios.create({
   },
 });
 
-// 2. Request interceptor with proper type handling
 axiosClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     // Always initialize headers if undefined
@@ -29,7 +28,6 @@ axiosClient.interceptors.request.use(
     if (config.requiresToken !== false) {
       const token = store.getState().auth.userInfo?.token;
       if (token) {
-        console.log("fk u");
         config.headers.Authorization = `Bearer ${token}`;
       }
     }
@@ -43,7 +41,7 @@ axiosClient.interceptors.request.use(
   },
   (error) => Promise.reject(error)
 );
-interface ApiRequestOptions<T> {
+interface ApiRequestOptions {
   url: string;
   method: "GET" | "POST" | "PUT" | "DELETE";
   data?: RequestBody;
@@ -52,9 +50,7 @@ interface ApiRequestOptions<T> {
 }
 
 // 3. Generic request maker with type safety
-export const apiRequest = async <T>(
-  options: ApiRequestOptions<T>
-): Promise<T> => {
+export const apiRequest = async <T>(options: ApiRequestOptions): Promise<T> => {
   const { url, method, data, requiresToken = true } = options;
   const respone = await axiosClient({
     method,

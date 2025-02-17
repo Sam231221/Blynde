@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { apiRequest } from "../../lib/api";
+import { apiRequest } from "../../lib/axiosClient";
 
 const ResetPasswordConfirmScreen: React.FC = () => {
   const [searchParams] = useSearchParams();

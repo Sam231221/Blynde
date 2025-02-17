@@ -1,97 +1,95 @@
-import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { apiRequest } from "../../lib/api";
-import { User } from "../../types";
+// import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+// import { apiRequest } from "../../lib/api";
+// import { User } from "../../types";
 
-// Async Thunks for CRUD operations (if you want to manage state in Redux as well) - Optional
-export const fetchUsers = createAsyncThunk<User[]>(
-  "users/fetchUsers",
-  async (): Promise<User[]> => {
-    const response = await apiRequest("/api/users", "GET");
-    return response as User[];
-  }
-);
+// // Async Thunks for CRUD operations (if you want to manage state in Redux as well) - Optional
+// export const fetchUsers = createAsyncThunk<User[]>(
+//   "users/fetchUsers",
+//   async (): Promise<User[]> => {
+//     const response = await apiRequest({ url: "/api/users", method: "GET" });
+//     return response as User[];
+//   }
+// );
 
-export const createUser = createAsyncThunk<User, User>(
-  "users/createUser",
-  async (user, { rejectWithValue }) => {
-    try {
-      const response = await apiRequest("/api/users", "POST", user);
-      return response as User;
-    } catch {
-      return rejectWithValue("Error creating user");
-    }
-  }
-);
+// export const createUser = createAsyncThunk<User, User>(
+//   "users/createUser",
+//   async (user: User, { rejectWithValue }) => {
+//     try {
+//       const response = await apiRequest({
+//         url: "/api/users",
+//         method: "POST",
+//         data: user,
+//       });
+//       return response as User;
+//     } catch {
+//       return rejectWithValue("Error creating user");
+//     }
+//   }
+// );
+// // export interface User extends Record<string, unknown> {
+// //   _id: string;
+// //   name: string;
+// //   email: string;
+// //   // other fields...
+// // }
 
-export const updateUser = createAsyncThunk<User, User>(
-  "users/updateUser",
-  async (user, { rejectWithValue }) => {
-    try {
-      const response = await apiRequest(`/api/users/${user._id}`, "PUT", user); // Assuming user object has an ID
-      return response as User;
-    } catch {
-      return rejectWithValue("Error updating user");
-    }
-  }
-);
+// export const deleteUser = createAsyncThunk<string, string>(
+//   "users/deleteUser",
+//   async (_id) => {
+//     await apiRequest({ url: `/api/users/${_id}`, method: "DELETE" });
+//     return _id;
+//   }
+// );
 
-export const deleteUser = createAsyncThunk<string, string>(
-  "users/deleteUser",
-  async (_id) => {
-    await apiRequest(`/api/users/${_id}`, "DELETE");
-    return _id;
-  }
-);
+// interface UserState {
+//   users: User[];
+//   loading: boolean;
+//   error: string | null;
+// }
 
-interface UserState {
-  users: User[];
-  loading: boolean;
-  error: string | null;
-}
+// const initialState: UserState = {
+//   users: [],
+//   loading: false,
+//   error: null,
+// };
 
-const initialState: UserState = {
-  users: [],
-  loading: false,
-  error: null,
-};
+// const userSlice = createSlice({
+//   name: "users",
+//   initialState,
+//   reducers: {
+//     // Reducers for synchronous state updates (if needed)
+//     // Example: setUser(state, action) { state.user = action.payload; }
+//   },
+//   extraReducers: (builder) => {
+//     builder
+//       .addCase(fetchUsers.pending, (state) => {
+//         state.loading = true;
+//         state.error = null;
+//       })
+//       .addCase(fetchUsers.fulfilled, (state, action: PayloadAction<User[]>) => {
+//         state.loading = false;
+//         state.users = action.payload;
+//       })
+//       .addCase(fetchUsers.rejected, (state, action) => {
+//         state.loading = false;
+//         state.error = action.error.message || "Error fetching users";
+//       })
+//       .addCase(createUser.fulfilled, (state, action: PayloadAction<User>) => {
+//         state.users.push(action.payload);
+//       })
+//       .addCase(updateUser.fulfilled, (state, action: PayloadAction<User>) => {
+//         const index = state.users.findIndex(
+//           (user) => user._id === action.payload._id
+//         );
+//         if (index !== -1) {
+//           state.users[index] = action.payload;
+//         }
+//       })
+//       .addCase(deleteUser.fulfilled, (state, action: PayloadAction<string>) => {
+//         state.users = state.users.filter((user) => user._id !== action.payload);
+//       });
+//   },
+// });
 
-const userSlice = createSlice({
-  name: "users",
-  initialState,
-  reducers: {
-    // Reducers for synchronous state updates (if needed)
-    // Example: setUser(state, action) { state.user = action.payload; }
-  },
-  extraReducers: (builder) => {
-    builder
-      .addCase(fetchUsers.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(fetchUsers.fulfilled, (state, action: PayloadAction<User[]>) => {
-        state.loading = false;
-        state.users = action.payload;
-      })
-      .addCase(fetchUsers.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message || "Error fetching users";
-      })
-      .addCase(createUser.fulfilled, (state, action: PayloadAction<User>) => {
-        state.users.push(action.payload);
-      })
-      .addCase(updateUser.fulfilled, (state, action: PayloadAction<User>) => {
-        const index = state.users.findIndex(
-          (user) => user._id === action.payload._id
-        );
-        if (index !== -1) {
-          state.users[index] = action.payload;
-        }
-      })
-      .addCase(deleteUser.fulfilled, (state, action: PayloadAction<string>) => {
-        state.users = state.users.filter((user) => user._id !== action.payload);
-      });
-  },
-});
-
-export default userSlice.reducer;
-// export const { setUser } = userSlice.actions; // Export any synchronous actions
+// export default userSlice.reducer;
+// // export const { setUser } = userSlice.actions; // Export any synchronous actions

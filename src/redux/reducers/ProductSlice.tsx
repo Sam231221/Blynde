@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Product, ProductState } from "../../types";
-import apiClient from "../../lib/api";
+import apiClient from "../../lib/axiosClient";
 import { toast } from "react-toastify";
 
 const initialState: ProductState = {

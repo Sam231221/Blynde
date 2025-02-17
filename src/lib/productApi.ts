@@ -1,5 +1,5 @@
 import { Pagination, Product } from "../types";
-import { apiRequest } from "./api";
+import { apiRequest } from "./axiosClient";
 
 // Function to fetch products based on filters
 export const fetchProducts = async (
@@ -37,5 +37,6 @@ export const fetchProducts = async (
     method: "GET",
     requiresToken: false,
   });
-  return data;
+
+  return data as { results: Product[]; pagination: Pagination };
 };
