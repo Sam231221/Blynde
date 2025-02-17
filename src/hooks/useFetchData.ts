@@ -1,34 +1,30 @@
 import { useQuery } from "@tanstack/react-query";
-import apiClient from "../lib/api";
+import { apiRequest } from "../lib/api";
 import { Product } from "../types";
 
 const fetchAllProducts = async () => {
-  const response = await apiClient.get("/products");
-  return response.data;
-};
-
-const fetchTopProducts = async () => {
-  const response = await apiClient.get("/products/top");
-  return response.data;
+  const response = await apiRequest({
+    url: "api/products",
+    method: "GET",
+    requiresToken: false,
+  });
+  return response;
 };
 
 export const fetchRecentProducts = async () => {
-  const response = await apiClient.get("/api/products/recents");
+  const response = await apiRequest({
+    url: "api/products/recents",
+    method: "GET",
+    requiresToken: false,
+  });
 
-  return response.data;
+  return response;
 };
 
 export const useAllProducts = () => {
   return useQuery({
     queryKey: ["allProducts"],
     queryFn: fetchAllProducts,
-  });
-};
-
-export const useTopProducts = () => {
-  return useQuery<Product[]>({
-    queryKey: ["topProducts"],
-    queryFn: fetchTopProducts,
   });
 };
 

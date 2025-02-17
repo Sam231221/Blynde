@@ -49,10 +49,11 @@ const DiscountOffers: React.FC = () => {
       setIsLoading(true);
       setError(null);
       try {
-        const response = await apiRequest(
-          `/api/products/discountoffers/`,
-          "GET"
-        ); // Replace with your API endpoint
+        const response = await apiRequest({
+          url: `/api/products/discountoffers/`,
+          method: "GET",
+          requiresToken: false,
+        }); // Replace with your API endpoint
         const updatedOffers = (response as Offer[]).map((offer: Offer) => {
           const endDate = new Date(offer.end_date);
           return {

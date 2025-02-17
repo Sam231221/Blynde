@@ -6,7 +6,7 @@ export interface User {
   username: string;
   first_name: string;
   last_name: string;
-  profile_pic: string;
+  profile_pic_url: string;
   email: string;
   email_verified: boolean;
   token: string;

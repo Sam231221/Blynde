@@ -2,6 +2,8 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { queryClient } from "./queryClient";
 import { apiRequest } from "./api";
 import { User } from "../types";
+import store from "../redux/store";
+const token = store.getState().auth.userInfo?.token;
 
 export const useUsersQuery = () =>
   useQuery({
@@ -48,6 +50,7 @@ interface UpdateUserFormData {
   email?: string;
   password?: string;
   profile_pic?: string;
+  avatarFile?: File | null;
 }
 
 export const useUpdateUserMutation = () => {
@@ -79,15 +82,24 @@ export const useDeleteUserMutation = () => {
 export const useGetUserProfileQuery = () => {
   return useQuery<User>({
     queryKey: ["profile"],
-    queryFn: () => apiRequest("/api/users/profile/", "GET"),
+    queryFn: () =>
+      apiRequest({
+        url: "/api/users/profile/", // Adjust to your Django backend endpoint
+        method: "GET",
+        requiresToken: true,
+      }),
     staleTime: Infinity,
   });
 };
 
 export const useUpdateProfileMutation = () => {
-  return useMutation<void, Error, { first_name: string; email: string }>({
-    mutationFn: (userData) =>
-      apiRequest("/api/users/profile/", "PUT", userData),
+  return useMutation({
+    mutationFn: (formData) =>
+      apiRequest({
+        url: "/api/users/profile/", // Adjust to your Django backend endpoint
+        method: "PUT",
+        data: formData,
+      }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["profile"] });
     },

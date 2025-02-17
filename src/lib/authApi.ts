@@ -7,9 +7,12 @@ export const loginUser = (userData: {
   password: string;
   rememberMe: boolean;
 }): Promise<User> => {
-  return apiRequest("/api/users/login/", "POST", userData);
+  return apiRequest({
+    url: "/api/users/login/",
+    method: "POST",
+    data: userData,
+  });
 };
-
 // Register User
 export const registerUser = (userData: {
   firstName: string;
@@ -20,7 +23,11 @@ export const registerUser = (userData: {
   confirmPassword: string;
   agreeToTerms: boolean;
 }): Promise<User> => {
-  return apiRequest("/api/users/register/", "POST", userData);
+  return apiRequest({
+    url: "/api/users/register/",
+    method: "POST",
+    data: userData,
+  });
 };
 
 export const resetPasswordForUser = (email: string): Promise<void> => {

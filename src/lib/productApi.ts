@@ -30,10 +30,12 @@ export const fetchProducts = async (
       }
     }
   });
-  // Make the API call
-  const data = await apiRequest(
-    `/api/products/all/?${params.toString()}`,
-    "GET"
-  );
-  return data as { results: Product[]; pagination: Pagination };
+  // Make the API call{
+
+  const data = await apiRequest({
+    url: `/api/products/all/?${params.toString()}`,
+    method: "GET",
+    requiresToken: false,
+  });
+  return data;
 };
