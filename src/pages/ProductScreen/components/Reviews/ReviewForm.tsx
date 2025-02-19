@@ -2,14 +2,20 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Rating from "../../../../components/Rating";
 import { addReview } from "../../../../redux/reducers/ReviewSlice";
-import { AppDispatch, Review, RootState } from "../../../../types";
+import {
+  AppDispatch,
+  Product,
+  Review,
+  RootState,
+  User,
+} from "../../../../types";
 import DOMPurify from "dompurify";
 interface ReviewFormProps {
-  productId: string;
+  productSlug: string | undefined;
   userId: string;
   username: string;
 }
-const ReviewForm = ({ productId, userId, username }: ReviewFormProps) => {
+const ReviewForm = ({ productSlug, userId, username }: ReviewFormProps) => {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
 
@@ -31,21 +37,18 @@ const ReviewForm = ({ productId, userId, username }: ReviewFormProps) => {
       return;
     }
 
-    const productIdNumber = Number(productId);
-    if (isNaN(productIdNumber)) {
-      alert("Invalid product ID.");
+    if (!productSlug) {
+      alert("Product slug is missing.");
       return;
     }
-
-    const reviewData: Review = {
-      product: productIdNumber,
-      user: userId,
-      name: username,
-      rating: rating,
-      comment: sanitizedComment,
-    };
-
-    dispatch(addReview(reviewData));
+    dispatch(
+      addReview({
+        rating: rating,
+        comment: sanitizedComment,
+        product: productSlug,
+        user: userId,
+      })
+    );
     setRating(0);
     setComment("");
   };

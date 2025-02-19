@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Product, ProductState } from "../../types";
 import apiClient from "../../lib/axiosClient";
-import { toast } from "react-toastify";
 
 const initialState: ProductState = {
   allProducts: [],
@@ -14,14 +13,14 @@ const initialState: ProductState = {
 
 export const fetchProductDetail = createAsyncThunk(
   "product/fetchProductDetail",
-  async (productId: number) => {
+  async (productSlug: string) => {
     try {
-      const response = await apiClient.get(`/api/products/${productId}/`);
+      const response = await apiClient.get(`/api/products/${productSlug}/`);
       return response.data as Product;
     } catch (error) {
       console.error(error);
-      toast.error("Something went wrong while fetching product details.");
-      return Promise.reject("Failed to fetch product details");
+
+      return Promise.reject("Failed to fetch product Product");
     }
   }
 );

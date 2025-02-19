@@ -23,42 +23,40 @@ export const fetchReviews = createAsyncThunk<
   Review[],
   void,
   { rejectValue: string }
->("reviews/fetchReviews", async (_, { rejectWithValue }) => {
+>("reviews/fetchReviews", async (productSlug, { rejectWithValue }) => {
   try {
     const response = await apiRequest({
-      url: "/api/products/reviews",
+      url: `/api/products/${productSlug}/reviews/`,
       method: "GET",
       requiresToken: true,
     });
     return response as Review[];
   } catch (error) {
     console.error(error);
-    toast.error("Something went wrong while fetching reviews.");
     return rejectWithValue("Error fetching reviews");
   }
 });
 
 // Async thunk to add a new review
-export const addReview = createAsyncThunk<
-  Review,
-  Omit<Review, "createdAt">,
-  { rejectValue: string }
->("reviews/addReview", async (review, { rejectWithValue }) => {
-  try {
-    const response = await apiRequest({
-      url: "/api/products/reviews",
-      method: "POST",
-      data: review,
-      requiresToken: true,
-    });
+export const addReview = createAsyncThunk<Review, { rejectValue: string }>(
+  "reviews/addReview",
+  async (review, { rejectWithValue }) => {
+    try {
+      const response = await apiRequest({
+        url: "/api/products/reviews/",
+        method: "POST",
+        data: review,
+        requiresToken: true,
+      });
 
-    return response as Review;
-  } catch (error) {
-    console.error(error);
-    toast.error("Something went wrong while adding the review.");
-    return rejectWithValue("Error adding review");
+      return response as Review;
+    } catch (error) {
+      console.error(error);
+      toast.error("Something went wrong while adding the review.");
+      return rejectWithValue("Error adding review");
+    }
   }
-});
+);
 
 const reviewSlice = createSlice({
   name: "reviews",
@@ -99,9 +97,11 @@ const reviewSlice = createSlice({
         state.loading = false;
         // If the API call succeeds, the server's response might have a different ID or timestamp.
         // Find the optimistically added review and replace it with the server's version.
+
         const index = state.reviews.findIndex(
           (review) => review === action.meta.arg
         );
+
         if (index !== -1) {
           state.reviews[index] = action.payload;
         }

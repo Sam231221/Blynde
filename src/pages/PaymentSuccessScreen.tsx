@@ -16,29 +16,24 @@ const PaymentSuccessScreen: React.FC = () => {
   const [search] = useSearchParams();
   const navigate = useNavigate();
   const dataQuery = search.get("data");
-  const orderId = search.get("order_id");
+  const order_number = search.get("order_number");
   const [data, setData] = useState<PaymentData>({});
 
   const { mutate: payUserOrder } = useMutation({
     mutationFn: payOrder,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["order", orderId] });
+      queryClient.invalidateQueries({ queryKey: ["order", order_number] });
     },
   });
 
-  // Trigger mutation only when orderId exists
   useEffect(() => {
-    if (orderId) {
-      const parsedOrderId = Number(orderId);
-      if (!isNaN(parsedOrderId)) {
-        payUserOrder({ orderId: parsedOrderId });
-      } else {
-        toast.error("Invalid order id.");
-      }
+    if (order_number) {
+      payUserOrder({ orderNumber: order_number });
+    } else {
+      toast.error("Invalid order id.");
     }
-  }, [orderId, payUserOrder]);
+  }, [order_number, payUserOrder]);
 
-  // Decode and parse payment data from query params
   useEffect(() => {
     if (dataQuery) {
       try {
@@ -128,7 +123,7 @@ const PaymentSuccessScreen: React.FC = () => {
           className="w-full bg-gradient-to-r from-green-400 to-teal-500 text-white font-bold py-3 px-6 rounded-lg shadow-lg hover:from-green-500 hover:to-teal-600 transition duration-300 ease-in-out transform hover:-translate-y-1"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          onClick={() => navigate(`/order/${orderId}`)}
+          onClick={() => navigate(`/myorders/${order_number}`)}
         >
           Return to Order Details
         </motion.button>

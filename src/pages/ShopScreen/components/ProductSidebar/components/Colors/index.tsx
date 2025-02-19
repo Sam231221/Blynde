@@ -10,8 +10,12 @@ export default function Colors() {
   const dispatch: AppDispatch = useDispatch();
 
   const loadColors = async () => {
-    const data: Color[] = await apiRequest("/api/products/colors/", "GET");
-    setColors(data);
+    const data = await apiRequest({
+      url: "/api/products/colors/",
+      method: "GET",
+      requiresToken: false,
+    });
+    setColors(data as Color[]);
   };
   useEffect(() => {
     loadColors();

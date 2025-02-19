@@ -1,7 +1,11 @@
 import type React from "react";
 import { motion } from "framer-motion";
+import { useSearchParams } from "react-router-dom";
 
 const PaymentErrorScreen = () => {
+  const [search] = useSearchParams();
+
+  const order_number = search.get("order_number");
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-100 to-pink-200 flex items-center justify-center p-4">
       <motion.div
@@ -59,7 +63,8 @@ const PaymentErrorScreen = () => {
             ERR_PAYMENT_FAILED
           </p>
           <p className="text-sm text-red-600 mb-2">
-            <span className="font-semibold">Transaction ID:</span> #123456789
+            <span className="font-semibold">Transaction ID:</span> #
+            {order_number}
           </p>
           <p className="text-sm text-red-600">
             <span className="font-semibold">Date:</span>{" "}

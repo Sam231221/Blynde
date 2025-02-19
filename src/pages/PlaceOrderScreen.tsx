@@ -60,7 +60,7 @@ function PlaceOrderScreen() {
       // Invalidate the relevant query so it refetches and shows the new order
       queryClient.invalidateQueries({ queryKey: ["orders"] }); // Example query key
       dispatch(clearCart());
-      navigate(`/order/${newOrder._id}`);
+      navigate(`/myorders/${newOrder.order_number}`);
     },
     onError: (error) => {
       // Handle errors - display a message to the user, etc.
@@ -233,7 +233,7 @@ function PlaceOrderScreen() {
                       <div className="w-14 h-14">
                         <img
                           className="w-full h-full object-contain"
-                          src={item.thumbnail}
+                          src={item.thumbnailUrl}
                           alt={item.name}
                         />
                       </div>

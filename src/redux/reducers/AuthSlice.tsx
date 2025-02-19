@@ -2,7 +2,6 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { AuthState, User } from "../../types";
 
-// Retrieve user info from localStorage or initialize it to null
 const userInfoFromStorage: User | null = JSON.parse(
   localStorage.getItem("userInfo") || "null"
 );

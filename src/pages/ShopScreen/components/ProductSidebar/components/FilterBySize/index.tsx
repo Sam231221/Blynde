@@ -13,8 +13,12 @@ export default function FilterBySize() {
   const dispatch: AppDispatch = useDispatch();
   const loadSizes = async () => {
     try {
-      const data: Size[] = await apiRequest("/api/products/sizes/", "GET");
-      setSizes(data);
+      const data: Size[] = await apiRequest({
+        url: "/api/products/sizes/",
+        method: "GET",
+        requiresToken: false,
+      });
+      setSizes(data as Size[]);
     } catch (error) {
       console.error("Error fetching sizes:", error);
     } finally {

@@ -108,7 +108,7 @@ const routes = [
     items: [
       {
         name: "ProductScreen",
-        path: "/product/:id",
+        path: "/products/:slug",
         component: <ProductScreen />,
       },
 
@@ -124,7 +124,7 @@ const routes = [
     items: [
       {
         name: "OrderScreen",
-        path: "/order/:id",
+        path: "/myorders/:order_number",
         component: <OrderScreen />,
       },
       {

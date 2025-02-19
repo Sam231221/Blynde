@@ -1,8 +1,7 @@
 import { useCallback, useState } from "react";
-import { endpoint } from "../../../lib/axiosClient";
 interface ProductImageTransitionProps {
   name: string;
-  img_albums: { image: string }[];
+  img_albums: { image_url: string }[];
 }
 
 export default function ProductImageTransition({
@@ -18,6 +17,7 @@ export default function ProductImageTransition({
     },
     []
   );
+
   return (
     <div
       onMouseEnter={() => setShowFirstImage(false)}
@@ -25,7 +25,7 @@ export default function ProductImageTransition({
       className="relative bg-gray-300 w-full h-full overflow-hidden  shadow-lg"
     >
       <img
-        src={`${endpoint}${img_albums[0]?.image}`}
+        src={img_albums[0]?.image_url}
         onError={handleImageError}
         alt={name}
         width={300}
@@ -35,7 +35,7 @@ export default function ProductImageTransition({
       />
 
       <img
-        src={`${endpoint}${img_albums[1]?.image}`}
+        src={img_albums[1]?.image_url}
         onError={handleImageError}
         alt={name}
         width={300}

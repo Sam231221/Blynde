@@ -51,7 +51,7 @@ export default function CartRightBar({
             <div key={i} className="flex mb-3 cursor-pointer  items-center">
               <div className="w-16 h-16 mr-3">
                 <img
-                  src={item.thumbnail}
+                  src={item.thumbnailUrl}
                   className="w-full h-full object-cover"
                   alt={item.name}
                 />

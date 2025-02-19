@@ -140,7 +140,7 @@ export default function ProductGridShowCase({
                     <MdOutlineZoomOutMap size={15} />
                   </div>
                   <Link
-                    to={`/product/${product._id}`}
+                    to={`/products/${product.slug}`}
                     className="flex justify-center items-center w-10 h-10 bg-white mb-2 text-gray-400 border border-zinc-200  transition-all duration-200 ease-in-out rounded-full hover:bg-gray-900 hover:text-white hover:border-gray-800"
                   >
                     <EyeOutline

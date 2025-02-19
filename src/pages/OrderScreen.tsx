@@ -6,14 +6,13 @@ import Moment from "moment";
 
 import Loader from "../components/Loader";
 import { Message } from "../components/Message";
-
 import PageContainer from "../components/PageContainer";
 import { useUser } from "../hooks/useAuth";
 import {
   selectSelectedOrder,
   setSelectedOrder,
 } from "../redux/reducers/OrderSlice";
-import { fetchOrderById } from "../lib/orderApi";
+import { fetchOrder } from "../lib/orderApi";
 import { useQuery } from "@tanstack/react-query";
 
 import { EsewaPaymentForm } from "./EsewaPaymentForm";
@@ -24,7 +23,7 @@ const items = [
 ];
 
 export default function OrderScreen() {
-  const { id } = useParams();
+  const { order_number } = useParams();
   const dispatch = useDispatch();
   const redirect = useNavigate();
   const selectedOrder = useSelector(selectSelectedOrder);
@@ -37,8 +36,8 @@ export default function OrderScreen() {
     isLoading,
     error: fetchOrdersError,
   } = useQuery({
-    queryKey: ["order", id],
-    queryFn: () => fetchOrderById(Number(id)),
+    queryKey: ["order", order_number],
+    queryFn: () => fetchOrder(order_number),
   });
 
   useEffect(() => {
@@ -70,17 +69,6 @@ export default function OrderScreen() {
     document.body.appendChild(script);
   };
 
-  // const { mutate: deliverUserOrder, isPending: isDelivering } = useMutation({
-  //   mutationFn: deliverOrder,
-  //   onSuccess: () => {
-  //     queryClient.invalidateQueries({ queryKey: ["order", id] });
-  //   },
-  // });
-
-  // const handleUpdateStatus = (orderId: number) => {
-  //   deliverUserOrder({ orderId });
-  // };
-
   useEffect(() => {
     if (!userInfo) {
       redirect("/login");
@@ -88,7 +76,7 @@ export default function OrderScreen() {
     if (!selectedOrder?.isPaid && !sdkReady) {
       addPayPalScript();
     }
-  }, [userInfo, id, redirect, selectedOrder?.isPaid, sdkReady]);
+  }, [userInfo, order_number, redirect, selectedOrder?.isPaid, sdkReady]);
 
   if (isLoading) return <Loader />;
 
@@ -126,7 +114,7 @@ export default function OrderScreen() {
                   Order Details
                 </h1>
                 <h1 className="text-sm ml-3 mb-2 text-zinc-800 font-medium">
-                  Order No: {selectedOrder._id}
+                  Order No: {selectedOrder.order_number}
                 </h1>
                 <h1 className="text-sm ml-3 mb-2 text-zinc-800 font-medium">
                   Issued on:{" "}
@@ -179,18 +167,10 @@ export default function OrderScreen() {
                   Status
                 </h1>
 
-                {selectedOrder.isDelivered ? (
-                  <Message variant="success">
-                    Delivered on{" "}
-                    {Moment(selectedOrder.deliveredAt).format(
-                      "MMMM Do YYYY, h:mm a"
-                    )}
-                  </Message>
-                ) : (
-                  <>
-                    <Message variant="alert">Processing...</Message>
-                  </>
-                )}
+                <>
+                  <Message variant="alert">{selectedOrder.status}</Message>
+                </>
+
                 {/* inlcude userInfo.isAdmin later on && */}
                 {/* {userInfo &&
                   selectedOrder.isPaid &&
@@ -288,7 +268,7 @@ export default function OrderScreen() {
               </tbody>
             </table>
 
-            <div className="bg-zinc-50 border p-4 mb-3 sm:w-2/6">
+            <div className="bg-zinc-50 border p-4 mb-3 md:flex-[2_1_0%]">
               <h1 className="font-medium text-lg border-b mb-2 pb-2">
                 Shipping Address
               </h1>

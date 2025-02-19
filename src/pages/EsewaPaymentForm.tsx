@@ -54,13 +54,13 @@ export const EsewaPaymentForm = ({ order }: { order: Order }) => {
       <input
         type="hidden"
         name="success_url"
-        value={`http://localhost:5173/payment/success/?order_id=${order._id}&`}
+        value={`http://localhost:5173/payment/success/?order_number=${order.order_number}&`}
         required
       />
       <input
         type="hidden"
         name="failure_url"
-        value={`http://localhost:5173/payment/error/?order_id=${order._id}&`}
+        value={`http://localhost:5173/payment/error/?order_number=${order.order_number}`}
         required
       />
       <input

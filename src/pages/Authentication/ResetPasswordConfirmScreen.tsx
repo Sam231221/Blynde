@@ -32,21 +32,21 @@ const ResetPasswordConfirmScreen: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const data = (await apiRequest(
-        `${import.meta.env.VITE_APP_API}/api/users/password-reset/confirm/`,
-        "POST",
-        {
+      const data = (await apiRequest({
+        url: "/api/users/password-reset/confirm/",
+        method: "POST",
+        data: {
           token: token,
           new_password: password,
           confirm_password: confirmPassword,
-        }
-      )) as { detail?: string };
+        },
+      })) as { detail?: string };
       if (data.detail) {
         setPassword("");
         setConfirmPassword("");
         toast.success(data.detail);
         setTimeout(() => {
-          navigate("/login"); // Redirect to login (adjust as needed)
+          navigate("/login");
         }, 2000);
       }
     } catch {

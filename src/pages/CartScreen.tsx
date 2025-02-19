@@ -108,7 +108,7 @@ export default function CartScreen() {
                         </td>
                         <td className="p-2 border-b-0 text-sm  text-gray-700">
                           <img
-                            src={cartItem.thumbnail}
+                            src={cartItem.thumbnailUrl}
                             className="w-12 inline h-12 object-contain"
                           />
                           <span>{cartItem.name}</span>

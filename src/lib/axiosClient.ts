@@ -1,4 +1,8 @@
-import axios, { AxiosInstance, InternalAxiosRequestConfig } from "axios";
+import axios, {
+  AxiosInstance,
+  AxiosResponse,
+  InternalAxiosRequestConfig,
+} from "axios";
 import store from "../redux/store";
 
 export const endpoint: string = import.meta.env.VITE_APP_API as string;
@@ -26,7 +30,7 @@ axiosClient.interceptors.request.use(
 
     // Token handling
     if (config.requiresToken !== false) {
-      const token = store.getState().auth.userInfo?.token;
+      const token = store.getState().auth.userInfo?.access_token;
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }
@@ -50,15 +54,37 @@ interface ApiRequestOptions {
 }
 
 // 3. Generic request maker with type safety
-export const apiRequest = async <T>(options: ApiRequestOptions): Promise<T> => {
+export const apiRequest = async <T>(
+  options: ApiRequestOptions
+): Promise<T | number> => {
   const { url, method, data, requiresToken = true } = options;
-  const respone = await axiosClient({
-    method,
-    url,
-    data,
-    requiresToken: method === "GET" ? requiresToken : true, // Enforce token for non-GET
-  });
-  return respone.data;
+
+  try {
+    const response: AxiosResponse<T> = await axiosClient({
+      // Type the response
+      method,
+      url,
+      data,
+      requiresToken: method === "GET" ? requiresToken : true,
+    });
+
+    if (response.status === 204) {
+      return response.status;
+    } else if (response.status >= 200 && response.status < 300) {
+      return response.data; // Return response.data for other successful requests
+    } else {
+      throw new Error(`HTTP error! status: ${response.status}`); // Throw an error for non-2xx status codes
+    }
+  } catch (error) {
+    console.error("apiRequest error:", error);
+
+    throw error;
+  }
+  // Promise<T> -> Promise<T | number> for 204 status response
+  // This line is unreachable, but added to satisfy TypeScript's control flow analysis.
+  throw new Error("Unhandled code path in apiRequest");
 };
 
 export default axiosClient;
+
+//how to properly handle response of 204 status code response

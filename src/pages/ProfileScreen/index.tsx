@@ -7,6 +7,7 @@ import {
   useUpdateProfileMutation,
 } from "../../lib/userApi";
 import Avatar from "./components/Avatar";
+import { favoriteProducts, recentOrders } from "./data";
 
 interface ProfileData {
   first_name: string;

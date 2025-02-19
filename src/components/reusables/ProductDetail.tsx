@@ -8,7 +8,6 @@ import Rating from "../Rating";
 import ProductColorSelect from "../ProductColorSelect";
 import SizeVariant from "../SizeVariant";
 import ProductPriceInput from "../ProductPriceInput";
-import { endpoint } from "../../lib/axiosClient";
 import { ShareProduct } from "./ShareProduct";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
@@ -57,7 +56,7 @@ export const ProductDetail = ({ product, openModal }: ProductDetailProps) => {
           price: product.sale_price ? product.sale_price : product.price,
           color,
           size,
-          thumbnail: product.thumbnail,
+          thumbnailUrl: product.thumbnail_url,
           qty: quantity,
         })
       );
@@ -69,16 +68,11 @@ export const ProductDetail = ({ product, openModal }: ProductDetailProps) => {
   return (
     <div className="flex my-8 flex-col md:flex-row md:h-screen gap-3">
       {/* ProductSlider*/}
-
       <div className="md:flex-1 lg:flex-[3] ">
         {product.image_albums && (
           <ProductSlider>
             {product.image_albums?.map((album, index) => (
-              <img
-                key={index}
-                src={`${endpoint}${album.image}`}
-                alt={album.image}
-              />
+              <img key={index} src={album.image_url} alt={album.image} />
             ))}
           </ProductSlider>
         )}
@@ -128,10 +122,10 @@ export const ProductDetail = ({ product, openModal }: ProductDetailProps) => {
               colors={product.colors}
             />
           )}
-          {product.size && (
+          {product.sizes && (
             <SizeVariant
               handleSizeChange={handleSizeChange}
-              sizes={product.size}
+              sizes={product.sizes}
             />
           )}
           <span className="bg-slate-100 mt-4 inline-block px-3 text-xs font-semibold text-green-600 rounded-lg p-2">
@@ -156,8 +150,6 @@ export const ProductDetail = ({ product, openModal }: ProductDetailProps) => {
               Add to Cart
             </button>
           </div>
-
-          {/* {product.countInStock == 0} returns booleand value */}
           <div className="flex my-2 justify-between items-center">
             <a
               href="#"

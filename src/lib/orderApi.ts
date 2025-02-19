@@ -20,19 +20,23 @@ export const fetchOrders = async ({
 
   return response;
 };
-// Fetch order by ID
-export const fetchOrderById = async (id: number): Promise<Order> => {
+
+export const fetchOrder = async (
+  order_number: string | undefined
+): Promise<Order> => {
   const response = await apiRequest({
-    url: `/api/orders/${id}/`,
+    url: `/api/orders/${order_number}/`,
     method: "GET",
+    requiresToken: true,
   });
+
   return response as Order;
 };
 
 // Create an order
 export const createOrder = (order: Partial<Order>): Promise<Partial<Order>> => {
   const data = apiRequest({
-    url: "/api/orders/",
+    url: "/api/orders/add/",
     method: "POST",
     data: order,
   }) as Promise<Partial<Order>>;
@@ -62,17 +66,21 @@ export const updateOrder = async ({
   });
   return data as Order;
 };
-export const deliverOrder = async ({ orderId }: { orderId: number }) => {
+export const deliverOrder = async ({
+  orderNumber,
+}: {
+  orderNumber: string;
+}) => {
   const data = await apiRequest({
-    url: `/api/orders/${orderId}/deliver/`,
+    url: `/api/orders/${orderNumber}/deliver/`,
     method: "PUT",
   });
   return data;
 };
 
-export const payOrder = async ({ orderId }: { orderId: number }) => {
+export const payOrder = async ({ orderNumber }: { orderNumber: string }) => {
   const data = await apiRequest({
-    url: `/api/orders/${orderId}/pay/`,
+    url: `/api/orders/${orderNumber}/pay/`,
     method: "PUT",
   });
 

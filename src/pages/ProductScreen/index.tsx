@@ -11,31 +11,31 @@ import { ProductDetail } from "../../components/reusables/ProductDetail";
 
 import { AppDispatch, RootState } from "../../types";
 import { fetchProductDetail } from "../../redux/reducers/ProductSlice";
+import NotFound from "../NotFound";
+import { toast } from "react-toastify";
 const items = [
   { label: "Home", path: "/" },
   { label: "Shop", path: "/shop" },
 ];
 export default function ProductScreen() {
   const dispatch: AppDispatch = useDispatch();
-  const { id } = useParams<{ id: string }>();
+  const { slug } = useParams<{ slug: string }>();
 
   const { productDetail, loading, error } = useSelector(
     (state: RootState) => state.product
   );
-  const userLogin = useSelector((state: RootState) => state.auth);
-  const { userInfo } = userLogin;
-
-  // const { success } = useSelector((state) => state.reviews);
+  const auth = useSelector((state: RootState) => state.auth);
+  const { userInfo } = auth;
 
   useEffect(() => {
-    if (id) {
-      dispatch(fetchProductDetail(Number(id))); // Fetch product data
+    if (slug) {
+      dispatch(fetchProductDetail(slug)); // Fetch product data
     }
-  }, [id, dispatch]);
+  }, [slug, dispatch]);
 
   if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
-  if (!productDetail) return <p>Product not found</p>;
+  if (error) return toast.error("Something went wrong while fetching Product.");
+  if (!productDetail) return <NotFound />;
   return (
     <PageContainer>
       <div className="container mx-auto mt-24">
@@ -73,7 +73,11 @@ export default function ProductScreen() {
         ) : (
           <>
             <ProductDetail product={productDetail} />
-            {userInfo && id && <Reviews productId={id} userInfo={userInfo} />}
+
+            <Reviews
+              productSlug={String(productDetail._id)}
+              userInfo={userInfo}
+            />
           </>
         )}
       </div>

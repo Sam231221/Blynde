@@ -9,10 +9,10 @@ import { AppDispatch, RootState, User } from "../../../../types";
 import { fetchReviews } from "../../../../redux/reducers/ReviewSlice";
 
 interface ReviewsProps {
-  productId: string;
+  productSlug: string | undefined;
   userInfo: User | null;
 }
-export default function Reviews({ productId, userInfo }: ReviewsProps) {
+export default function Reviews({ productSlug, userInfo }: ReviewsProps) {
   const dispatch = useDispatch<AppDispatch>();
 
   const { reviews, loading: reviewLoading } = useSelector(
@@ -20,17 +20,17 @@ export default function Reviews({ productId, userInfo }: ReviewsProps) {
   );
 
   useEffect(() => {
-    if (productId) {
-      dispatch(fetchReviews());
+    if (productSlug) {
+      dispatch(fetchReviews(productSlug));
     }
-  }, [productId, dispatch]);
+  }, [productSlug, dispatch]);
   const productReviews = reviews.filter(
-    (review) => review.product === Number(productId)
+    (review) => review.product.slug === productSlug
   );
 
   return (
     <>
-      <h1 className="text-xl font-semibold text-gray-800">
+      <h1 className="text-2xl font-semibold text-gray-800">
         Reviews({productReviews.length})
       </h1>
       <hr />
@@ -59,7 +59,9 @@ export default function Reviews({ productId, userInfo }: ReviewsProps) {
                     color={"#fc8c04"}
                   />
                   <div className="flex items-center gap-2">
-                    <span className="font-semibold text-sm">{review.name}</span>
+                    <span className="font-semibold text-sm">
+                      By {review.user.first_name} {review.user.last_name}
+                    </span>
                     <div className=" w-[20px] h-[1px] bg-black"></div>
                     <span className="text-gray-400">
                       {Moment(review.createdAt).format("MMMM Do YYYY, h:mm a")}
@@ -78,8 +80,8 @@ export default function Reviews({ productId, userInfo }: ReviewsProps) {
         {userInfo !== null && userInfo.username ? (
           <ReviewForm
             username={userInfo.username}
-            userId={String(userInfo._id)}
-            productId={productId}
+            userId={String(userInfo.id)}
+            productSlug={productSlug}
           />
         ) : (
           <div className="w-80">

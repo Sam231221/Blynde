@@ -1,5 +1,11 @@
 import { User } from "../types";
 import { apiRequest } from "./axiosClient";
+import store from "../redux/store";
+
+// Function to get the latest refresh token from the store
+const getRefreshToken = (): string | undefined => {
+  return store.getState().auth.userInfo?.refresh_token;
+};
 
 // Login User
 export const loginUser = (userData: {
@@ -13,6 +19,7 @@ export const loginUser = (userData: {
     data: userData,
   });
 };
+
 // Register User
 export const registerUser = (userData: {
   firstName: string;
@@ -30,14 +37,22 @@ export const registerUser = (userData: {
   });
 };
 
+export const logoutUser = async () => {
+  const refreshToken = getRefreshToken();
+  const response = await apiRequest({
+    url: "/api/users/logout/",
+    method: "POST",
+    data: {
+      refresh: refreshToken,
+    },
+  });
+  return response;
+};
+
 export const resetPasswordForUser = (email: string): Promise<void> => {
   return apiRequest({
-    url: "/api/users/reset-password/",
+    url: "/api/users/password-reset-request/",
     method: "POST",
     data: { email },
   });
-};
-
-export const logoutUser = () => {
-  localStorage.removeItem("userInfo");
 };

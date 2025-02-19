@@ -5,9 +5,6 @@ import { CartItem, CartState, RootState, ShippingAddress } from "../../types";
 const cartItemsFromStorage: CartItem[] = JSON.parse(
   localStorage.getItem("cartItems") || "[]"
 );
-const userInfoFromStorage = JSON.parse(
-  localStorage.getItem("userInfo") || "null"
-);
 const shippingAddressFromStorage = JSON.parse(
   localStorage.getItem("shippingAddress") || "{}"
 );
@@ -20,7 +17,6 @@ const initialState: CartState = {
   error: false,
   cartItems: cartItemsFromStorage,
   shippingAddress: shippingAddressFromStorage,
-  userLogin: { userInfo: userInfoFromStorage },
   paymentMethod: paymentMethodFromStorage,
 };
 
@@ -29,7 +25,7 @@ const cartSlice = createSlice({
   initialState,
   reducers: {
     addToCart: (state, action: PayloadAction<CartItem>) => {
-      const { productId, name, price, color, size, thumbnail, qty } =
+      const { productId, name, price, color, size, thumbnailUrl, qty } =
         action.payload;
 
       const existingItem = state.cartItems.find(
@@ -50,7 +46,7 @@ const cartSlice = createSlice({
           qty,
           color,
           size,
-          thumbnail,
+          thumbnailUrl,
         });
       }
       localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
