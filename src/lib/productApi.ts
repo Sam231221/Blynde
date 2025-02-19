@@ -33,3 +33,23 @@ export const fetchProducts = async (
 
   return data as { results: Product[]; pagination: Pagination };
 };
+
+export const fetchRecentProducts = async () => {
+  const response = await apiRequest({
+    url: "api/products/recents",
+    method: "GET",
+    requiresToken: false,
+  });
+
+  return response;
+};
+
+export const fetchProductdDetail = async (productSlug: string | undefined) => {
+  const data = await apiRequest({
+    url: `/api/products/${productSlug}/`,
+    method: "GET",
+    requiresToken: false,
+  });
+
+  return data as Product;
+};

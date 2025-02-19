@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import ProductGridShowCase from "../../../components/reusables/ProductGridShowCase";
-import { useRecentProducts } from "../../../hooks/useFetchData";
+import { useRecentProducts } from "../../../hooks/useProducts";
 
 import { setRecentProducts } from "../../../redux/reducers/ProductSlice";
 

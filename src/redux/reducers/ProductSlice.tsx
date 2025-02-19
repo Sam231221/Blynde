@@ -1,29 +1,14 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Product, ProductState } from "../../types";
-import apiClient from "../../lib/axiosClient";
 
 const initialState: ProductState = {
   allProducts: [],
   topProducts: [],
   recentProducts: [],
-  productDetail: null, // Add this field
+  productDetail: null,
   loading: false,
   error: null,
 };
-
-export const fetchProductDetail = createAsyncThunk(
-  "product/fetchProductDetail",
-  async (productSlug: string) => {
-    try {
-      const response = await apiClient.get(`/api/products/${productSlug}/`);
-      return response.data as Product;
-    } catch (error) {
-      console.error(error);
-
-      return Promise.reject("Failed to fetch product Product");
-    }
-  }
-);
 
 const productSlice = createSlice({
   name: "product",
@@ -47,20 +32,6 @@ const productSlice = createSlice({
     setError: (state, action: PayloadAction<string | null>) => {
       state.error = action.payload;
     },
-  },
-  extraReducers: (builder) => {
-    builder.addCase(fetchProductDetail.pending, (state) => {
-      state.loading = true;
-      state.error = null;
-    });
-    builder.addCase(fetchProductDetail.fulfilled, (state, action) => {
-      state.productDetail = action.payload;
-      state.loading = false;
-    });
-    builder.addCase(fetchProductDetail.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.payload as string;
-    });
   },
 });
 

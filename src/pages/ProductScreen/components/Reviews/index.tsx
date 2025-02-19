@@ -1,40 +1,34 @@
-import { useEffect } from "react";
 import Moment from "moment";
 import ReviewForm from "./ReviewForm";
 import Rating from "../../../../components/Rating";
-import { useDispatch, useSelector } from "react-redux";
 import { Message } from "../../../../components/Message";
 
-import { AppDispatch, RootState, User } from "../../../../types";
-import { fetchReviews } from "../../../../redux/reducers/ReviewSlice";
+import { User, Review } from "../../../../types";
+import { useProductReviews } from "../../../../hooks/useProductReviews";
 
 interface ReviewsProps {
+  productId: string | undefined;
   productSlug: string | undefined;
   userInfo: User | null;
 }
-export default function Reviews({ productSlug, userInfo }: ReviewsProps) {
-  const dispatch = useDispatch<AppDispatch>();
-
-  const { reviews, loading: reviewLoading } = useSelector(
-    (state: RootState) => state.reviews
-  );
-
-  useEffect(() => {
-    if (productSlug) {
-      dispatch(fetchReviews(productSlug));
-    }
-  }, [productSlug, dispatch]);
-  const productReviews = reviews.filter(
-    (review) => review.product.slug === productSlug
-  );
-
+export default function Reviews({
+  productId,
+  productSlug,
+  userInfo,
+}: ReviewsProps) {
+  const {
+    data: productReviews = [],
+    isLoading,
+    error,
+  } = useProductReviews(productSlug);
+  console.log(productReviews);
   return (
     <>
       <h1 className="text-2xl font-semibold text-gray-800">
         Reviews({productReviews.length})
       </h1>
       <hr />
-      {reviewLoading ? (
+      {isLoading ? (
         <p>Loading reviews...</p>
       ) : productReviews.length > 0 ? (
         productReviews
@@ -81,6 +75,7 @@ export default function Reviews({ productSlug, userInfo }: ReviewsProps) {
           <ReviewForm
             username={userInfo.username}
             userId={String(userInfo.id)}
+            productId={productId}
             productSlug={productSlug}
           />
         ) : (

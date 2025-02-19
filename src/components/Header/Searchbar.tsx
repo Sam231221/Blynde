@@ -11,7 +11,7 @@ export default function Searchbar() {
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
 
-  const debouncedSearch = useDebounce(search); // Added debounce delay
+  const debouncedSearch = useDebounce(search);
 
   useEffect(() => {
     if (!debouncedSearch.trim()) {
@@ -24,10 +24,11 @@ export default function Searchbar() {
       setError(null);
 
       try {
-        const data = (await apiRequest(
-          `/api/products/all/?search=${debouncedSearch}`,
-          "GET"
-        )) as { results: Product[] };
+        const data = (await apiRequest({
+          url: `/api/products/all/?search=${debouncedSearch}`,
+          method: "GET",
+          requiresToken: false,
+        })) as { results: Product[] };
         setProducts(data.results || []);
       } catch (err) {
         setError(
@@ -64,7 +65,6 @@ export default function Searchbar() {
           {loading && (
             <div className="py-2 flex justify-center items-center">
               <div className="loader"></div>{" "}
-              {/* Add a proper loader component */}
             </div>
           )}
 
@@ -74,13 +74,13 @@ export default function Searchbar() {
             <div className="max-h-[300px] overflow-y-auto">
               {products.map((product) => (
                 <Link
-                  to={`/product/${product._id}`}
+                  to={`/products/${product.slug}`}
                   className="flex items-center p-2 hover:bg-slate-100 border-b"
-                  key={product._id}
+                  key={product.slug}
                 >
                   <img
                     className="w-10 h-10 object-cover rounded"
-                    src={`${endpoint}${product.image_albums[0]?.image}`}
+                    src={product.thumbnail_url}
                     alt={product.name}
                   />
                   <p className="px-2 truncate">{product.name}</p>

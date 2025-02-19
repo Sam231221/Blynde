@@ -104,7 +104,7 @@ export interface Pagination {
   previous: null;
 }
 export type Product = {
-  _id: number;
+  _id: string;
   slug: string;
   name: string;
   price: number;

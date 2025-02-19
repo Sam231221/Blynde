@@ -1,27 +1,23 @@
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import Rating from "../../../../components/Rating";
-import { addReview } from "../../../../redux/reducers/ReviewSlice";
-import {
-  AppDispatch,
-  Product,
-  Review,
-  RootState,
-  User,
-} from "../../../../types";
 import DOMPurify from "dompurify";
+import Rating from "../../../../components/Rating";
+
+import { useAddProductReview } from "../../../../hooks/useProductReviews";
 interface ReviewFormProps {
+  productId: string | undefined;
   productSlug: string | undefined;
   userId: string;
   username: string;
 }
-const ReviewForm = ({ productSlug, userId, username }: ReviewFormProps) => {
+const ReviewForm = ({ productId, productSlug, userId }: ReviewFormProps) => {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
 
-  const dispatch: AppDispatch = useDispatch();
-  const { loading, error } = useSelector((state: RootState) => state.reviews);
-
+  const {
+    mutate: addProductReview,
+    isPending,
+    error,
+  } = useAddProductReview(productSlug);
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const sanitizedComment = DOMPurify.sanitize(comment);
@@ -32,23 +28,22 @@ const ReviewForm = ({ productSlug, userId, username }: ReviewFormProps) => {
     }
 
     if (sanitizedComment.length > 500) {
-      // Example comment length limit
       alert("Comment is too long (max 500 characters).");
       return;
     }
 
-    if (!productSlug) {
-      alert("Product slug is missing.");
+    if (!productId) {
+      alert("ProductId is missing.");
       return;
     }
-    dispatch(
-      addReview({
-        rating: rating,
-        comment: sanitizedComment,
-        product: productSlug,
-        user: userId,
-      })
-    );
+
+    addProductReview({
+      rating: rating,
+      comment: sanitizedComment,
+      product: productId,
+      user: userId,
+    });
+
     setRating(0);
     setComment("");
   };
@@ -93,11 +88,10 @@ const ReviewForm = ({ productSlug, userId, username }: ReviewFormProps) => {
         ></textarea>
       </div>
       <button
-        disabled={loading}
         type="submit"
         className="px-3 py-2 mb-3 text-black bg-gray-200 hover:bg-gray-900 hover:text-white border border-gray-400 rounded-sm text-medium"
       >
-        {loading ? "Submitting..." : "Submit Review"}
+        {isPending ? "Submitting..." : "Submit Review"}
       </button>
     </form>
   );
