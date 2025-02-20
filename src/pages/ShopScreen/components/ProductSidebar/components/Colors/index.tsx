@@ -17,7 +17,11 @@ export default function Colors() {
         Colors
       </h2>
       {isLoading && <SideFiltersLoader itemCount={8} />}
-      {isError && <div>Error loading Colors. Please try again later.</div>}
+      {isError && (
+        <span className="text-sm">
+          Error loading Colors. Please try again later.
+        </span>
+      )}
       {!isLoading && !isError && (
         <div className="px-3">
           <ColorCheckBox

@@ -4,10 +4,10 @@ import axios, {
   InternalAxiosRequestConfig,
 } from "axios";
 import store from "../redux/store";
+import { logout, updateTokens } from "../redux/reducers/AuthSlice";
 
 export const endpoint: string = import.meta.env.VITE_APP_API as string;
 
-// 1. Augment AxiosRequestConfig to include custom properties
 declare module "axios" {
   interface AxiosRequestConfig {
     requiresToken?: boolean;
@@ -27,13 +27,10 @@ axiosClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     // Always initialize headers if undefined
     config.headers = config.headers || {};
+    const token = store.getState().auth.userInfo?.access_token;
 
-    // Token handling
-    if (config.requiresToken !== false) {
-      const token = store.getState().auth.userInfo?.access_token;
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
+    if (config.requiresToken !== false && token) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
 
     // FormData handling
@@ -45,15 +42,54 @@ axiosClient.interceptors.request.use(
   },
   (error) => Promise.reject(error)
 );
+
+// ✅ Handle Refresh Token Rotation
+axiosClient.interceptors.response.use(
+  (response: AxiosResponse) => response,
+  async (error) => {
+    const originalRequest = error.config;
+
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      try {
+        const refreshToken = store.getState().auth.userInfo?.refresh_token;
+        if (!refreshToken) {
+          store.dispatch(logout());
+          return Promise.reject(error);
+        }
+
+        const { data } = await axios.post(`${endpoint}/api/token/refresh/`, {
+          refresh: refreshToken,
+        });
+
+        store.dispatch(
+          updateTokens({
+            access_token: data.access,
+            refresh_token: data.refresh,
+          })
+        );
+
+        originalRequest.headers.Authorization = `Bearer ${data.access}`;
+
+        return axiosClient(originalRequest);
+      } catch (err) {
+        store.dispatch(logout());
+        return Promise.reject(err);
+      }
+    }
+
+    return Promise.reject(error);
+  }
+);
+
 interface ApiRequestOptions {
   url: string;
   method: "GET" | "POST" | "PUT" | "DELETE";
   data?: RequestBody;
   requiresToken?: boolean;
-  // ... any other options you might need
 }
 
-// 3. Generic request maker with type safety
 export const apiRequest = async <T>(
   options: ApiRequestOptions
 ): Promise<T | number> => {
@@ -71,7 +107,7 @@ export const apiRequest = async <T>(
     if (response.status === 204) {
       return response.status;
     } else if (response.status >= 200 && response.status < 300) {
-      return response.data; // Return response.data for other successful requests
+      return response.data;
     } else {
       throw new Error(`HTTP error! status: ${response.status}`); // Throw an error for non-2xx status codes
     }

@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useMemo, MouseEvent } from "react";
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+  MouseEvent,
+} from "react";
 
 interface RatingProps {
   color?: string;
@@ -30,25 +36,31 @@ const Rating: React.FC<RatingProps> = ({
     setCurrentValue(value);
   }, [value]);
 
-  const handleClick = (index: number) => {
-    setCurrentValue(index);
-    if (onChange) {
-      onChange(index);
-    }
-  };
+  const handleClick = useCallback(
+    (index: number) => {
+      setCurrentValue(index);
+      if (onChange) {
+        onChange(index);
+      }
+    },
+    [onChange]
+  );
 
-  const handleMouseMove = (e: MouseEvent<HTMLSpanElement>, index: number) => {
-    if (hoverEnabled) {
-      const { left, width } = e.currentTarget.getBoundingClientRect();
-      const x = e.clientX - left;
-      const isHalf = x < width / 2;
-      setHoverValue(isHalf ? index - 0.5 : index);
-    }
-  };
+  const handleMouseMove = useCallback(
+    (e: MouseEvent<HTMLSpanElement>, index: number) => {
+      if (hoverEnabled) {
+        const { left, width } = e.currentTarget.getBoundingClientRect();
+        const x = e.clientX - left;
+        const isHalf = x < width / 2;
+        setHoverValue(isHalf ? index - 0.5 : index);
+      }
+    },
+    [hoverEnabled]
+  );
 
-  const handleMouseLeave = () => {
+  const handleMouseLeave = useCallback(() => {
     setHoverValue(null);
-  };
+  }, []);
 
   const stars = useMemo(() => {
     const result = [];
@@ -56,10 +68,10 @@ const Rating: React.FC<RatingProps> = ({
     for (let i = 1; i <= count; i++) {
       let starClass = "far fa-star";
 
-      if (hoverEnabled) {
-        if (hoverValue !== null && hoverValue >= i) {
+      if (hoverEnabled && hoverValue !== null) {
+        if (hoverValue >= i) {
           starClass = "fas fa-star";
-        } else if (hoverValue !== null && hoverValue >= i - 0.5) {
+        } else if (hoverValue >= i - 0.5) {
           starClass = "fas fa-star-half-alt";
         }
       } else if (currentValue >= i) {
@@ -73,7 +85,7 @@ const Rating: React.FC<RatingProps> = ({
           key={i}
           onMouseMove={(e) => handleMouseMove(e, i)}
           onMouseLeave={handleMouseLeave}
-          onClick={() => handleClick(hoverValue ?? i)}
+          onClick={() => handleClick(i)}
           style={{ cursor: hoverEnabled ? "pointer" : "default" }}
         >
           <i
@@ -100,6 +112,9 @@ const Rating: React.FC<RatingProps> = ({
     hoverColor,
     fontSize,
     className,
+    handleClick,
+    handleMouseMove,
+    handleMouseLeave,
   ]);
 
   return (

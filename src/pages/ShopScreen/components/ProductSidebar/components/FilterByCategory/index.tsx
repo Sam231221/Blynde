@@ -20,7 +20,11 @@ function FilterByCategory() {
         Category
       </h2>
       {isLoading && <SideFiltersLoader />}
-      {isError && <div>Error loading categories. Please try again later.</div>}
+      {isError && (
+        <span className="text-sm">
+          Error loading categories. Please try again later.
+        </span>
+      )}
       {!isLoading && !isError && (
         <MultiLevelCheckbox
           handleChange={handleCategoriesChange}

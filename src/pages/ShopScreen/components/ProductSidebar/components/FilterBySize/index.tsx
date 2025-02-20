@@ -30,7 +30,11 @@ export default function FilterBySize() {
         Filter By Size
       </h2>
       {isLoading && <SideFiltersLoader itemCount={5} />}
-      {isError && <div>Error loading Sizes. Please try again later.</div>}
+      {isError && (
+        <span className="text-sm">
+          Error loading Sizes. Please try again later.
+        </span>
+      )}
       {!isLoading && !isError && (
         <div className="px-3">
           {selectedSizes.length > 0 && (
