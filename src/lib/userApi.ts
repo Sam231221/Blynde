@@ -2,11 +2,12 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { queryClient } from "./queryClient";
 import { apiRequest, RequestBody } from "./axiosClient";
 import { User } from "../types";
+
 export const useUsersQuery = () =>
   useQuery({
     queryKey: ["users"],
     queryFn: () => apiRequest({ url: "/api/users/", method: "GET" }),
-    staleTime: Infinity, // Data will not be refetched if the query is considered fresh, even if the query is not active.
+    staleTime: Infinity,
   });
 export const useUserDetailQuery = (userId: number) =>
   useQuery({
@@ -18,17 +19,19 @@ export const useUserDetailQuery = (userId: number) =>
         requiresToken: true,
       }),
 
-    enabled: !!userId, // Only run the query if userId is provided
+    enabled: !!userId,
     staleTime: Infinity,
   });
+
 export const useCreateUserMutation = () => {
   return useMutation<void, Error, RequestBody>({
-    mutationFn: (userData: RequestBody) =>
-      apiRequest({
+    mutationFn: async (userData: RequestBody) => {
+      await apiRequest({
         url: "/api/users/create/",
         method: "POST",
         data: userData,
-      }),
+      });
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
     },
@@ -39,12 +42,11 @@ export const useCreateUserMutation = () => {
 };
 
 export const useUpdateUserMutation = () => {
-  return useMutation<void, Error, RequestBody>({
+  return useMutation({
     mutationFn: (userId) =>
       apiRequest({
         url: `/api/users/update/${userId}/`,
         method: "PUT",
-        data: userId,
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
@@ -72,26 +74,29 @@ export const useDeleteUserMutation = () => {
 };
 
 export const useGetUserProfileQuery = () => {
-  return useQuery<User>({
+  return useQuery({
     queryKey: ["profile"],
-    queryFn: () =>
-      apiRequest({
-        url: "/api/users/profile/", // Adjust to your Django backend endpoint
+    queryFn: async () => {
+      const data = await apiRequest({
+        url: "/api/users/profile/",
         method: "GET",
         requiresToken: true,
-      }),
+      });
+      return (data as User) || {};
+    },
     staleTime: Infinity,
   });
 };
 
 export const useUpdateProfileMutation = () => {
   return useMutation<void, Error, RequestBody>({
-    mutationFn: (formData: RequestBody) =>
-      apiRequest({
-        url: "/api/users/profile/", // Adjust to your Django backend endpoint
+    mutationFn: async (formData: RequestBody) => {
+      await apiRequest({
+        url: "/api/users/profile/",
         method: "PUT",
         data: formData,
-      }),
+      });
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["profile"] });
     },

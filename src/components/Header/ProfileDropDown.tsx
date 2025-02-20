@@ -81,7 +81,7 @@ export const ProfileDropDown = ({ classes }: ProfileDropDownProps) => {
 
           <li>
             <div
-              onClick={() => logout.mutate()}
+              onClick={() => logout()}
               className="px-3 py-2 cursor-pointer bg-none hover:bg-[#eef2fa] transition-all duration-500 ease-out flex items-center gap-2 text-xs"
             >
               {" "}

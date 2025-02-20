@@ -1,4 +1,3 @@
-import { User } from "../types";
 import { apiRequest } from "./axiosClient";
 import store from "../redux/store";
 
@@ -12,7 +11,7 @@ export const loginUser = (userData: {
   email: string;
   password: string;
   rememberMe: boolean;
-}): Promise<User> => {
+}) => {
   return apiRequest({
     url: "/api/users/login/",
     method: "POST",
@@ -29,7 +28,7 @@ export const registerUser = (userData: {
   password: string;
   confirmPassword: string;
   agreeToTerms: boolean;
-}): Promise<User> => {
+}) => {
   return apiRequest({
     url: "/api/users/register/",
     method: "POST",
@@ -49,10 +48,11 @@ export const logoutUser = async () => {
   return response;
 };
 
-export const resetPasswordForUser = (email: string): Promise<void> => {
-  return apiRequest({
+export const resetPasswordForUser = async (email: string) => {
+  const response = await apiRequest({
     url: "/api/users/password-reset-request/",
     method: "POST",
     data: { email },
   });
+  return response;
 };

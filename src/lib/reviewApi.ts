@@ -1,13 +1,12 @@
 import { Review } from "../types";
 import { apiRequest, RequestBody } from "./axiosClient";
 
-export const fetchReviews = async (productSlug: string) => {
+export const fetchProductReviews = async (productSlug: string) => {
   const response = await apiRequest({
     url: `/api/products/${productSlug}/reviews/`,
     method: "GET",
     requiresToken: true,
   });
-  console.log("res:", response);
   return response as Review[];
 };
 

@@ -7,8 +7,8 @@ import {
   differenceInMinutes,
   differenceInSeconds,
 } from "date-fns";
+import NoDiscountOffers from "./NoDiscountOffers";
 
-//based on end date, calculate remaining time i.e days, hours, minutes, seconds
 const calculateRemainingTime = (endDate: Date) => {
   const now = new Date();
   const diffInDays = differenceInDays(endDate, now);
@@ -53,7 +53,7 @@ const DiscountOffers: React.FC = () => {
           url: `/api/products/discountoffers/`,
           method: "GET",
           requiresToken: false,
-        }); // Replace with your API endpoint
+        });
         const updatedOffers = (response as Offer[]).map((offer: Offer) => {
           const endDate = new Date(offer.end_date);
           return {
@@ -87,10 +87,13 @@ const DiscountOffers: React.FC = () => {
               newRemainingTime.remainingMinutes <= 0 &&
               newRemainingTime.remainingSeconds <= 0
             ) {
-              apiRequest(
-                `/api/products/discountoffers/${offer.id}/delete/`,
-                "DELETE"
-              ).catch((error) => console.error("Error deleting offer:", error));
+              apiRequest({
+                url: `/api/products/discountoffers/${offer.id}/`,
+                method: "DELETE",
+                requiresToken: true,
+              }).catch((error) =>
+                console.error("Error deleting offer:", error)
+              );
               return null;
             }
 
@@ -222,17 +225,9 @@ const DiscountOffers: React.FC = () => {
             ))}
           </div>
         ) : (
-          <div className="container mx-auto py-8 px-4">
-            <div
-              className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-              role="alert"
-            >
-              <strong className="font-bold">Error: </strong>
-              <span className="block sm:inline">
-                No discount offers available at the moment.
-              </span>
-            </div>
-          </div>
+          <>
+            <NoDiscountOffers />
+          </>
         )}
       </div>
     </div>

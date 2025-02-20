@@ -9,28 +9,28 @@ import {
 import Avatar from "./components/Avatar";
 import { favoriteProducts, recentOrders } from "./data";
 
-interface ProfileData {
+interface UserProfileData {
   first_name: string;
   last_name: string;
-  avatar?: File;
+  email: string;
+  profile_pic_url?: string;
 }
 export default function ProfileScreen() {
   const [activeTab, setActiveTab] = useState("orders");
-  const { register, handleSubmit, setValue } = useForm<ProfileData>();
+  const { register, handleSubmit, setValue } = useForm<UserProfileData>();
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
   const { isLoading, error, data } = useGetUserProfileQuery();
   const { mutate: updateUserProfile, isPending } = useUpdateProfileMutation();
-  // Pre-fill form when profile data is fetched
+
   useEffect(() => {
     if (data) {
       setValue("first_name", data.first_name);
       setValue("last_name", data.last_name);
-      // If you want to handle avatar image preview, do it here as well
     }
   }, [data, setValue]);
 
-  const handleProfileUpdate = (data: ProfileData) => {
+  const handleProfileUpdate = (data: UserProfileData) => {
     const formData = new FormData();
     formData.append("first_name", data.first_name);
     formData.append("last_name", data.last_name);

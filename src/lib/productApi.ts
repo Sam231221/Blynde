@@ -36,12 +36,12 @@ export const fetchProducts = async (
 
 export const fetchRecentProducts = async () => {
   const response = await apiRequest({
-    url: "api/products/recents",
+    url: "api/products/recents/",
     method: "GET",
     requiresToken: false,
   });
 
-  return response;
+  return (response as Product[]) || [];
 };
 
 export const fetchProductdDetail = async (productSlug: string | undefined) => {

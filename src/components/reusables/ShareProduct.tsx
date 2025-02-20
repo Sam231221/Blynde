@@ -9,7 +9,7 @@ import {
   XIcon,
 } from "react-share";
 import CodeSnippet from "../code-snippet";
-export const ShareProduct = ({ id }: { id: number }) => {
+export const ShareProduct = ({ id }: { id: string }) => {
   return (
     <div>
       <h2 className="text-xl tracking-wide mb-2">Copy link</h2>

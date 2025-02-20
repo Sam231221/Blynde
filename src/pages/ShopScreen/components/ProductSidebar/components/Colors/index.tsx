@@ -1,25 +1,13 @@
-import { useEffect, useState } from "react";
-import { apiRequest } from "../../../../../../lib/axiosClient";
 import ColorCheckBox from "./ColorCheckBox";
 import { useDispatch } from "react-redux";
-import { AppDispatch, Color } from "../../../../../../types";
+import { AppDispatch } from "../../../../../../types";
 import { setColor } from "../../../../../../redux/reducers/FilterProductSlice";
+import { useProductColors } from "../../../../../../hooks/useProducts";
+import SideFiltersLoader from "../SideFiltersLoader";
 
 export default function Colors() {
-  const [colors, setColors] = useState<Color[]>([]);
   const dispatch: AppDispatch = useDispatch();
-
-  const loadColors = async () => {
-    const data = await apiRequest({
-      url: "/api/products/colors/",
-      method: "GET",
-      requiresToken: false,
-    });
-    setColors(data as Color[]);
-  };
-  useEffect(() => {
-    loadColors();
-  }, []);
+  const { data: colors, isLoading, isError } = useProductColors();
   const handleColorChange = (color: string) => {
     dispatch(setColor(color));
   };
@@ -28,13 +16,17 @@ export default function Colors() {
       <h2 className="text-lg tracking-wide font-medium text-gray-900">
         Colors
       </h2>
-      <div className="px-3">
-        <ColorCheckBox
-          handleColorChange={handleColorChange}
-          direction="vertical"
-          colors={colors}
-        />
-      </div>
+      {isLoading && <SideFiltersLoader itemCount={8} />}
+      {isError && <div>Error loading Colors. Please try again later.</div>}
+      {!isLoading && !isError && (
+        <div className="px-3">
+          <ColorCheckBox
+            handleColorChange={handleColorChange}
+            direction="vertical"
+            colors={colors || []}
+          />
+        </div>
+      )}
     </div>
   );
 }

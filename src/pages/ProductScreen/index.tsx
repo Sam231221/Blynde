@@ -7,7 +7,7 @@ import PageContainer from "../../components/PageContainer";
 
 import { ProductDetail } from "../../components/reusables/ProductDetail";
 import { useProductDetail } from "../../hooks/useProducts";
-import { use } from "react";
+
 import { useSelector } from "react-redux";
 import { RootState } from "../../types";
 import Reviews from "./components/Reviews";
@@ -38,7 +38,6 @@ export default function ProductScreen() {
       </PageContainer>
     );
   }
-
   // Handle case where productDetail is not available
   if (!productDetail) {
     return (
@@ -83,7 +82,7 @@ export default function ProductScreen() {
         <ProductDetail product={productDetail} />
 
         <Reviews
-          productId={productDetail._id}
+          productId={String(productDetail._id)}
           productSlug={productDetail.slug}
           userInfo={userInfo}
         />

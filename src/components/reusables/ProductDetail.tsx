@@ -43,10 +43,10 @@ export const ProductDetail = ({ product, openModal }: ProductDetailProps) => {
     setData((prev) => ({ ...prev, size }));
   };
 
-  const addToCartHandler = (id: number) => {
+  const addToCartHandler = (id: string) => {
     const { quantity, size, color } = data;
 
-    if (product._id === id && quantity && size && color) {
+    if (String(product._id) === id && quantity && size && color) {
       dispatch(
         addToCart({
           _id: String(product._id),
@@ -163,7 +163,8 @@ export const ProductDetail = ({ product, openModal }: ProductDetailProps) => {
                 </button>
                 <button
                   onClick={() =>
-                    openModal && openModal(<ShareProduct id={product._id} />)
+                    openModal &&
+                    openModal(<ShareProduct id={String(product._id)} />)
                   }
                   className="text-zinc-800 flex items-center gap-2 font-medium tracking-wide text-sm my-2"
                 >

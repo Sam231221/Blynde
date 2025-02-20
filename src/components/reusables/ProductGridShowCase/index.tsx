@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { MdOutlineZoomOutMap } from "react-icons/md";
 import { EyeOutline, HeartOutline, RepeatOutline } from "react-ionicons";
 import ProductImageTransition from "./ProductImageTransition";
@@ -12,7 +12,7 @@ import ProductPriceInput from "../../ProductPriceInput";
 import { useModalContext } from "../../../providers/ModalProvider";
 import { ProductDetail } from "../ProductDetail";
 import { addToCart } from "../../../redux/reducers/CartSlice";
-import { Product } from "../../../types";
+import { Product, RootState } from "../../../types";
 
 interface ProductGridShowCaseProps {
   showtype?: string;
@@ -20,10 +20,11 @@ interface ProductGridShowCaseProps {
   productheight: string;
 }
 export default function ProductGridShowCase({
-  showtype = "grid",
   products,
   productheight,
 }: ProductGridShowCaseProps) {
+  const filters = useSelector((state: RootState) => state.productfilters);
+  const { productsDisplayType } = filters;
   const { openModal } = useModalContext();
   const dispatch = useDispatch();
   const [data, setData] = useState({
@@ -42,12 +43,12 @@ export default function ProductGridShowCase({
   };
 
   const addToCartHandler = (
-    productId: number,
+    productId: string,
     name: string,
     price: number,
     color: string,
     size: string,
-    thumbnail: string,
+    thumbnailUrl: string,
     quantity: number
   ) => {
     if (productId && quantity && size && color) {
@@ -59,7 +60,7 @@ export default function ProductGridShowCase({
           price,
           color,
           size,
-          thumbnail,
+          thumbnailUrl: thumbnailUrl,
           qty: quantity,
         })
       );
@@ -70,7 +71,7 @@ export default function ProductGridShowCase({
 
   return (
     <>
-      {showtype === "grid" && (
+      {productsDisplayType === "grid" && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {products.map((product, i) => (
             <div
@@ -165,7 +166,7 @@ export default function ProductGridShowCase({
 
               <div className="px-3 py-1">
                 <Link
-                  to={`/product/${product._id}`}
+                  to={`/products/${product._id}`}
                   className="uppercase font-medium"
                 >
                   <h3 className="text-gray-800 text-sm capitalize duration-200 ease-in-out font-medium">
@@ -191,7 +192,7 @@ export default function ProductGridShowCase({
           ))}
         </div>
       )}
-      {showtype === "list" && (
+      {productsDisplayType === "list" && (
         <div className={`relative`}>
           {products.map((product, i) => (
             <div
@@ -253,7 +254,7 @@ export default function ProductGridShowCase({
                       />
                     </div>
                     <Link
-                      to={`/product/${product._id}`}
+                      to={`/products/${product._id}`}
                       className="flex justify-center items-center w-10 h-10 bg-white mb-2 text-gray-400 border border-zinc-200  transition-all duration-200 ease-in-out rounded-full hover:bg-gray-900 hover:text-white hover:border-gray-800"
                     >
                       <EyeOutline
@@ -319,10 +320,10 @@ export default function ProductGridShowCase({
                     colors={product.colors}
                   />
                 )}
-                {product.size && (
+                {product.sizes && (
                   <SizeVariant
                     handleSizeChange={handleSizeChange}
-                    sizes={product.size}
+                    sizes={product.sizes}
                   />
                 )}
                 <span className="bg-slate-100 mt-4 inline-block px-3 text-xs font-semibold text-green-600 rounded-lg p-2">
@@ -341,7 +342,7 @@ export default function ProductGridShowCase({
                         product.sale_price ? product.sale_price : product.price,
                         data.color,
                         data.size,
-                        product.thumbnail,
+                        product.thumbnail_url,
                         data.quantity
                       )
                     }

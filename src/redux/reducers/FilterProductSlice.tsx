@@ -8,16 +8,18 @@ interface FilterState {
   ordering: string;
   page: number;
   products_limit: number;
+  productsDisplayType: "grid" | "list";
 }
 
-const initialState: FilterState = {
+export const initialState: FilterState = {
   categories: [],
   price: [0, 600],
   sizes: [],
   color: "",
-  ordering: "",
   page: 1,
+  productsDisplayType: "grid",
   products_limit: 8,
+  ordering: "",
 };
 
 const filterSlice = createSlice({
@@ -47,9 +49,15 @@ const filterSlice = createSlice({
     setColor: (state, action: PayloadAction<string>) => {
       state.color = action.payload;
     },
-    // You can add a reset filter action here if needed
+    setProductsDisplayType: (state, action: PayloadAction<"grid" | "list">) => {
+      state.productsDisplayType = action.payload;
+    },
+    setOrdering: (state, action: PayloadAction<string>) => {
+      state.ordering = action.payload;
+    },
+
     resetFilters: () => {
-      return initialState; // Resets to initial state
+      return initialState;
     },
   },
 });
@@ -60,6 +68,8 @@ export const {
   setPrice,
   setFilterSizes,
   setColor,
+  setProductsDisplayType,
+  setOrdering,
   resetFilters,
 } = filterSlice.actions;
 export default filterSlice.reducer;
