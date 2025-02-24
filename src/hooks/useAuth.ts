@@ -24,15 +24,8 @@ export const usePasswordReset = () => {
 };
 
 export const useRegister = () => {
-  const dispatch = useDispatch();
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: registerUser,
-    onSuccess: (user) => {
-      dispatch(setUser(user as User));
-      queryClient.setQueryData(["user"], user);
-    },
   });
 };
 export const useLogout = () => {
