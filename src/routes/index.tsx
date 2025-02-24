@@ -32,7 +32,6 @@ const PlaceOrderScreen = React.lazy(() => import("../pages/PlaceOrderScreen"));
 const OrderScreen = React.lazy(() => import("../pages/OrderScreen"));
 const WishlistScreen = React.lazy(() => import("../pages/WishlistScreen"));
 
-// Helper function to wrap components in Suspense
 const lazyLoad = (
   Component: React.LazyExoticComponent<React.ComponentType>
 ) => (

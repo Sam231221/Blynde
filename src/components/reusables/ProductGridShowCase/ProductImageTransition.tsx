@@ -1,4 +1,6 @@
 import { useCallback, useState } from "react";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+
 interface ProductImageTransitionProps {
   name: string;
   img_albums: { image_url: string }[];
@@ -9,7 +11,7 @@ export default function ProductImageTransition({
   img_albums,
 }: ProductImageTransitionProps) {
   const [showFirstImage, setShowFirstImage] = useState(true);
-  // Memoize event handlers to avoid unnecessary re-renders
+
   const handleImageError = useCallback(
     (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
       (e.target as HTMLImageElement).src =
@@ -17,14 +19,13 @@ export default function ProductImageTransition({
     },
     []
   );
-
   return (
     <div
       onMouseEnter={() => setShowFirstImage(false)}
       onMouseLeave={() => setShowFirstImage(true)}
       className="relative bg-gray-300 w-full h-full overflow-hidden  shadow-lg"
     >
-      <img
+      <LazyLoadImage
         src={img_albums[0]?.image_url}
         onError={handleImageError}
         alt={name}
@@ -34,7 +35,7 @@ export default function ProductImageTransition({
         }`}
       />
 
-      <img
+      <LazyLoadImage
         src={img_albums[1]?.image_url}
         onError={handleImageError}
         alt={name}

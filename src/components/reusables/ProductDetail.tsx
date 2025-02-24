@@ -3,6 +3,8 @@ import {
   PiHeartStraightLight,
   PiShareNetworkLight,
 } from "react-icons/pi";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+
 import ProductSlider from "../ProductSlider";
 import Rating from "../Rating";
 import ProductColorSelect from "../ProductColorSelect";
@@ -72,7 +74,12 @@ export const ProductDetail = ({ product, openModal }: ProductDetailProps) => {
           <div className="md:flex-1 lg:flex-[3] ">
             <ProductSlider>
               {product.image_albums?.map((album, index) => (
-                <img key={index} src={album.image_url} alt="productimage" />
+                <LazyLoadImage
+                  effect="blur"
+                  key={index}
+                  src={album.image_url}
+                  alt="productimage"
+                />
               ))}
             </ProductSlider>
           </div>
