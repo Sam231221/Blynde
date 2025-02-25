@@ -30,6 +30,7 @@ export default function ModalContextProvider({
   const [content, setContent] = useState<ReactNode | null>(null);
 
   const openModal = (content: ReactNode) => {
+    console.log("sd:", isModalOpen);
     setContent(content);
     setModalOpen(true);
   };

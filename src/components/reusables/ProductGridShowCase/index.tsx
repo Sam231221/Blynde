@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MdOutlineZoomOutMap } from "react-icons/md";
 import { EyeOutline, HeartOutline, RepeatOutline } from "react-ionicons";
-import ProductImageTransition from "./ProductImageTransition";
+import ProductImageTransition from "./SingleProductGridCard/ProductImageTransition";
 import Rating from "../../Rating";
 import ProductColorSelect from "../../ProductColorSelect";
 import SizeVariant from "../../SizeVariant";
@@ -12,7 +12,10 @@ import ProductPriceInput from "../../ProductPriceInput";
 import { useModalContext } from "../../../providers/ModalProvider";
 import { ProductDetail } from "../ProductDetail";
 import { addToCart } from "../../../redux/reducers/CartSlice";
-import { Product, RootState } from "../../../types";
+import { Product, RootState, WishlistItemCreatePayload } from "../../../types";
+import { useCreateOrDeleteWishlistItem } from "../../../hooks/useWishlist";
+import { toast } from "react-toastify";
+import Spinner from "../../Spinner";
 
 interface ProductGridShowCaseProps {
   showtype?: string;
@@ -26,7 +29,7 @@ export default function ProductGridShowCase({
   const filters = useSelector((state: RootState) => state.productfilters);
   const { productsDisplayType } = filters;
   const { openModal } = useModalContext();
-  const dispatch = useDispatch();
+
   const [data, setData] = useState({
     quantity: 1,
     color: "",
@@ -40,33 +43,6 @@ export default function ProductGridShowCase({
   };
   const handleSizeChange = (size: string) => {
     setData((prev) => ({ ...prev, size }));
-  };
-
-  const addToCartHandler = (
-    productId: string,
-    name: string,
-    price: number,
-    color: string,
-    size: string,
-    thumbnailUrl: string,
-    quantity: number
-  ) => {
-    if (productId && quantity && size && color) {
-      dispatch(
-        addToCart({
-          _id: String(productId),
-          productId: String(productId),
-          name,
-          price,
-          color,
-          size,
-          thumbnailUrl: thumbnailUrl,
-          qty: quantity,
-        })
-      );
-    } else {
-      alert("Please select size and color");
-    }
   };
 
   return (
@@ -114,14 +90,21 @@ export default function ProductGridShowCase({
                 )}
                 {/* Product Actions */}
                 <div className="absolute flex flex-col top-3 right-3 text-lg  transition-all duration-200 ease-in-out z-[3] translate-x-14 group-hover:translate-x-0  ">
-                  <div className="flex justify-center items-center w-10 h-10 bg-white mb-2 text-gray-400 border border-zinc-200  transition-all duration-200 ease-in-out rounded-full hover:bg-gray-900 hover:text-white hover:border-gray-800">
-                    <HeartOutline
-                      color={"#00000"}
-                      title={"heart-outline"}
-                      height="20px"
-                      width="20px"
-                      aria-label="heart outline"
-                    />
+                  <div
+                    onClick={() => handleAddToWishlist(String(product._id))}
+                    className="flex justify-center items-center w-10 h-10 bg-white mb-2 text-gray-400 border border-zinc-200  transition-all duration-200 ease-in-out rounded-full hover:bg-gray-900 hover:text-white hover:border-gray-800"
+                  >
+                    {isPending ? (
+                      <Spinner width={3} height={3} />
+                    ) : (
+                      <HeartOutline
+                        color={"#00000"}
+                        title={"Add to Wishlist"}
+                        height="20px"
+                        width="20px"
+                        aria-label="Add to Wishlist"
+                      />
+                    )}
                   </div>
                   <div
                     onClick={() =>
@@ -138,7 +121,13 @@ export default function ProductGridShowCase({
                     }
                     className="flex justify-center items-center w-10 h-10 bg-white mb-2 py-2 text-gray-400 border border-zinc-200  transition-all duration-200 ease-in-out rounded-full hover:bg-gray-900 hover:text-white hover:border-gray-800"
                   >
-                    <MdOutlineZoomOutMap size={15} />
+                    <MdOutlineZoomOutMap
+                      color={"#00000"}
+                      title={"Mini Open"}
+                      height="20px"
+                      width="20px"
+                      aria-label="Mini Open"
+                    />
                   </div>
                   <Link
                     to={`/products/${product.slug}`}
@@ -146,10 +135,10 @@ export default function ProductGridShowCase({
                   >
                     <EyeOutline
                       color={"#00000"}
-                      title={"eye-outline"}
+                      title={"Show In Detail"}
                       height="20px"
                       width="20px"
-                      aria-label="eye outline"
+                      aria-label="Show In Detail"
                     />
                   </Link>
                   <button className="flex justify-center items-center w-10 h-10 bg-white mb-2 text-gray-400 border border-zinc-200  transition-all duration-200 ease-in-out rounded-full hover:bg-gray-900 hover:text-white hover:border-gray-800">
@@ -259,10 +248,10 @@ export default function ProductGridShowCase({
                     >
                       <EyeOutline
                         color={"#00000"}
-                        title={"eye-outline"}
+                        title={"add-to-wishlist"}
                         height="20px"
                         width="20px"
-                        aria-label="eye outline"
+                        aria-label="Add to Wishlist"
                       />
                     </Link>
                     <button className="flex justify-center items-center w-10 h-10 bg-white mb-2 text-gray-400 border border-zinc-200  transition-all duration-200 ease-in-out rounded-full hover:bg-gray-900 hover:text-white hover:border-gray-800">

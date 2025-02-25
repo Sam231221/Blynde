@@ -5,6 +5,7 @@ import { CartItem, CartState, RootState, ShippingAddress } from "../../types";
 const cartItemsFromStorage: CartItem[] = JSON.parse(
   localStorage.getItem("cartItems") || "[]"
 );
+
 const shippingAddressFromStorage = JSON.parse(
   localStorage.getItem("shippingAddress") || "{}"
 );

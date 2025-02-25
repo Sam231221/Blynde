@@ -1,5 +1,5 @@
-import { Order } from "../types";
-import { apiRequest } from "./axiosClient";
+import { Order } from "../../types";
+import { apiRequest } from "../axios/axiosClient";
 
 // Fetch orders
 export const fetchOrders = async ({

@@ -5,9 +5,9 @@ import { Message } from "../components/Message";
 import PageContainer from "../components/PageContainer";
 
 import { Order, RootState } from "../types";
-import { createOrder } from "../lib/orderApi";
+import { createOrder } from "../lib/django/orderApi";
 import { useMutation } from "@tanstack/react-query";
-import { queryClient } from "../lib/queryClient";
+import { queryClient } from "../lib/axios/queryClient";
 import { clearCart } from "../redux/reducers/CartSlice";
 import { useEffect } from "react";
 import { toast } from "react-toastify";

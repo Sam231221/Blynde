@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
-import { queryClient } from "../lib/queryClient";
-import { payOrder } from "../lib/orderApi";
+import { queryClient } from "../lib/axios/queryClient";
+import { payOrder } from "../lib/django/orderApi";
 import { toast } from "react-toastify";
 
 interface PaymentData {

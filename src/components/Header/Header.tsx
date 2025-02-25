@@ -13,14 +13,13 @@ import { ProfileDropDown } from "./ProfileDropDown";
 import Searchbar from "./Searchbar";
 import { useUser } from "../../hooks/useAuth";
 import { RootState } from "../../types";
+import { useUserWishlist } from "../../hooks/useWishlist";
 function Header() {
   const [sideCartNav, setSideCartNav] = useState(false);
   const cart = useSelector((state: RootState) => state.cart);
   const { cartItems } = cart;
-
+  const { data } = useUserWishlist();
   const userInfo = useUser();
-  // const wishlist = useSelector((state) => state.wishlist);
-  // const { userLikes } = wishlist;
 
   const location = useLocation();
 
@@ -140,13 +139,15 @@ function Header() {
                 {cartItems.reduce((acc, item) => acc + item.qty, 0)}
               </div>
             </div>
+            {userInfo && (
+              <Link to="/my-wishlist" className="relative cursor-pointer">
+                <FaRegHeart className="text-[15px] md:text-[20px]" />
 
-            <Link to="/my-wishlist" className="relative cursor-pointer">
-              <FaRegHeart className="text-[15px] md:text-[20px]" />
-              <div className="absolute  aspect-square -top-3 -right-3 w-4 h-4 flex items-center justify-center text-white text-[12px] font-medium bg-[#717FE0]">
-                {/* {userLikes.reduce((acc, item) => acc + 1, 0)} */}
-              </div>
-            </Link>
+                <div className="absolute  aspect-square -top-3 -right-3 w-4 h-4 flex items-center justify-center text-white text-[12px] font-medium bg-[#717FE0]">
+                  {data?.count}
+                </div>
+              </Link>
+            )}
           </div>
         </div>
       </header>

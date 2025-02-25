@@ -3,8 +3,8 @@ import axios, {
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from "axios";
-import store from "../redux/store";
-import { logout, updateTokens } from "../redux/reducers/AuthSlice";
+import store from "../../redux/store";
+import { logout, updateTokens } from "../../redux/reducers/AuthSlice";
 
 export const endpoint: string = import.meta.env.VITE_APP_API as string;
 

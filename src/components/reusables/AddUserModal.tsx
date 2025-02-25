@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 
-import { useCreateUserMutation } from "../../lib/userApi";
+import { useCreateUserMutation } from "../../lib/django/userApi";
 
 interface AddUserModalProps {
   isOpen: boolean;

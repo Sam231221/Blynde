@@ -5,7 +5,7 @@ import {
   fetchProductdDetail,
   fetchProducts,
   fetchRecentProducts,
-} from "../lib/productApi";
+} from "../lib/django/productApi";
 
 import {
   Category,
@@ -15,7 +15,7 @@ import {
   RootState,
   Size,
 } from "../types";
-import { apiRequest } from "../lib/axiosClient";
+import { apiRequest } from "../lib/axios/axiosClient";
 
 export const useProductCategories = () => {
   return useQuery<Category[], Error>({

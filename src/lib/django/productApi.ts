@@ -1,5 +1,5 @@
-import { Pagination, Product } from "../types";
-import { apiRequest } from "./axiosClient";
+import { Pagination, Product } from "../../types";
+import { apiRequest } from "../axios/axiosClient";
 
 export const fetchProducts = async (
   filters: Record<string, string>

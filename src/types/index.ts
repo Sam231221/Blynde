@@ -1,4 +1,5 @@
 import store from "../redux/store";
+import WishlistScreen from "../pages/WishlistScreen";
 
 export interface User {
   _id: string;
@@ -20,8 +21,31 @@ export interface CartState {
   loading: boolean;
   error: boolean;
   cartItems: CartItem[];
+
   shippingAddress: ShippingAddress | null;
   paymentMethod: string | null;
+}
+export interface WishlistItem {
+  id: string;
+  product: Product;
+  added_at: Date;
+}
+export interface WishlistResponse {
+  count: number;
+  wishlist: WishlistItem[];
+}
+export interface WishlistItemCreatePayload {
+  product: string; // Sending only product ID when adding to wishlist
+}
+
+export interface DeleteWishlistPayload {
+  productId: number;
+}
+
+export interface WishlistState {
+  loading: boolean;
+  error: boolean;
+  wishlistItems: WishlistItem[];
 }
 
 export interface CartItem {

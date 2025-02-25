@@ -1,5 +1,5 @@
-import { Review } from "../types";
-import { apiRequest, RequestBody } from "./axiosClient";
+import { Review } from "../../types";
+import { apiRequest, RequestBody } from "../axios/axiosClient";
 
 export const fetchProductReviews = async (productSlug: string) => {
   const response = await apiRequest({

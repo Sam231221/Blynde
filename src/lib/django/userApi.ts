@@ -1,7 +1,7 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { queryClient } from "./queryClient";
-import { apiRequest, RequestBody } from "./axiosClient";
-import { User } from "../types";
+import { queryClient } from "../axios/queryClient";
+import { apiRequest, RequestBody } from "../axios/axiosClient";
+import { User } from "../../types";
 
 export const useUsersQuery = () =>
   useQuery({

@@ -6,6 +6,8 @@ import AuthReducer from "./reducers/AuthSlice";
 
 import ProductReducer from "./reducers/ProductSlice";
 import CartReducer from "./reducers/CartSlice";
+import WishListReducer from "./reducers/WishListSlice";
+
 import ReviewReducer from "./reducers/ReviewSlice";
 import OrderReducer from "./reducers/OrderSlice";
 import FilterProductReducer from "./reducers/FilterProductSlice";
@@ -16,6 +18,7 @@ const store = configureStore({
     product: ProductReducer,
     productfilters: FilterProductReducer,
     cart: CartReducer,
+    wishlist: WishListReducer,
     reviews: ReviewReducer,
     orders: OrderReducer,
   },

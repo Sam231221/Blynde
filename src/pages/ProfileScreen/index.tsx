@@ -5,7 +5,7 @@ import PageContainer from "../../components/PageContainer";
 import {
   useGetUserProfileQuery,
   useUpdateProfileMutation,
-} from "../../lib/userApi";
+} from "../../lib/django/userApi";
 import Avatar from "./components/Avatar";
 import { favoriteProducts, recentOrders } from "./data";
 

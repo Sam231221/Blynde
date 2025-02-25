@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { AlertTriangle, X } from "lucide-react";
-import { useDeleteUserMutation } from "../../lib/userApi";
+import { useDeleteUserMutation } from "../../lib/django/userApi";
 
 interface DeleteModalProps {
   isOpen: boolean;

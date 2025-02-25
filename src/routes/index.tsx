@@ -1,6 +1,8 @@
 import React, { Suspense } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import Loader from "../components/Loader";
 import { ScrollRestoration } from "react-router-dom";
+import { Modal } from "../components/Modal";
 
 const HomeScreen = React.lazy(() => import("../pages/HomeScreen"));
 const ShopScreen = React.lazy(() => import("../pages/ShopScreen"));
@@ -36,8 +38,11 @@ const lazyLoad = (
   Component: React.LazyExoticComponent<React.ComponentType>
 ) => (
   <Suspense fallback={<Loader />}>
-    <ScrollRestoration />
-    <Component />
+    <ErrorBoundary fallback={<div>Something went wrong</div>}>
+      <ScrollRestoration />
+      <Component />
+      <Modal />
+    </ErrorBoundary>
   </Suspense>
 );
 

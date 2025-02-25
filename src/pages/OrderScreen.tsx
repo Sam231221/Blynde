@@ -12,7 +12,7 @@ import {
   selectSelectedOrder,
   setSelectedOrder,
 } from "../redux/reducers/OrderSlice";
-import { fetchOrder } from "../lib/orderApi";
+import { fetchOrder } from "../lib/django/orderApi";
 import { useQuery } from "@tanstack/react-query";
 
 import { EsewaPaymentForm } from "./EsewaPaymentForm";

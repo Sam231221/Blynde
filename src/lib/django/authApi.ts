@@ -1,5 +1,5 @@
-import { apiRequest } from "./axiosClient";
-import store from "../redux/store";
+import { apiRequest } from "../axios/axiosClient";
+import store from "../../redux/store";
 
 // Function to get the latest refresh token from the store
 const getRefreshToken = (): string | undefined => {

@@ -2,7 +2,11 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, setUser } from "../redux/reducers/AuthSlice";
 import { RootState, User } from "../types";
-import { loginUser, registerUser, resetPasswordForUser } from "../lib/authApi";
+import {
+  loginUser,
+  registerUser,
+  resetPasswordForUser,
+} from "../lib/django/authApi";
 
 export const useLogin = () => {
   const dispatch = useDispatch();

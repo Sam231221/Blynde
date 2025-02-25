@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDebounce } from "../../hooks/useDebounce";
-import { apiRequest } from "../../lib/axiosClient";
+import { apiRequest } from "../../lib/axios/axiosClient";
 import { GoSearch } from "react-icons/go";
 import { Link } from "react-router-dom";
 import { Product } from "../../types";
