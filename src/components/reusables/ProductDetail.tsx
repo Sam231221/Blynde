@@ -15,6 +15,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../redux/reducers/CartSlice";
 import { Product } from "../../types";
+import { toast } from "react-toastify";
 
 export interface ProductDetailProps {
   product: Product;
@@ -48,7 +49,7 @@ export const ProductDetail = ({ product, openModal }: ProductDetailProps) => {
   const addToCartHandler = (id: string) => {
     const { quantity, size, color } = data;
 
-    if (String(product._id) === id && quantity && size && color) {
+    if (product._id === id && quantity && size && color) {
       dispatch(
         addToCart({
           _id: String(product._id),
@@ -62,7 +63,7 @@ export const ProductDetail = ({ product, openModal }: ProductDetailProps) => {
         })
       );
     } else {
-      alert("Please select size and color");
+      toast.error("Please select size and color");
     }
   };
   if (!product) return <>No product found.</>;

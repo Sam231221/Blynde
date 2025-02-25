@@ -1,6 +1,6 @@
 import { Product } from "../../../../types";
 
-export const ProductTag = ({ product }: { product: Product }) => {
+export const ProductCardTag = ({ product }: { product: Product }) => {
   return (
     <div>
       {" "}

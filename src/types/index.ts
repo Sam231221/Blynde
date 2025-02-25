@@ -1,5 +1,4 @@
 import store from "../redux/store";
-import WishlistScreen from "../pages/WishlistScreen";
 
 export interface User {
   _id: string;
@@ -32,7 +31,7 @@ export interface WishlistItem {
 }
 export interface WishlistResponse {
   count: number;
-  wishlist: WishlistItem[];
+  items: WishlistItem[];
 }
 export interface WishlistItemCreatePayload {
   product: string; // Sending only product ID when adding to wishlist

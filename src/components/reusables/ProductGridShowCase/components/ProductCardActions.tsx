@@ -1,14 +1,28 @@
-import React from "react";
-import { Product } from "../../../../types";
-import { useDispatch, useSelector } from "react-redux";
-import { useCreateOrDeleteWishlistItem } from "../../../../hooks/useWishlist";
+import { Product, RootState } from "../../../../types";
+import { useSelector } from "react-redux";
+import {
+  useCreateOrDeleteWishlistItem,
+  useUserWishlist,
+} from "../../../../hooks/useWishlist";
 import { toast } from "react-toastify";
+import Spinner from "../../../Spinner";
+import { IoMdHeart } from "react-icons/io";
+import { EyeOutline, HeartOutline, RepeatOutline } from "react-ionicons";
+import { ProductDetail } from "../../ProductDetail";
+import { useModalContext } from "../../../../providers/ModalProvider";
+import { MdOutlineZoomOutMap } from "react-icons/md";
+import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 
-export const ProductActions = ({ product }: { product: Product }) => {
+export const ProductCardActions = ({ product }: { product: Product }) => {
+  const { data } = useUserWishlist();
+  const wishlistItems = data?.items;
+  const [isInWishlist, setIsInWishlist] = useState(false);
   const { userInfo } = useSelector((state: RootState) => state.auth);
-  const dispatch = useDispatch();
+  const { openModal } = useModalContext();
   const { mutate: addorDeletetoWishlist, isPending } =
     useCreateOrDeleteWishlistItem();
+
   const handleAddToWishlist = (productId: string) => {
     if (userInfo) {
       addorDeletetoWishlist(productId, {
@@ -18,7 +32,6 @@ export const ProductActions = ({ product }: { product: Product }) => {
           } else if (typeof data !== "number" && data?.product) {
             toast.success("Added to wishlist");
           }
-          console.log("data:", data);
         },
         onError: (error) => {
           console.error("Failed to add to wishlist", error);
@@ -30,32 +43,15 @@ export const ProductActions = ({ product }: { product: Product }) => {
       }
     }
   };
-  const addToCartHandler = (
-    productId: string,
-    name: string,
-    price: number,
-    color: string,
-    size: string,
-    thumbnailUrl: string,
-    quantity: number
-  ) => {
-    if (productId && quantity && size && color) {
-      dispatch(
-        addToCart({
-          _id: String(productId),
-          productId: String(productId),
-          name,
-          price,
-          color,
-          size,
-          thumbnailUrl: thumbnailUrl,
-          qty: quantity,
-        })
+  useEffect(() => {
+    if (wishlistItems) {
+      const productInWishlist = wishlistItems.find(
+        (item) => item.product._id === product._id
       );
-    } else {
-      alert("Please select size and color");
+      setIsInWishlist(!!productInWishlist); // Set state based on whether product is found
     }
-  };
+  }, [wishlistItems, product._id]); // Run effect when wishlistItems or productId change
+
   return (
     <div className="absolute flex flex-col top-3 right-3 text-lg  transition-all duration-200 ease-in-out z-[3] translate-x-14 group-hover:translate-x-0  ">
       <div
@@ -63,29 +59,32 @@ export const ProductActions = ({ product }: { product: Product }) => {
         className="flex justify-center items-center w-10 h-10 bg-white mb-2 text-gray-400 border border-zinc-200  transition-all duration-200 ease-in-out rounded-full hover:bg-gray-900 hover:text-white hover:border-gray-800"
       >
         {isPending ? (
-          <Spinner width={3} height={3} />
+          <Spinner width={4} height={4} />
         ) : (
-          <HeartOutline
-            color={"#00000"}
-            title={"Add to Wishlist"}
-            height="20px"
-            width="20px"
-            aria-label="Add to Wishlist"
-          />
+          <>
+            {isInWishlist ? (
+              <IoMdHeart
+                color={"#00000"}
+                title={"Remove from Wishlist"}
+                height="20px"
+                width="20px"
+                aria-label="Remove from Wishlist"
+              />
+            ) : (
+              <HeartOutline
+                color={"#00000"}
+                title={"Add to Wishlist"}
+                height="20px"
+                width="20px"
+                aria-label="Add to Wishlist"
+              />
+            )}
+          </>
         )}
       </div>
       <div
         onClick={() =>
-          openModal(
-            <ProductDetail
-              product={product}
-              handleColorChange={handleColorChange}
-              handleSizeChange={handleSizeChange}
-              handleQuantityChange={handleQuantityChange}
-              data={data}
-              openModal={openModal}
-            />
-          )
+          openModal(<ProductDetail product={product} openModal={openModal} />)
         }
         className="flex justify-center items-center w-10 h-10 bg-white mb-2 py-2 text-gray-400 border border-zinc-200  transition-all duration-200 ease-in-out rounded-full hover:bg-gray-900 hover:text-white hover:border-gray-800"
       >
@@ -112,10 +111,10 @@ export const ProductActions = ({ product }: { product: Product }) => {
       <button className="flex justify-center items-center w-10 h-10 bg-white mb-2 text-gray-400 border border-zinc-200  transition-all duration-200 ease-in-out rounded-full hover:bg-gray-900 hover:text-white hover:border-gray-800">
         <RepeatOutline
           color={"#00000"}
-          title={"repeat-outline"}
+          title={"Compare"}
           height="20px"
           width="20px"
-          aria-label="repeat outline"
+          aria-label="Compare"
         />
       </button>
     </div>

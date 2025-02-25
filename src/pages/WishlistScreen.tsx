@@ -3,7 +3,7 @@ import PageContainer from "../components/PageContainer";
 import { useDeleteWishlistItem, useUserWishlist } from "../hooks/useWishlist";
 import Rating from "../components/Rating";
 import { X } from "lucide-react";
-import ProductImageTransition from "../components/reusables/ProductGridShowCase/SingleProductGridCard/ProductImageTransition";
+import ProductImageTransition from "../components/reusables/ProductGridShowCase/ProductGridTypeCard/ProductImageTransition";
 import { toast } from "react-toastify";
 
 const items = [
