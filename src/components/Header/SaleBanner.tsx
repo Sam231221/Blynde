@@ -1,6 +1,9 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import {
+  useDeleteHighestDiscount,
+  useHighestPriorityDiscount,
+} from "../../hooks/useOffers";
 
 const formatTime = (time: number) => time.toString().padStart(2, "0");
 
@@ -17,7 +20,7 @@ const TimeComponent = ({ unit }: { unit: TimeUnit }) => (
         initial={{ opacity: 0.8, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.2 }}
-        className="font-medium  text-gray-800 text-sm"
+        className="font-medium text-gray-800 text-sm"
       >
         {formatTime(unit.value)}
       </motion.span>
@@ -27,18 +30,23 @@ const TimeComponent = ({ unit }: { unit: TimeUnit }) => (
 );
 
 export default function SaleBanner() {
+  const { data: discount, isLoading, error } = useHighestPriorityDiscount();
+  const { mutate: deleteDiscount } = useDeleteHighestDiscount();
   const [timeLeft, setTimeLeft] = useState<TimeUnit[]>([]);
   const [isVisible, setIsVisible] = useState(true);
-
+  console.log("data:", discount);
   useEffect(() => {
-    const endDate = new Date("2026-02-15T23:59:59");
+    if (!discount || !discount.end_date) return;
+
+    const endDate = new Date(discount.end_date);
 
     const updateCountdown = () => {
       const now = new Date();
       const difference = endDate.getTime() - now.getTime();
 
       if (difference <= 0) {
-        setIsVisible(false);
+        // setIsVisible(false);
+        deleteDiscount(); // Auto-delete the discount
         return;
       }
 
@@ -59,7 +67,10 @@ export default function SaleBanner() {
     const timer = setInterval(updateCountdown, 1000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [discount, deleteDiscount]);
+
+  if (isLoading) return null;
+  if (error || !discount) return null;
 
   return (
     <AnimatePresence>
@@ -72,12 +83,14 @@ export default function SaleBanner() {
           className="w-full bg-[#051818] text-white h-11 px-4"
         >
           <div className="max-w-7xl mx-auto px-4 py-2">
-            <div className="flex items-center justify-between  flex-wrap gap-2">
+            <div className="flex items-center justify-between flex-wrap gap-2">
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="font-medium text-sm">Sale ends today</span>
+                <span className="font-medium text-sm">
+                  {discount.title || "Sale ends soon!"}
+                </span>
                 <div className="h-4 w-px bg-gray-400" />
                 <span className="text-xs">
-                  Get courses to help you reach your goals. Starting at $9.99.
+                  {discount.description || "Get courses at discounted prices!"}
                 </span>
               </div>
 
@@ -99,7 +112,10 @@ export default function SaleBanner() {
                 </div>
 
                 <button
-                  onClick={() => setIsVisible(false)}
+                  onClick={() => {
+                    setIsVisible(false);
+                    deleteDiscount();
+                  }}
                   className="p-1 hover:bg-black/5 rounded-full transition-colors"
                   aria-label="Close banner"
                 >

@@ -57,6 +57,15 @@ export interface CartItem {
   size: string;
   thumbnailUrl: string;
 }
+export interface Discount {
+  id: number;
+  discount_type: "fixed" | "percentage";
+  amount: number;
+  is_global: boolean;
+  start_date: string;
+  end_date: string;
+  priority: number;
+}
 
 export interface Order {
   _id?: string;

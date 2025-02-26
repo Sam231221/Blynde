@@ -13,7 +13,7 @@ const HomeScreen = () => {
   useEffect(() => {
     setSLides(imageData);
   }, []);
-
+  console.log("test");
   return (
     <PageContainer>
       <ImageSlider slides={slides} />
