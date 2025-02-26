@@ -14,8 +14,10 @@ import Searchbar from "./Searchbar";
 import { useUser } from "../../hooks/useAuth";
 import { RootState } from "../../types";
 import { useUserWishlist } from "../../hooks/useWishlist";
+import MobileSideHeader from "./MobileSideHeader";
 function Header() {
   const [sideCartNav, setSideCartNav] = useState(false);
+  const [sideMobileHeader, setSideMobileHeader] = useState(false);
   const cart = useSelector((state: RootState) => state.cart);
   const { cartItems } = cart;
   const { data } = useUserWishlist();
@@ -25,6 +27,9 @@ function Header() {
 
   const [navbar, setNavbar] = useState(false);
 
+  const toggleSideMobileHeader = () => {
+    setSideMobileHeader(!sideMobileHeader);
+  };
   const showSideCartNav = () => {
     setSideCartNav(!sideCartNav);
   };
@@ -54,7 +59,10 @@ function Header() {
         <div className="flex justify-between w-full h-full items-center">
           <div className="w-full h-full px-4 flex items-center  ">
             <div className="flex items-center ">
-              <RxHamburgerMenu className="text-[20px] md:text-[25px] mr-3 block md:hidden" />
+              <RxHamburgerMenu
+                onClick={() => toggleSideMobileHeader()}
+                className="text-[20px] md:text-[25px] mr-3 block md:hidden"
+              />
               <Link to="/">
                 <h2 className="text-3xl  mb-2 font-bold tracking-wide text-zinc-900">
                   Blynde
@@ -151,6 +159,10 @@ function Header() {
           </div>
         </div>
       </header>
+      <MobileSideHeader
+        sideMobileHeader={sideMobileHeader}
+        setSideMobileHeader={toggleSideMobileHeader}
+      />
       <CartRightBar sideCartNav={sideCartNav} setSideCartNav={setSideCartNav} />
     </>
   );

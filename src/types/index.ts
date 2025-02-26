@@ -132,17 +132,17 @@ export type Product = {
   name: string;
   price: number;
   thumbnail_url: string;
-  sale_price?: number;
+  discounted_price?: number;
+  discount_percentage: number;
   badge: string;
   countInStock: number;
   date: Date;
   sizes: Size[];
   categories: Category[];
   colors: [];
-  review_count: number;
+  reviews_count: number;
   rating: number;
   priceBadge: string;
-  discount_percentage: number;
   description: string;
   image_albums: [
     {

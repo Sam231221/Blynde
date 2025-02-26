@@ -48,9 +48,9 @@ export const ProductCardActions = ({ product }: { product: Product }) => {
       const productInWishlist = wishlistItems.find(
         (item) => item.product._id === product._id
       );
-      setIsInWishlist(!!productInWishlist); // Set state based on whether product is found
+      setIsInWishlist(!!productInWishlist);
     }
-  }, [wishlistItems, product._id]); // Run effect when wishlistItems or productId change
+  }, [wishlistItems, product._id]);
 
   return (
     <div className="absolute flex flex-col top-3 right-3 text-lg  transition-all duration-200 ease-in-out z-[3] translate-x-14 group-hover:translate-x-0  ">

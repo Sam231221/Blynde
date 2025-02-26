@@ -1,10 +1,11 @@
+import clsx from "clsx";
 import { Product } from "../../../../types";
 
 export const ProductCardTag = ({ product }: { product: Product }) => {
   return (
     <div>
       {" "}
-      {product.sale_price ? (
+      {product.discounted_price && (
         <p
           className={`absolute font-medium z-[3]  rounded-sm  text-white text-[12px]  bg-black top-[8px] px-10 py-1 left-[-29px] captialize -rotate-45  ${
             product.priceBadge === "blue" && "bg-blue-500 px-3 py-1"
@@ -14,19 +15,20 @@ export const ProductCardTag = ({ product }: { product: Product }) => {
             product.discount_percentage
           )}% Off`}</span>
         </p>
-      ) : (
+      )}
+      {product.badge && (
         <>
-          {product.badge && (
-            <>
-              <p
-                className={`absolute top-[15px] font-medium left-[15px] z-[3]  rounded-sm py-1 text-white text-[12px]  ${
-                  product.badge === "Featured" && "bg-blue-400 px-3 py-1"
-                } ${product.badge === "Top Rated" && "bg-green-500 px-3 py-1"}`}
-              >
-                {product.badge}
-              </p>
-            </>
-          )}
+          <p
+            className={clsx(
+              "absolute bottom-[15px] right-2 bg-slate-800 font-medium z-[3] rounded-sm py-1 px-2 text-white text-[12px]",
+              product.badge === "Featured" && "bg-blue-400 px-3 py-1",
+              product.badge === "Trending" && "bg-green-500 px-3 py-1",
+              product.badge === "Exclusive" && "bg-purple-500 px-3 py-1",
+              product.badge === "Limited Edition" && "bg-yellow-500 px-3 py-1"
+            )}
+          >
+            {product.badge}
+          </p>
         </>
       )}
     </div>

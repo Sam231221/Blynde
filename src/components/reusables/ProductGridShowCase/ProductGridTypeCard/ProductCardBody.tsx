@@ -15,13 +15,23 @@ export const ProductCardBody = ({ product }: { product: Product }) => {
         color={"#fc8c04"}
         fontSize={14}
         value={product.rating}
-        text={`${product.review_count} reviews`}
+        text={`${product.reviews_count} reviews`}
       />
 
       <div className="flex px-1 gap-3 text-gray-800 mb-2 text-sm">
-        <p className="font-bold">${product.price}</p>
-        {product.sale_price && (
-          <del className="text-gray-400">${product.sale_price}</del>
+        {product.discounted_price ? (
+          <>
+            <del className="text-gray-300  tracking-wide text-sm my-2 ">
+              ${product.price}
+            </del>
+            <p className="text-slate-800 font-medium tracking-wide text-sm my-2 ">
+              ${product.discounted_price}
+            </p>
+          </>
+        ) : (
+          <p className="text-slate-800 font-medium tracking-wide text-sm my-2 ">
+            ${product.price}
+          </p>
         )}
       </div>
     </div>

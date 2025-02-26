@@ -35,13 +35,16 @@ export const ProductListBody = ({ product }: { product: Product }) => {
           _id: String(product._id),
           productId: String(product._id),
           name: product.name,
-          price: product.sale_price ? product.sale_price : product.price,
+          price: product.discounted_price
+            ? product.discounted_price
+            : product.price,
           color,
           size,
           thumbnailUrl: product.thumbnail_url,
           qty: quantity,
         })
       );
+      toast.success(`${product.name} added to cart x ${quantity}`);
     } else {
       toast.error("Please select size and color");
     }
@@ -58,18 +61,18 @@ export const ProductListBody = ({ product }: { product: Product }) => {
         <Rating
           fontSize={12}
           value={product.rating}
-          text={`${product.review_count} reviews`}
+          text={`${product.reviews_count} reviews`}
           color={"#fc8c04"}
         />
       </div>
       <div className="flex gap-2 items-center">
-        {product.sale_price ? (
+        {product.discounted_price ? (
           <>
             <del className="text-gray-300  tracking-wide text-lg my-2 ">
               ${product.price}
             </del>
             <p className="text-slate-800 font-medium tracking-wide text-lg my-2 ">
-              ${product.sale_price}
+              ${product.discounted_price}
             </p>
           </>
         ) : (

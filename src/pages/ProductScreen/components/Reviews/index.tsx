@@ -31,7 +31,7 @@ export default function Reviews({
   return (
     <>
       <h1 className="text-2xl font-semibold text-gray-800">
-        Reviews({productReviews.length})
+        Reviews({sortedReviews.length})
       </h1>
       <hr />
       {isLoading && <p>Loading reviews...</p>}
