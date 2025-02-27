@@ -103,7 +103,7 @@ export const ProductDetail = ({ product, openModal }: ProductDetailProps) => {
                 />
               </div>
               <div className="flex gap-2 items-center">
-                {product.discounted_price ? (
+                {product.discounted_price !== parseFloat(product.price) ? (
                   <>
                     <del className="text-gray-300  tracking-wide text-lg my-2 ">
                       ${product.price}

@@ -34,9 +34,11 @@ export default function SaleBanner() {
   const { mutate: deleteDiscount } = useDeleteHighestDiscount();
   const [timeLeft, setTimeLeft] = useState<TimeUnit[]>([]);
   const [isVisible, setIsVisible] = useState(true);
-  console.log("data:", discount);
+  console.log(discount);
   useEffect(() => {
-    if (!discount || !discount.end_date) return;
+    if (!discount || !discount.end_date) {
+      return;
+    }
 
     const endDate = new Date(discount.end_date);
 
@@ -45,8 +47,7 @@ export default function SaleBanner() {
       const difference = endDate.getTime() - now.getTime();
 
       if (difference <= 0) {
-        // setIsVisible(false);
-        deleteDiscount(); // Auto-delete the discount
+        deleteDiscount();
         return;
       }
 
@@ -90,7 +91,7 @@ export default function SaleBanner() {
                 </span>
                 <div className="h-4 w-px bg-gray-400" />
                 <span className="text-xs">
-                  {discount.description || "Get courses at discounted prices!"}
+                  {discount.description || "Limited time offer!"}
                 </span>
               </div>
 

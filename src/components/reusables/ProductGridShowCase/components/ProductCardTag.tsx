@@ -4,8 +4,7 @@ import { Product } from "../../../../types";
 export const ProductCardTag = ({ product }: { product: Product }) => {
   return (
     <div>
-      {" "}
-      {product.discounted_price && (
+      {product.discount_percentage !== null && (
         <p
           className={`absolute font-medium z-[3]  rounded-sm  text-white text-[12px]  bg-black top-[8px] px-10 py-1 left-[-29px] captialize -rotate-45  ${
             product.priceBadge === "blue" && "bg-blue-500 px-3 py-1"

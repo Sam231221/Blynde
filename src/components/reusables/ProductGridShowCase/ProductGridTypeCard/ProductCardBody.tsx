@@ -17,9 +17,8 @@ export const ProductCardBody = ({ product }: { product: Product }) => {
         value={product.rating}
         text={`${product.reviews_count} reviews`}
       />
-
       <div className="flex px-1 gap-3 text-gray-800 mb-2 text-sm">
-        {product.discounted_price ? (
+        {product.discounted_price !== parseFloat(product.price) ? (
           <>
             <del className="text-gray-300  tracking-wide text-sm my-2 ">
               ${product.price}

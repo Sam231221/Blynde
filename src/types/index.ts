@@ -59,6 +59,8 @@ export interface CartItem {
 }
 export interface Discount {
   id: number;
+  title: string;
+  description: string;
   discount_type: "fixed" | "percentage";
   amount: number;
   is_global: boolean;
@@ -139,9 +141,9 @@ export type Product = {
   _id: string;
   slug: string;
   name: string;
-  price: number;
+  price: string;
   thumbnail_url: string;
-  discounted_price?: number;
+  discounted_price: number;
   discount_percentage: number;
   badge: string;
   countInStock: number;

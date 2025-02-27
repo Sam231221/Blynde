@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { apiRequest } from "../lib/axios/axiosClient";
+import { Discount } from "../types";
 
 const fetchHighestDiscount = async () => {
   const response = await apiRequest({
@@ -8,7 +9,7 @@ const fetchHighestDiscount = async () => {
     method: "GET",
     requiresToken: false,
   });
-  return response;
+  return response as Discount;
 };
 
 export const useHighestPriorityDiscount = () => {
