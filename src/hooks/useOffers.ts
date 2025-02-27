@@ -1,6 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { Discount } from "../types";
 import { apiRequest } from "../lib/axios/axiosClient";
 
 const fetchHighestDiscount = async () => {
@@ -16,7 +15,7 @@ export const useHighestPriorityDiscount = () => {
   return useQuery({
     queryKey: ["highestDiscount"],
     queryFn: fetchHighestDiscount,
-    staleTime: 1000 * 60 * 5, // Cache result for 5 minutes
+    staleTime: 1000 * 60 * 5,
   });
 };
 
@@ -33,7 +32,7 @@ export const useDeleteHighestDiscount = () => {
   return useMutation({
     mutationFn: deleteHighestDiscount,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["highestDiscount"] }); // Refresh data after deletion
+      queryClient.invalidateQueries({ queryKey: ["highestDiscount"] });
     },
   });
 };

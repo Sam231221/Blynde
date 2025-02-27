@@ -11,11 +11,13 @@ import WishListReducer from "./reducers/WishListSlice";
 import ReviewReducer from "./reducers/ReviewSlice";
 import OrderReducer from "./reducers/OrderSlice";
 import FilterProductReducer from "./reducers/FilterProductSlice";
+import CompareProductsReducer from "./reducers/CompareProductsSlice";
 
 const store = configureStore({
   reducer: {
     auth: AuthReducer,
     product: ProductReducer,
+    comparelist: CompareProductsReducer,
     productfilters: FilterProductReducer,
     cart: CartReducer,
     wishlist: WishListReducer,

@@ -3,6 +3,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import Loader from "../components/Loader";
 import { ScrollRestoration } from "react-router-dom";
 import { Modal } from "../components/Modal";
+import ProductCompareToast from "../components/globals/ProductCompareToast";
 
 const HomeScreen = React.lazy(() => import("../pages/HomeScreen"));
 const ShopScreen = React.lazy(() => import("../pages/ShopScreen"));
@@ -33,6 +34,7 @@ const PaymentErrorScreen = React.lazy(
 const PlaceOrderScreen = React.lazy(() => import("../pages/PlaceOrderScreen"));
 const OrderScreen = React.lazy(() => import("../pages/OrderScreen"));
 const WishlistScreen = React.lazy(() => import("../pages/WishlistScreen"));
+const CompareScreen = React.lazy(() => import("../pages/CompareScreen"));
 
 const lazyLoad = (
   Component: React.LazyExoticComponent<React.ComponentType>
@@ -42,6 +44,7 @@ const lazyLoad = (
       <ScrollRestoration />
       <Component />
       <Modal />
+      <ProductCompareToast />
     </ErrorBoundary>
   </Suspense>
 );
@@ -58,6 +61,10 @@ const routes = [
   {
     path: "/my-wishlist",
     element: lazyLoad(WishlistScreen),
+  },
+  {
+    path: "/compare",
+    element: lazyLoad(CompareScreen),
   },
   {
     path: "/profile",
