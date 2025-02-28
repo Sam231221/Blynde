@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 import { useDebounce } from "use-debounce";
 import { useQuery } from "@tanstack/react-query";
 import {
-  fetchProductdDetail,
+  fetchProductDetail,
   fetchProducts,
   fetchRecentProducts,
 } from "../lib/django/productApi";
@@ -79,11 +79,10 @@ export const useRecentProducts = () => {
 };
 
 export const useProductDetail = (productSlug: string | undefined) => {
-  return useQuery({
+  return useQuery<Product>({
     queryKey: ["productDetail", productSlug],
-    queryFn: () => fetchProductdDetail(productSlug),
-    enabled: !!productSlug,
-    retry: 3,
-    staleTime: Infinity,
+    queryFn: () => fetchProductDetail(productSlug),
+
+    // Better staleTime configuration for mutations
   });
 };

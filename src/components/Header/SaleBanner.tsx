@@ -34,7 +34,6 @@ export default function SaleBanner() {
   const { mutate: deleteDiscount } = useDeleteHighestDiscount();
   const [timeLeft, setTimeLeft] = useState<TimeUnit[]>([]);
   const [isVisible, setIsVisible] = useState(true);
-  console.log(discount);
   useEffect(() => {
     if (!discount || !discount.end_date) {
       return;

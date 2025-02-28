@@ -160,6 +160,10 @@ export type Product = {
       image_url: string;
     }
   ];
+
+  isCouponLoading?: boolean;
+  couponCodeInput?: string;
+  couponError?: string | null;
 };
 
 export type Review = {

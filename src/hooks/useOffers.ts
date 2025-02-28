@@ -2,6 +2,46 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { apiRequest } from "../lib/axios/axiosClient";
 import { Discount } from "../types";
+import { applyOrderCoupon, applyProductCoupon } from "../lib/django/offersApi";
+
+// Define the types for your input variables and the success response
+interface ApplyCouponVariables {
+  productSlug: string;
+  couponCode: string;
+}
+
+interface ApplyCouponSuccessResponse {
+  discounted_price: number;
+  discount_percentage: number;
+  valid: boolean;
+}
+
+// Define your error response type
+interface ApplyCouponErrorResponse {
+  error: string;
+}
+
+export const useProductCoupon = () => {
+  return useMutation<
+    ApplyCouponSuccessResponse,
+    ApplyCouponErrorResponse,
+    ApplyCouponVariables
+  >({
+    mutationFn: async ({ productSlug, couponCode }) => {
+      return applyProductCoupon(productSlug, couponCode);
+    },
+  });
+};
+export const useApplyOrderCoupon = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ orderId, couponCode }) =>
+      applyOrderCoupon({ orderId, couponCode }),
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries(["order", variables.orderId]);
+    },
+  });
+};
 
 const fetchHighestDiscount = async () => {
   const response = await apiRequest({

@@ -44,7 +44,7 @@ export const fetchRecentProducts = async () => {
   return (response as Product[]) || [];
 };
 
-export const fetchProductdDetail = async (productSlug: string | undefined) => {
+export const fetchProductDetail = async (productSlug: string | undefined) => {
   const data = await apiRequest({
     url: `/api/products/${productSlug}/`,
     method: "GET",

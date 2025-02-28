@@ -16,7 +16,6 @@ function WishlistScreen() {
 
   const { mutate, isPending } = useDeleteWishlistItem();
   const handleDeleteWishlistItem = (productId: number) => {
-    console.log(typeof productId);
     mutate(
       { productId },
       {
@@ -30,7 +29,7 @@ function WishlistScreen() {
       }
     );
   };
-  console.log(data);
+
   return (
     <PageContainer>
       <div className="container mx-auto py-2 overflow-auto mt-10">
