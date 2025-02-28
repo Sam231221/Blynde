@@ -12,14 +12,15 @@ import CartRightBar from "./CartRightBar";
 import { ProfileDropDown } from "./ProfileDropDown";
 import Searchbar from "./Searchbar";
 import { useUser } from "../../hooks/useAuth";
-import { RootState } from "../../types";
+
 import { useUserWishlist } from "../../hooks/useWishlist";
 import MobileSideHeader from "./MobileSideHeader";
+import { selectCartItemCount } from "../../redux/reducers/CartSlice";
 function Header() {
   const [sideCartNav, setSideCartNav] = useState(false);
   const [sideMobileHeader, setSideMobileHeader] = useState(false);
-  const cart = useSelector((state: RootState) => state.cart);
-  const { cartItems } = cart;
+  const totalCartItems = useSelector(selectCartItemCount);
+
   const { data } = useUserWishlist();
   const userInfo = useUser();
 
@@ -144,7 +145,7 @@ function Header() {
             >
               <FaCartShopping className="text-[15px] md:text-[20px]" />
               <div className="absolute  aspect-square -top-3 -right-3 w-4 h-4 flex items-center justify-center text-white text-[12px] font-medium bg-[#717FE0]">
-                {cartItems.reduce((acc, item) => acc + item.qty, 0)}
+                {totalCartItems}
               </div>
             </div>
             {userInfo && (

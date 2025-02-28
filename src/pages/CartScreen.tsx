@@ -1,13 +1,24 @@
 import { Link, useNavigate } from "react-router-dom";
 
 import { useDispatch, useSelector } from "react-redux";
-
-import { AiOutlineDelete } from "react-icons/ai";
+import {
+  useReactTable,
+  getCoreRowModel,
+  getPaginationRowModel,
+  flexRender,
+} from "@tanstack/react-table";
 import PageContainer from "../components/PageContainer";
 
 import ProductPriceInput from "../components/ProductPriceInput";
-import { removeFromCart, updateQuantity } from "../redux/reducers/CartSlice";
+import {
+  removeFromCart,
+  selectCartItemCount,
+  selectCartTotal,
+  updateQuantity,
+} from "../redux/reducers/CartSlice";
 import { RootState } from "../types";
+import { useMemo, useState } from "react";
+import { FiTrash } from "react-icons/fi";
 const items = [
   { label: "Home", path: "/" },
   { label: "Cart", path: "/cart" },
@@ -16,16 +27,118 @@ const items = [
 export default function CartScreen() {
   const dispatch = useDispatch();
   const redirect = useNavigate();
+  const totalCartItems = useSelector(selectCartItemCount);
+  const totalCartAmount = useSelector(selectCartTotal);
 
-  const handleChange = (val: number, _id: string | undefined): void => {
-    dispatch(updateQuantity({ qty: val, _id }));
-  };
   const cart = useSelector((state: RootState) => state.cart);
   const { cartItems } = cart;
 
-  const removeFromCartHandler = (id: string) => {
-    dispatch(removeFromCart(id));
+  const data = useMemo(() => {
+    return cartItems.flatMap((product) =>
+      product.variations.map((variant) => ({
+        productId: product.productId,
+        name: product.name,
+        thumbnailUrl: product.thumbnailUrl,
+        price: product.price,
+        qty: variant.qty,
+        color: variant.color,
+        size: variant.size,
+      }))
+    );
+  }, [cartItems]);
+
+  const handleDeleteVariant = (rowData) => {
+    dispatch(
+      removeFromCart({
+        productId: rowData.productId,
+        color: rowData.color,
+        size: rowData.size,
+      })
+    );
   };
+  console.log("sds");
+
+  const columns = useMemo(
+    () => [
+      {
+        accessorKey: "thumbnailUrl",
+        header: "Image",
+        cell: (info) => (
+          <img
+            src={info.getValue()}
+            alt="Product"
+            className="w-16 h-16 object-cover rounded"
+          />
+        ),
+      },
+      {
+        accessorKey: "name",
+        header: "Product Name",
+      },
+      {
+        accessorKey: "price",
+        header: "Price",
+        cell: (info) => `$${info.getValue()}`,
+      },
+      {
+        id: "quantity",
+        header: "Quantity",
+        cell: ({ row }) => (
+          <ProductPriceInput
+            qty={row.original.qty}
+            id={`${row.original.productId}-${row.original.color}-${row.original.size}`}
+            handleChange={(newQty, id) => {
+              dispatch(
+                updateQuantity({
+                  productId: row.original.productId,
+                  color: row.original.color,
+                  size: row.original.size,
+                  qty: newQty,
+                })
+              );
+            }}
+          />
+        ),
+      },
+      {
+        accessorKey: "color",
+        header: "Color",
+      },
+      {
+        accessorKey: "size",
+        header: "Size",
+      },
+      {
+        id: "action",
+        header: "Action",
+        cell: ({ row }) => (
+          <button
+            onClick={() => handleDeleteVariant(row.original)}
+            className="text-red-500 hover:text-red-700"
+          >
+            <FiTrash size={18} />
+          </button>
+        ),
+      },
+    ],
+    [dispatch]
+  );
+
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 5,
+  });
+
+  const table = useReactTable({
+    data,
+    columns,
+    state: { pagination },
+    onPaginationChange: setPagination,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    manualPagination: false,
+  });
+
   const checkoutHandler = () => {
     redirect("/shipping");
   };
@@ -51,7 +164,7 @@ export default function CartScreen() {
             ))}
           </ol>
         </nav>
-        {/* add extra and get free*/}
+
         <div className="flex flex-col md:flex-row gap-3 mt-10 mb-5">
           <div className="md:flex-1 flex-col">
             <div className="flex flex-col py-4 px-4 border border-gray-200">
@@ -70,103 +183,84 @@ export default function CartScreen() {
                 ></div>
               </div>
             </div>
-            <table className="table flex-1 md:flex-[3_1_0%] border w-full mt-4 mb-2">
-              <thead className="bg-secondaryBgColor ">
-                <tr className="uppercase text-zinc-700">
-                  <th className="p-2 text-sm font-semibold tracking-wide text-left">
-                    S.N
-                  </th>
-                  <th className="p-2 text-sm font-semibold tracking-wide text-left">
-                    Product
-                  </th>
-                  <th className="p-2 text-sm font-semibold tracking-wide text-left">
-                    Price
-                  </th>
-                  <th className="p-2 text-sm font-semibold tracking-wide text-left">
-                    Quantity
-                  </th>
-                  <th className="p-2 text-sm font-semibold tracking-wide text-left">
-                    Total
-                  </th>
-                  <th className="p-2 text-sm font-semibold tracking-wide text-left">
-                    Action
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {cartItems.length > 0 ? (
-                  <>
-                    {cartItems.map((cartItem, i) => (
-                      <tr className="border-b " key={i + 1}>
-                        <td className="p-2 text-center text-sm text-gray-700">
-                          <a
-                            className="text-primaryTextColor hover:text-secondaryTextColor"
-                            href="#"
-                          >
-                            {i + 1}
-                          </a>
-                        </td>
-                        <td className="p-2 border-b-0 text-sm  text-gray-700">
-                          <img
-                            src={cartItem.thumbnailUrl}
-                            className="w-12 inline h-12 object-contain"
-                          />
-                          <span>{cartItem.name}</span>
-                        </td>
+            <div className="p-4">
+              <h1 className="text-2xl font-bold mb-4">Your Cart</h1>
 
-                        <td className="p-2   text-sm text-gray-700">
-                          ${cartItem.price}
-                        </td>
-                        <td className="p-2 text-sm text-gray-700">
-                          <ProductPriceInput
-                            id={cartItem.productId}
-                            qty={cartItem.qty}
-                            handleChange={handleChange}
-                          />
-                        </td>
-                        <td className="p-2 text-sm text-gray-700">
-                          ${(cartItem.qty * cartItem.price).toFixed(2)}
-                        </td>
-                        <td className="p-2 text-xs text-center">
-                          <AiOutlineDelete
-                            onClick={() =>
-                              removeFromCartHandler(cartItem.productId)
-                            }
-                            className="text-red-500 cursor-pointer"
-                            size={20}
-                          />
-                        </td>
+              <div className="flex-1 md:flex-[3_1_0%]  overflow-x-auto">
+                <table className="min-w-full border border-gray-200">
+                  <thead className="bg-gray-100">
+                    {table.getHeaderGroups().map((headerGroup) => (
+                      <tr key={headerGroup.id}>
+                        {headerGroup.headers.map((header) => (
+                          <th
+                            key={header.id}
+                            className="p-2 text-left border-b whitespace-nowrap"
+                          >
+                            {header.isPlaceholder
+                              ? null
+                              : flexRender(
+                                  header.column.columnDef.header,
+                                  header.getContext()
+                                )}
+                          </th>
+                        ))}
                       </tr>
                     ))}
-                  </>
-                ) : (
-                  <p className="text-xs p-3">Your Cart is Empty</p>
-                )}
-              </tbody>
-            </table>
+                  </thead>
+                  <tbody>
+                    {table.getRowModel().rows.map((row) => (
+                      <tr key={row.id} className="border-b">
+                        {row.getVisibleCells().map((cell) => (
+                          <td key={cell.id} className="p-2 whitespace-nowrap">
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Pagination Controls */}
+              <div className="flex items-center justify-between mt-4">
+                <button
+                  onClick={() => table.previousPage()}
+                  disabled={!table.getCanPreviousPage()}
+                  className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+                >
+                  Previous
+                </button>
+                <span>
+                  Page{" "}
+                  <strong>
+                    {pagination.pageIndex + 1} of {table.getPageCount()}
+                  </strong>
+                </span>
+                <button
+                  onClick={() => table.nextPage()}
+                  disabled={!table.getCanNextPage()}
+                  className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+                >
+                  Next
+                </button>
+              </div>
+            </div>
           </div>
           <div className="md:w-1/4 border  mb-2  px-5 py-3">
             <h1 className="text-xl py-2 border-b border-gray-200 uppercase">
               Cart Totals
             </h1>
-            {/* Calculate indiviual total price, cart total */}
+
             <div className="flex border-b py-2 border-gray-200 justify-between text-sm my-3">
               <span> Total Items:</span>
-              <span>
-                {cartItems.reduce((acc, item) => acc + item.qty, 0)} items
-              </span>
+              <span>{totalCartItems} items</span>
             </div>
             <div className="flex border-b py-2 border-gray-200 justify-between text-sm my-3">
               <span> Subtotal:</span>
-              <span>
-                $
-                {cartItems
-                  .reduce(
-                    (accumulator, item) => accumulator + item.qty * item.price,
-                    0
-                  )
-                  .toFixed(2)}
-              </span>
+              <span>$ {totalCartAmount}</span>
             </div>
 
             <div>
