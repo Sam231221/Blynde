@@ -6,8 +6,8 @@ interface CouponInputProps {
   onApply: (coupon: string) => void;
   isLoading: boolean;
   isError: boolean;
-  error: any;
-  data: any;
+  error: { message: string } | null;
+  data: { message: string } | null;
   onCouponChange?: (coupon: string) => void;
   placeholder?: string;
 }
@@ -24,7 +24,6 @@ export default function CouponInput({
   const [coupon, setCoupon] = useState("");
   const [copied, setCopied] = useState(false);
 
-  // Determine the status based on the props
   const [status, setStatus] = useState("idle");
 
   useEffect(() => {
@@ -65,13 +64,12 @@ export default function CouponInput({
     }
   };
 
-  // Determine the message to display
   const message = isError
     ? error?.message || "An error occurred"
     : data?.message || "Coupon applied successfully!";
 
   return (
-    <div className="w-full max-w-md mx-auto">
+    <div className="w-full my-2 mx-auto">
       <div className="relative">
         <motion.div
           className={`
