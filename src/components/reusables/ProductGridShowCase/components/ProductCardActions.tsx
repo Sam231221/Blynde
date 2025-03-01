@@ -6,8 +6,15 @@ import {
 } from "../../../../hooks/useWishlist";
 import { toast } from "react-toastify";
 import Spinner from "../../../Spinner";
-import { IoMdHeart } from "react-icons/io";
-import { EyeOutline, HeartOutline, RepeatOutline } from "react-ionicons";
+
+import {
+  IoEyeOutline,
+  IoHeartOutline,
+  IoHeart,
+  IoRepeatOutline,
+} from "react-icons/io5";
+import { IoIosHeartEmpty } from "react-icons/io";
+
 import { ProductDetail } from "../../ProductDetail";
 import { useModalContext } from "../../../../providers/ModalProvider";
 import { MdOutlineZoomOutMap } from "react-icons/md";
@@ -78,7 +85,7 @@ export const ProductCardActions = ({ product }: { product: Product }) => {
         ) : (
           <>
             {isInWishlist ? (
-              <IoMdHeart
+              <IoHeart
                 color={"#00000"}
                 title={"Remove from Wishlist"}
                 height="20px"
@@ -86,7 +93,7 @@ export const ProductCardActions = ({ product }: { product: Product }) => {
                 aria-label="Remove from Wishlist"
               />
             ) : (
-              <HeartOutline
+              <IoHeartOutline
                 color={"#00000"}
                 title={"Add to Wishlist"}
                 height="20px"
@@ -115,7 +122,7 @@ export const ProductCardActions = ({ product }: { product: Product }) => {
         to={`/products/${product.slug}`}
         className="flex justify-center items-center w-10 h-10 bg-white mb-2 text-gray-400 border border-zinc-200  transition-all duration-200 ease-in-out rounded-full hover:bg-gray-900 hover:text-white hover:border-gray-800"
       >
-        <EyeOutline
+        <IoEyeOutline
           color={"#00000"}
           title={"Show In Detail"}
           height="20px"
@@ -136,7 +143,7 @@ export const ProductCardActions = ({ product }: { product: Product }) => {
       >
         {/* bg-white hover:bg-gray-900 hover:text-white hover:border-gray-800 */}
         {compareProducts.some((p) => p._id === product._id) ? (
-          <RepeatOutline
+          <IoRepeatOutline
             color={"#00000"}
             title={"Already Added to Compare list"}
             height="20px"
@@ -144,7 +151,7 @@ export const ProductCardActions = ({ product }: { product: Product }) => {
             aria-label="Already Added to Compare list"
           />
         ) : (
-          <RepeatOutline
+          <IoRepeatOutline
             color={"#00000"}
             title={"Add to Compare list"}
             height="20px"
