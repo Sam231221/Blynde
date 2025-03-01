@@ -5,6 +5,7 @@ import axios, {
 } from "axios";
 import store from "../../redux/store";
 import { logout, updateTokens } from "../../redux/reducers/AuthSlice";
+import { toast } from "react-toastify";
 
 export const endpoint: string = import.meta.env.VITE_APP_API as string;
 
@@ -25,7 +26,6 @@ const axiosClient: AxiosInstance = axios.create({
 
 axiosClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    // Always initialize headers if undefined
     config.headers = config.headers || {};
     const token = store.getState().auth.userInfo?.access_token;
 
@@ -33,7 +33,6 @@ axiosClient.interceptors.request.use(
       config.headers.Authorization = `Bearer ${token}`;
     }
 
-    // FormData handling
     if (config.data instanceof FormData) {
       config.headers["Content-Type"] = "multipart/form-data";
     }
@@ -43,7 +42,6 @@ axiosClient.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// ✅ Handle Refresh Token Rotation
 axiosClient.interceptors.response.use(
   (response: AxiosResponse) => response,
   async (error) => {
@@ -90,14 +88,11 @@ interface ApiRequestOptions {
   requiresToken?: boolean;
 }
 
-export const apiRequest = async <T>(
-  options: ApiRequestOptions
-): Promise<T | number> => {
+export const apiRequest = async <T>(options: ApiRequestOptions): Promise<T> => {
   const { url, method, data, requiresToken = true } = options;
 
   try {
     const response: AxiosResponse<T> = await axiosClient({
-      // Type the response
       method,
       url,
       data,
@@ -105,22 +100,24 @@ export const apiRequest = async <T>(
     });
 
     if (response.status === 204) {
-      return response.status;
+      return response.data;
     } else if (response.status >= 200 && response.status < 300) {
       return response.data;
     } else {
-      throw new Error(`HTTP error! status: ${response.status}`); // Throw an error for non-2xx status codes
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
   } catch (error) {
-    console.error("apiRequest error:", error);
+    if (axios.isAxiosError(error)) {
+      const errData = error.response?.data;
 
-    throw error;
+      // (V.Imp)Return the error data so that your onError callback can process field-level errors.
+      return Promise.reject(errData);
+    } else {
+      return Promise.reject({
+        errors: { general: "An unexpected error occurred" },
+      });
+    }
   }
-  // Promise<T> -> Promise<T | number> for 204 status response
-  // This line is unreachable, but added to satisfy TypeScript's control flow analysis.
-  throw new Error("Unhandled code path in apiRequest");
 };
 
 export default axiosClient;
-
-//how to properly handle response of 204 status code response

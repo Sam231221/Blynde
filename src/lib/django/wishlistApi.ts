@@ -1,8 +1,5 @@
-import {
-  DeleteWishlistPayload,
-  WishlistItem,
-  WishlistResponse,
-} from "../../types";
+import { WishlistItem } from "../../types";
+import { WishlistResponse } from "../../types/api/responses";
 import { apiRequest } from "../axios/axiosClient";
 
 export const fetchUserWishlist = async (): Promise<WishlistResponse> => {

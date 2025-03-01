@@ -1,32 +1,36 @@
-// React component (e.g., ResetPasswordScreen.tsx)
 import React, { useState } from "react";
 import { usePasswordReset } from "../../hooks/useAuth";
 import { toast, ToastContainer } from "react-toastify";
+import { ApiErrorResponse } from "../../types/api/responses";
 
-const ResetPasswordScreen: React.FC = () => {
+const ResetRequestPasswordScreen: React.FC = () => {
   const [email, setEmail] = useState("");
+
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const { mutate: resetMutation, isPending } = usePasswordReset();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    resetMutation(email, {
-      onSuccess: () => {
-        toast.success("Password reset email sent successfully.");
-        setEmail(""); // Clear the form
-      },
-      onError: (err) => {
-        const errorResponse = err as {
-          response?: { data?: { error?: string } };
-        };
-        if (errorResponse?.response?.data?.error) {
-          toast.error(
-            errorResponse.response.data.error ||
-              "An error occurred while setting up the request."
-          );
-        }
-      },
-    });
+    resetMutation(
+      { email },
+      {
+        onSuccess: () => {
+          toast.success("Password reset email sent successfully.");
+          setEmail("");
+        },
+        onError: (error: unknown) => {
+          const errorResponse = error as ApiErrorResponse;
+          if (errorResponse.errors.general) {
+            toast.error(errorResponse.errors.general);
+          } else if (errorResponse.errors) {
+            setErrors(errorResponse.errors);
+          } else {
+            toast.error("Something went wrong. Please try again.");
+          }
+        },
+      }
+    );
   };
 
   return (
@@ -48,15 +52,17 @@ const ResetPasswordScreen: React.FC = () => {
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            required
           />
+          {errors["email"] && (
+            <p className="text-red-500 text-sm">{errors["email"]}</p>
+          )}
         </div>
         <button
           type="submit"
           className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ${
             isPending ? "opacity-50 cursor-not-allowed" : ""
           }`}
-          disabled={isPending} // Disable while loading
+          disabled={isPending}
         >
           {isPending ? "Sending..." : "Reset Password"}
         </button>
@@ -66,4 +72,4 @@ const ResetPasswordScreen: React.FC = () => {
   );
 };
 
-export default ResetPasswordScreen;
+export default ResetRequestPasswordScreen;

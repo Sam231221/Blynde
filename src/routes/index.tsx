@@ -16,8 +16,8 @@ const LoginScreen = React.lazy(
 const RegisterScreen = React.lazy(
   () => import("../pages/Authentication/RegisterScreen")
 );
-const ResetPasswordScreen = React.lazy(
-  () => import("../pages/Authentication/ResetPasswordScreen")
+const ResetRequestPasswordScreen = React.lazy(
+  () => import("../pages/Authentication/ResetRequestPasswordScreen")
 );
 const ResetPasswordConfirmScreen = React.lazy(
   () => import("../pages/Authentication/ResetPasswordConfirmScreen")
@@ -80,7 +80,7 @@ const routes = [
   },
   {
     path: "/request-reset-password",
-    element: lazyLoad(ResetPasswordScreen),
+    element: lazyLoad(ResetRequestPasswordScreen),
   },
   {
     path: "/request-reset-password/confirm",
@@ -119,7 +119,7 @@ const routes = [
     element: lazyLoad(PaymentErrorScreen),
   },
   {
-    path: "*", // 404 route
+    path: "*",
     element: lazyLoad(NotFoundScreen),
   },
 ];

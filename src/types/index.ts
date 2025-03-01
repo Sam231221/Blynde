@@ -28,12 +28,9 @@ export interface WishlistItem {
   product: Product;
   added_at: Date;
 }
-export interface WishlistResponse {
-  count: number;
-  items: WishlistItem[];
-}
+
 export interface WishlistItemCreatePayload {
-  product: string; // Sending only product ID when adding to wishlist
+  product: string;
 }
 
 export interface DeleteWishlistPayload {
@@ -163,10 +160,6 @@ export type Product = {
       image_url: string;
     }
   ];
-
-  isCouponLoading?: boolean;
-  couponCodeInput?: string;
-  couponError?: string | null;
 };
 
 export type Review = {

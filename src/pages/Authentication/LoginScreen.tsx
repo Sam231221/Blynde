@@ -3,9 +3,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { useLogin } from "../../hooks/useAuth";
 import Spinner from "../../components/Spinner";
 import { toast } from "react-toastify";
+import { ApiErrorResponse } from "../../types/api/responses";
+import { LoginFormData } from "../../types/auth";
 
 const LoginScreen = () => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<LoginFormData>({
     email: "",
     password: "",
     rememberMe: false,
@@ -40,18 +42,15 @@ const LoginScreen = () => {
           navigate("/" + redirect);
         }
       },
-      onError: (err) => {
-        const errorResponse = err as {
-          response?: { data?: { errors?: { general?: string } } };
-        };
-        if (errorResponse.response?.data?.errors) {
-          if (errorResponse.response.data.errors.general) {
-            toast.error(errorResponse.response.data.errors.general);
-          } else {
-            setErrors(errorResponse.response.data.errors);
-          }
+      onError: (error: unknown) => {
+        const errorResponse = error as ApiErrorResponse;
+        console.log(errorResponse);
+        if (errorResponse.errors.general) {
+          toast.error(errorResponse.errors.general);
+        } else if (errorResponse.errors) {
+          setErrors(errorResponse.errors);
         } else {
-          toast.error("Something went wrong on the backend.");
+          toast.error("Something went wrong. Please try again.");
         }
       },
     });
@@ -86,11 +85,12 @@ const LoginScreen = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
+                autoComplete="email"
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
                 placeholder="momohhalima42@gmail.com"
               />
-              {errors["username"] && (
-                <p className="text-red-500 text-sm">{errors["username"]}</p>
+              {errors["email"] && (
+                <p className="text-red-500 text-sm">{errors["email"]}</p>
               )}
             </div>
 
@@ -107,6 +107,7 @@ const LoginScreen = () => {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
+                autoComplete="current-password"
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
                 placeholder="at least 8 character"
               />

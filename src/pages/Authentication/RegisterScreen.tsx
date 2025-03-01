@@ -6,9 +6,11 @@ import { RootState } from "../../types";
 import { useRegister } from "../../hooks/useAuth";
 import Spinner from "../../components/Spinner";
 import { toast } from "react-toastify";
+import { RegisterFormData } from "../../types/auth";
+import { ApiErrorResponse } from "../../types/api/responses";
 
 const RegistrationScreen = () => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<RegisterFormData>({
     firstName: "",
     lastName: "",
     username: "",
@@ -24,7 +26,7 @@ const RegistrationScreen = () => {
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
-    setErrors((prev) => ({ ...prev, [name]: "" })); // Clear error on input change
+    setErrors((prev) => ({ ...prev, [name]: "" }));
   };
   const navigate = useNavigate();
 
@@ -38,20 +40,18 @@ const RegistrationScreen = () => {
       onSuccess: () => {
         navigate("/login");
         toast.success("You have successfully created an Account!");
-      }, // Redirect on success
-      onError: (err) => {
-        const errorResponse = err as {
-          response?: { data?: { errors?: { general?: string } } };
-        };
-
-        if (errorResponse.response?.data?.errors) {
-          setErrors(errorResponse.response.data.errors); // Store field-specific errors
+      },
+      onError: (error: unknown) => {
+        const errorResponse = error as ApiErrorResponse;
+        if (errorResponse.errors) {
+          setErrors(errorResponse.errors);
         } else {
           toast.error("Something went wrong. Please try again.");
         }
       },
     });
   };
+
   useEffect(() => {
     if (userInfo) {
       navigate("/");
@@ -134,6 +134,7 @@ const RegistrationScreen = () => {
                 name="username"
                 value={formData.username}
                 onChange={handleChange}
+                autoComplete="username"
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
                 placeholder="Choose a unique username"
               />
@@ -176,6 +177,7 @@ const RegistrationScreen = () => {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
+                autoComplete="new-password"
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
                 placeholder="at least 8 characters"
               />
@@ -197,6 +199,7 @@ const RegistrationScreen = () => {
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleChange}
+                autoComplete="new-password"
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
                 placeholder="confirm your password"
               />

@@ -5,6 +5,7 @@ import { BsBoxArrowRight, BsGear, BsPerson } from "react-icons/bs";
 
 import { Link } from "react-router-dom";
 import { useLogout, useUser } from "../../hooks/useAuth";
+
 interface ProfileDropDownProps {
   classes?: string;
 }
@@ -15,7 +16,12 @@ export const ProfileDropDown = ({ classes }: ProfileDropDownProps) => {
   const ProfileDivRef = useRef<HTMLDivElement>(null);
 
   const userInfo = useUser();
-  const logout = useLogout();
+
+  const { mutate: logout, isPending } = useLogout();
+
+  const handleLogout = () => {
+    logout();
+  };
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (
@@ -81,11 +87,11 @@ export const ProfileDropDown = ({ classes }: ProfileDropDownProps) => {
 
           <li>
             <div
-              onClick={() => logout()}
+              onClick={() => handleLogout()}
               className="px-3 py-2 cursor-pointer bg-none hover:bg-[#eef2fa] transition-all duration-500 ease-out flex items-center gap-2 text-xs"
             >
               {" "}
-              <BsBoxArrowRight /> Sign Out
+              <BsBoxArrowRight /> {isPending ? "Logging out..." : "Log Out"}
             </div>
           </li>
         </ul>

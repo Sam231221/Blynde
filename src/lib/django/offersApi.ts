@@ -1,9 +1,6 @@
+import { ApplyCouponSuccessResponse } from "../../types/api/responses";
 import { apiRequest } from "../axios/axiosClient";
-interface ApplyCouponSuccessResponse {
-  discounted_price: number;
-  discount_percentage: number;
-  valid: boolean;
-}
+
 export const applyProductCoupon = async (
   productSlug: string,
   couponCode: string
