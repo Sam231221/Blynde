@@ -170,23 +170,6 @@ export default function OrderScreen() {
                 <>
                   <Message variant="alert">{selectedOrder.status}</Message>
                 </>
-
-                {/* inlcude userInfo.isAdmin later on && */}
-                {/* {userInfo &&
-                  selectedOrder.isPaid &&
-                  !selectedOrder.isDelivered && (
-                    <div className="mb-3 ms-2">
-                      <button
-                        type="button"
-                        className="text-white bg-sky-500 hover:bg-sky-600 px-5 text-xs font-medium py-2"
-                        onClick={() =>
-                          handleUpdateStatus(Number(selectedOrder._id))
-                        }
-                      >
-                        Mark As Delivered
-                      </button>
-                    </div>
-                  )} */}
               </div>
             </div>
 

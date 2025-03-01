@@ -8,9 +8,15 @@ import { Order, RootState } from "../types";
 import { createOrder } from "../lib/django/orderApi";
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "../lib/axios/queryClient";
-import { clearCart } from "../redux/reducers/CartSlice";
+import {
+  clearCart,
+  selectCartItems,
+  selectCartTotal,
+} from "../redux/reducers/CartSlice";
 import { useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "react-toastify";
+import { HiOutlineShoppingBag } from "react-icons/hi2";
 const items = [
   { label: "Home", path: "/" },
   { label: "Shipping", path: "/shipping" },
@@ -20,18 +26,12 @@ const items = [
 function PlaceOrderScreen() {
   const cart = useSelector((state: RootState) => state.cart);
   const { userInfo } = useSelector((state: RootState) => state.auth);
+  const cartItems = useSelector(selectCartItems);
+  const totalCartItems = useSelector(selectCartTotal);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  //FINALIZING AMOUNTS
-  const itemsPrice: number = Number(
-    Number(
-      cart.cartItems
-        .reduce((acc, item) => acc + item.price * item.qty, 0)
-        .toFixed(2)
-    )
-  );
-  //logic for shipping price
+  const itemsPrice: number = totalCartItems;
   const shippingPrice: number = Number(
     Number(itemsPrice > 100 ? 10 : 0).toFixed(2)
   );
@@ -57,19 +57,16 @@ function PlaceOrderScreen() {
   const { mutate: placeUserOrder, isError: error } = useMutation({
     mutationFn: createOrder,
     onSuccess: (newOrder: Partial<Order>) => {
-      // Invalidate the relevant query so it refetches and shows the new order
-      queryClient.invalidateQueries({ queryKey: ["orders"] }); // Example query key
+      queryClient.invalidateQueries({ queryKey: ["orders"] });
       dispatch(clearCart());
       navigate(`/myorders/${newOrder.order_number}`);
     },
     onError: (error) => {
-      // Handle errors - display a message to the user, etc.
       console.error(error);
       toast.error("There was an error while creating your order.");
     },
   });
 
-  //on clicking PlaceOrderButton dispatch createOrder() that will also create Order Instance in backend
   const placeOrder = (): void => {
     if (cart.cartItems.length === 0) {
       alert("Your cart is empty");
@@ -220,45 +217,95 @@ function PlaceOrderScreen() {
           </div>
 
           {/* Order Items */}
-          <div className="md:w-1/4">
+          <div className="md:w-1/3">
             <div className="m-3 p-3 border shadow">
               <h1 className="text-lg font-medium">Order Items</h1>
               <hr />
-              {cart.cartItems.length === 0 ? (
-                <Message variant="info">Your cart is empty</Message>
-              ) : (
-                <>
-                  {cart.cartItems.map((item, index) => (
-                    <div key={index} className="flex gap-2 mb-1 border-b">
-                      <div className="w-14 h-14">
-                        <img
-                          className="w-full h-full object-contain"
-                          src={item.thumbnailUrl}
-                          alt={item.name}
-                        />
-                      </div>
-                      <div className="flex flex-col">
-                        <div>
-                          <Link
-                            className="text-sm font-medium nav-links link-dark"
-                            to={`/product/${item.productId}`}
-                          >
-                            {item.name} X {item.qty}
-                          </Link>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3 }}
+                className="flex-1 overflow-y-auto py-4 px-6"
+              >
+                {cart.cartItems.length === 0 ? (
+                  <div className="h-full flex flex-col items-center justify-center text-center p-6">
+                    <motion.div
+                      initial={{ scale: 0.8 }}
+                      animate={{ scale: 1 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 300,
+                        damping: 20,
+                      }}
+                    >
+                      <HiOutlineShoppingBag
+                        className="mx-auto text-gray-300"
+                        size={64}
+                      />
+                      <p className="mt-4 text-gray-500 font-medium">
+                        Your cart is empty
+                      </p>
+                      <button
+                        onClick={() => navigate("/shop")}
+                        className="mt-4 text-sky-600 font-medium hover:text-sky-700"
+                      >
+                        Continue Shopping
+                      </button>
+                    </motion.div>
+                  </div>
+                ) : (
+                  <AnimatePresence>
+                    {cart.cartItems.map((item, i) => (
+                      <motion.div
+                        key={i}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, x: -100 }}
+                        transition={{
+                          delay: 0.1 * i,
+                          type: "spring",
+                          stiffness: 200,
+                          damping: 25,
+                        }}
+                        className="flex items-start gap-4 p-4 mb-3 shadow-sm rounded-lg bg-gray-50 transition-colors"
+                      >
+                        <motion.div
+                          whileHover={{ scale: 1.05 }}
+                          className="w-20 h-20 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0"
+                        >
+                          <img
+                            src={item.thumbnailUrl}
+                            className="w-full h-full object-cover"
+                            alt={item.name}
+                          />
+                        </motion.div>
+                        <div className="flex-1 space-y-1">
+                          <p className="font-medium text-gray-800">
+                            {item.name}
+                          </p>
+                          {item.variations.map((variant, j) => (
+                            <div
+                              key={j}
+                              className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-sm"
+                            >
+                              <div className="text-gray-600">
+                                <span
+                                  className="inline-block w-3 h-3 rounded-full mr-1"
+                                  style={{ backgroundColor: variant.color }}
+                                ></span>
+                                {variant.color}, Size: {variant.size}
+                                <span className="font-medium ml-1">
+                                  ({variant.qty} × ${item.price})
+                                </span>
+                              </div>
+                            </div>
+                          ))}
                         </div>
-                        <div className="flex py-1 text-xs">
-                          <span>Color:{item.color}</span>,
-                          <span className="ml-1">Size:{item.size}</span>
-                        </div>
-                        <div className="text-xs py-1">
-                          {" "}
-                          Altogether Cost: ${(item.qty * item.price).toFixed(2)}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </>
-              )}
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
+                )}
+              </motion.div>
             </div>
           </div>
         </div>
