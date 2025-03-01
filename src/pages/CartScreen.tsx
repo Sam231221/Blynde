@@ -1,14 +1,13 @@
 import { Link, useNavigate } from "react-router-dom";
-
 import { useDispatch, useSelector } from "react-redux";
 import {
   useReactTable,
   getCoreRowModel,
   getPaginationRowModel,
   flexRender,
+  ColumnDef,
 } from "@tanstack/react-table";
 import PageContainer from "../components/PageContainer";
-
 import ProductPriceInput from "../components/ProductPriceInput";
 import {
   removeFromCart,
@@ -19,10 +18,21 @@ import {
 import { RootState } from "../types";
 import { useMemo, useState } from "react";
 import { FiTrash } from "react-icons/fi";
+
 const items = [
   { label: "Home", path: "/" },
   { label: "Cart", path: "/cart" },
 ];
+
+interface CartItem {
+  productId: string;
+  name: string;
+  thumbnailUrl: string;
+  price: number;
+  qty: number;
+  color: string;
+  size: string;
+}
 
 export default function CartScreen() {
   const dispatch = useDispatch();
@@ -47,7 +57,7 @@ export default function CartScreen() {
     );
   }, [cartItems]);
 
-  const handleDeleteVariant = (rowData) => {
+  const handleDeleteVariant = (rowData: CartItem) => {
     dispatch(
       removeFromCart({
         productId: rowData.productId,
@@ -56,16 +66,15 @@ export default function CartScreen() {
       })
     );
   };
-  console.log("sds");
 
-  const columns = useMemo(
+  const columns = useMemo<ColumnDef<CartItem>[]>(
     () => [
       {
         accessorKey: "thumbnailUrl",
         header: "Image",
         cell: (info) => (
           <img
-            src={info.getValue()}
+            src={info.getValue() as string}
             alt="Product"
             className="w-16 h-16 object-cover rounded"
           />
@@ -87,7 +96,7 @@ export default function CartScreen() {
           <ProductPriceInput
             qty={row.original.qty}
             id={`${row.original.productId}-${row.original.color}-${row.original.size}`}
-            handleChange={(newQty, id) => {
+            handleChange={(newQty) => {
               dispatch(
                 updateQuantity({
                   productId: row.original.productId,
