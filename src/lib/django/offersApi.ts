@@ -1,11 +1,11 @@
-import { ApplyCouponSuccessResponse } from "../../types/wishlist";
+import { ApplyCouponSuccessResponse } from "../../types/coupon";
 import { apiRequest } from "../axios/axiosClient";
 
 export const applyProductCoupon = async (
   productSlug: string,
   couponCode: string
-): Promise<ApplyCouponSuccessResponse> => {
-  const response = await apiRequest({
+) => {
+  const response = await apiRequest<ApplyCouponSuccessResponse>({
     url: `/api/products/${productSlug}/apply-coupon/`,
     method: "POST",
     data: { coupon_code: couponCode },
