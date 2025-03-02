@@ -1,4 +1,5 @@
-import { ApiErrorResponse, WishlistItem } from ".";
+import { WishlistItem } from ".";
+import { ApiErrorResponse } from "./common/response";
 export interface WishlistItemsListResponse {
   count: number;
   items: WishlistItem[];

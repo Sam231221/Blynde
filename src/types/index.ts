@@ -1,5 +1,3 @@
-import store from "../redux/store";
-
 export interface User {
   _id: string;
   id: string;
@@ -12,51 +10,13 @@ export interface User {
   refresh_token: string;
   access_token: string;
 }
-export interface AuthState {
-  userInfo: User | null;
-}
 
-export interface CartState {
-  loading: boolean;
-  error: boolean;
-  cartItems: CartItem[];
-  shippingAddress: ShippingAddress | null;
-  paymentMethod: string | null;
-}
 export interface WishlistItem {
   id: string;
   product: Product;
   added_at: Date;
 }
 
-export interface WishlistItemCreatePayload {
-  product: string;
-}
-
-export interface DeleteWishlistPayload {
-  productId: number;
-}
-
-export interface WishlistState {
-  loading: boolean;
-  error: boolean;
-  wishlistItems: WishlistItem[];
-}
-
-export interface CartItemVariation {
-  qty: number;
-  color: string;
-  size: string;
-}
-
-export interface CartItem {
-  _id: string;
-  productId: string;
-  name: string;
-  price: number;
-  thumbnailUrl: string;
-  variations: CartItemVariation[];
-}
 export interface Discount {
   id: number;
   title: string;
@@ -69,36 +29,6 @@ export interface Discount {
   priority: number;
 }
 
-export interface Order {
-  _id?: string;
-  order_number: string;
-  user: User;
-  orderItems: OrderItem[] | CartItem[];
-  shippingAddress: ShippingAddress;
-  paymentMethod: string;
-  itemsPrice: number;
-  shippingPrice: number;
-  taxPrice: number;
-  totalPrice: number;
-  isPaid: boolean;
-  paidAt: string | null;
-  status: string;
-  isDelivered: boolean;
-  deliveredAt: string | null;
-  createdAt: string;
-}
-
-export interface OrderItem {
-  _id?: string;
-  product: Product;
-  order: Order;
-  name: string;
-  color: string;
-  size: string;
-  qty: number;
-  price: number;
-  thumbnail: string;
-}
 export interface ShippingAddress {
   _id?: string;
   address: string;
@@ -129,14 +59,7 @@ export type Color = {
   stock?: number;
   product_count: number;
 };
-export interface Pagination {
-  current_page: 1;
-  total_pages: 12;
-  total_items: 23;
-  page_size: 2;
-  next: null;
-  previous: null;
-}
+
 export type Product = {
   _id: string;
   slug: string;
@@ -162,6 +85,37 @@ export type Product = {
   ];
 };
 
+export interface Order {
+  _id?: string;
+  order_number: string;
+  user: User;
+  orderItems: OrderItem[];
+  shippingAddress: ShippingAddress;
+  paymentMethod: string;
+  itemsPrice: number;
+  shippingPrice: number;
+  taxPrice: number;
+  totalPrice: number;
+  isPaid: boolean;
+  paidAt: string | null;
+  status: string;
+  isDelivered: boolean;
+  deliveredAt: string | null;
+  createdAt: string;
+}
+
+export interface OrderItem {
+  _id?: string;
+  product: Product;
+  order: Order;
+  name: string;
+  color: string;
+  size: string;
+  qty: number;
+  price: number;
+  thumbnail: string;
+}
+
 export type Review = {
   _id?: string;
   product: Product | string;
@@ -170,20 +124,3 @@ export type Review = {
   comment: string;
   createdAt?: string;
 };
-export interface ProductState {
-  allProducts: Product[];
-  topProducts: Product[];
-  recentProducts: Product[];
-  productDetail: Product | null;
-  loading: boolean;
-  error: string | null;
-}
-
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
-export interface ApiErrorResponse {
-  errors: {
-    [key: string]: string;
-  };
-  detail?: string;
-}

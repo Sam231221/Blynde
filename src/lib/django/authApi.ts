@@ -7,7 +7,7 @@ import {
   RegisterResponse,
   RequestPasswordResetFormData,
   RequestPasswordResetResponse,
-} from "../../types/auth";
+} from "../../types/api/auth";
 import { User } from "../../types";
 
 const getRefreshToken = (): string | undefined => {

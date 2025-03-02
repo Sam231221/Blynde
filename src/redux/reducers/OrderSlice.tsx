@@ -1,13 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Order, RootState, ShippingAddress } from "../../types";
-
-interface OrderState {
-  orders: Order[];
-  isPaid: boolean;
-  isDelivered: boolean;
-  selectedOrder: Order | null;
-  shippingAddress: ShippingAddress | null;
-}
+import { Order } from "../../types";
+import { OrderState, RootState } from "../../types/redux";
 
 const initialState: OrderState = {
   orders: [],

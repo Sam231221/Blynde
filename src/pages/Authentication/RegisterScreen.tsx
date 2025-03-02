@@ -6,7 +6,7 @@ import { RootState } from "../../types";
 import { useRegister } from "../../hooks/useAuth";
 import Spinner from "../../components/Spinner";
 import { toast } from "react-toastify";
-import { RegisterFormData } from "../../types/auth";
+import { RegisterFormData } from "../../types/api/auth";
 import { ApiErrorResponse } from "../../types/wishlist";
 
 const RegistrationScreen = () => {

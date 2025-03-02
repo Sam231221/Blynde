@@ -1,4 +1,8 @@
-import { ApiErrorResponse, User } from ".";
+import { User } from "..";
+import { ApiErrorResponse } from "../common/response";
+export interface AuthState {
+  userInfo: User | null;
+}
 export interface LoginFormData extends Record<string, unknown> {
   email: string;
   password: string;

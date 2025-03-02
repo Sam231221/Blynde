@@ -1,6 +1,8 @@
 import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { CartItem, CartState, RootState, ShippingAddress } from "../../types";
+import { ShippingAddress } from "../../types";
 import { getLocalStorageItem } from "../../helpers/utils";
+import { CartItem, CartState } from "../../types/redux/cart";
+import { RootState } from "../../types/redux";
 
 const cartItemsFromStorage: CartItem[] = getLocalStorageItem("cartItems", []);
 const shippingAddressFromStorage = getLocalStorageItem("shippingAddress", null);

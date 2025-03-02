@@ -1,9 +1,6 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { Product } from "../../types";
-
-interface CompareState {
-  products: Product[];
-}
+import { CompareState } from "../../types/redux";
 
 const loadState = (): CompareState => {
   try {
@@ -22,16 +19,13 @@ const loadState = (): CompareState => {
   };
 };
 
-// Create the slice
 const CompareProductsSlice = createSlice({
   name: "comparelist",
   initialState: loadState(),
   reducers: {
     addProduct: (state, action: PayloadAction<Product>) => {
-      // Only add if not already in the list
       if (!state.products.some((p) => p._id === action.payload._id)) {
         state.products.push(action.payload);
-        // Save to localStorage
         localStorage.setItem("compareProducts", JSON.stringify(state.products));
       }
     },

@@ -1,15 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-interface FilterState {
-  categories: string[];
-  price: [number, number];
-  sizes: string[];
-  color: string;
-  ordering: string;
-  page: number;
-  products_limit: number;
-  productsDisplayType: "grid" | "list";
-}
+import { FilterState } from "../../types/redux";
 
 export const initialState: FilterState = {
   categories: [],

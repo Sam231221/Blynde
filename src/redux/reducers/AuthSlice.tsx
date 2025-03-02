@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-import { AuthState, User } from "../../types";
+import { User } from "../../types";
+import { AuthState } from "../../types/api/auth";
 
 const userInfoFromStorage: User | null = JSON.parse(
   localStorage.getItem("userInfo") || "null"

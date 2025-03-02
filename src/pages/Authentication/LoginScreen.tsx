@@ -4,7 +4,7 @@ import { useLogin } from "../../hooks/useAuth";
 import Spinner from "../../components/Spinner";
 import { toast } from "react-toastify";
 import { ApiErrorResponse } from "../../types/wishlist";
-import { LoginFormData } from "../../types/auth";
+import { LoginFormData } from "../../types/api/auth";
 
 const LoginScreen = () => {
   const [formData, setFormData] = useState<LoginFormData>({

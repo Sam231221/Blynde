@@ -21,7 +21,7 @@ import {
   RegisterResponse,
   RequestPasswordResetFormData,
   RequestPasswordResetResponse,
-} from "../types/auth";
+} from "../types/api/auth";
 import { ApiErrorResponse } from "../types/wishlist";
 import { toast } from "react-toastify";
 
