@@ -7,7 +7,7 @@ import { useRegister } from "../../hooks/useAuth";
 import Spinner from "../../components/Spinner";
 import { toast } from "react-toastify";
 import { RegisterFormData } from "../../types/auth";
-import { ApiErrorResponse } from "../../types/api/responses";
+import { ApiErrorResponse } from "../../types/wishlist";
 
 const RegistrationScreen = () => {
   const [formData, setFormData] = useState<RegisterFormData>({

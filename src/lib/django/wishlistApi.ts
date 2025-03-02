@@ -1,22 +1,24 @@
 import { WishlistItem } from "../../types";
-import { WishlistResponse } from "../../types/api/responses";
+import {
+  WishlistAddOrDeleteResponse,
+  WishlistItemsListResponse,
+  WishlistResponse,
+} from "../../types/wishlist";
 import { apiRequest } from "../axios/axiosClient";
 
-export const fetchUserWishlist = async (): Promise<WishlistResponse> => {
-  const response = await apiRequest({
+export const fetchUserWishlist = async () => {
+  const response = await apiRequest<WishlistItemsListResponse>({
     url: "/api/users/wishlist/",
     method: "GET",
   });
-  return (response as WishlistResponse) || [];
+  return (response as WishlistItemsListResponse) || [];
 };
 
-export const createOrDeleteWishlistItem = async (
-  productId: string
-): Promise<WishlistItem | number> => {
-  const response = await apiRequest({
+export const createOrDeleteWishlistItem = async (wishlistItemId: string) => {
+  const response = await apiRequest<WishlistAddOrDeleteResponse>({
     url: "/api/users/wishlist/",
     method: "POST",
-    data: { product: productId },
+    data: { wishlistItemId },
   });
-  return (response as WishlistItem) || Number;
+  return response as WishlistAddOrDeleteResponse;
 };

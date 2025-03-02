@@ -181,3 +181,9 @@ export interface ProductState {
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
+export interface ApiErrorResponse {
+  errors: {
+    [key: string]: string;
+  };
+  detail?: string;
+}

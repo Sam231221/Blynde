@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useLogin } from "../../hooks/useAuth";
 import Spinner from "../../components/Spinner";
 import { toast } from "react-toastify";
-import { ApiErrorResponse } from "../../types/api/responses";
+import { ApiErrorResponse } from "../../types/wishlist";
 import { LoginFormData } from "../../types/auth";
 
 const LoginScreen = () => {

@@ -13,8 +13,6 @@ import {
   IoHeart,
   IoRepeatOutline,
 } from "react-icons/io5";
-import { IoIosHeartEmpty } from "react-icons/io";
-
 import { ProductDetail } from "../../ProductDetail";
 import { useModalContext } from "../../../../providers/ModalProvider";
 import { MdOutlineZoomOutMap } from "react-icons/md";
@@ -36,9 +34,9 @@ export const ProductCardActions = ({ product }: { product: Product }) => {
   const { mutate: addorDeletetoWishlist, isPending } =
     useCreateOrDeleteWishlistItem();
 
-  const handleAddToWishlist = (productId: string) => {
+  const handleAddToWishlist = (wishlistItemId: string) => {
     if (userInfo) {
-      addorDeletetoWishlist(productId, {
+      addorDeletetoWishlist(wishlistItemId, {
         onSuccess: (data) => {
           if (data === 204) {
             toast.success("Removed from wishlist");

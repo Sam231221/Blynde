@@ -18,9 +18,6 @@ export function useCreateOrDeleteWishlistItem() {
     mutationFn: createOrDeleteWishlistItem,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["wishlistItems"] });
-
-      // Optimistic updates (optional - adapt to your needs)
-      // queryClient.setQueryData(['wishlist'], (oldData: WishlistItem[] | undefined) => { ... });
     },
   });
 }

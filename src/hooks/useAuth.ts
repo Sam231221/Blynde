@@ -22,7 +22,7 @@ import {
   RequestPasswordResetFormData,
   RequestPasswordResetResponse,
 } from "../types/auth";
-import { ApiErrorResponse } from "../types/api/responses";
+import { ApiErrorResponse } from "../types/wishlist";
 import { toast } from "react-toastify";
 
 export const useLogin = (

@@ -1,6 +1,9 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import PageContainer from "../components/PageContainer";
-import { useDeleteWishlistItem, useUserWishlist } from "../hooks/useWishlist";
+import {
+  useCreateOrDeleteWishlistItem,
+  useUserWishlist,
+} from "../hooks/useWishlist";
 import Rating from "../components/Rating";
 import { X } from "lucide-react";
 import ProductImageTransition from "../components/reusables/ProductGridShowCase/ProductGridTypeCard/ProductImageTransition";
@@ -12,22 +15,19 @@ const items = [
 ];
 function WishlistScreen() {
   const { data, isLoading, error } = useUserWishlist();
-  const wishlist = data?.wishlist;
-
-  const { mutate, isPending } = useDeleteWishlistItem();
-  const handleDeleteWishlistItem = (productId: number) => {
-    mutate(
-      { productId },
-      {
-        onSuccess: () => {
-          toast.success("Item removed from wishlist");
-        },
-        onError: (error) => {
-          console.error(error);
-          toast.error("Failed to remove item from wishlist");
-        },
-      }
-    );
+  const wishlist = data?.items;
+  console.log(data);
+  const { mutate } = useCreateOrDeleteWishlistItem();
+  const handleDeleteWishlistItem = (wishlistItemId: string) => {
+    mutate(wishlistItemId, {
+      onSuccess: () => {
+        toast.success("Item removed from wishlist");
+      },
+      onError: (error) => {
+        console.error(error);
+        toast.error("Failed to remove item from wishlist");
+      },
+    });
   };
 
   return (

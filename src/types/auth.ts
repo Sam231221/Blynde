@@ -1,12 +1,10 @@
-import { User } from ".";
-import { ApiErrorResponse } from "./api/responses";
-import { ErrorResponse } from "react-router-dom";
+import { ApiErrorResponse, User } from ".";
 export interface LoginFormData extends Record<string, unknown> {
   email: string;
   password: string;
   rememberMe?: boolean;
 }
-export type LoginResponse = User | ErrorResponse;
+export type LoginResponse = User | ApiErrorResponse;
 
 export interface RegisterFormData extends Record<string, unknown> {
   username: string;
@@ -17,7 +15,7 @@ export interface RegisterFormData extends Record<string, unknown> {
   confirmPassword: string;
   agreeToTerms: boolean;
 }
-export type RegisterResponse = User | ErrorResponse;
+export type RegisterResponse = User | ApiErrorResponse;
 
 export interface LogoutData {
   refresh: string;

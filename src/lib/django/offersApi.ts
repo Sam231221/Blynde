@@ -1,4 +1,4 @@
-import { ApplyCouponSuccessResponse } from "../../types/api/responses";
+import { ApplyCouponSuccessResponse } from "../../types/wishlist";
 import { apiRequest } from "../axios/axiosClient";
 
 export const applyProductCoupon = async (
