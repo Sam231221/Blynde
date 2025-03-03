@@ -3,7 +3,7 @@ import { usePasswordReset } from "../../hooks/useAuth";
 import { toast, ToastContainer } from "react-toastify";
 import { ApiErrorResponse } from "../../types/wishlist";
 
-const ResetRequestPasswordScreen: React.FC = () => {
+const ResetRequestPasswordScreen = () => {
   const [email, setEmail] = useState("");
 
   const [errors, setErrors] = useState<Record<string, string>>({});

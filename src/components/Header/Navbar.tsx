@@ -16,7 +16,17 @@ import { useUser } from "../../hooks/useAuth";
 import { useUserWishlist } from "../../hooks/useWishlist";
 import MobileSideHeader from "./MobileSideHeader";
 import { selectCartItemCount } from "../../redux/reducers/CartSlice";
-function Header() {
+
+const routes = {
+  home: { path: "/", label: "Home" },
+  shop: { path: "/shop", label: "Shop" },
+  aboutUs: { path: "/about-us", label: "About Us" },
+  contactUs: { path: "/contact-us", label: "Contact Us" },
+  login: { path: "/auth/login", label: "Login" },
+  myWishlist: { path: "/my-wishlist", label: "My Wishlist" },
+};
+
+function Navbar() {
   const [sideCartNav, setSideCartNav] = useState(false);
   const [sideMobileHeader, setSideMobileHeader] = useState(false);
   const totalCartItems = useSelector(selectCartItemCount);
@@ -64,7 +74,7 @@ function Header() {
                 onClick={() => toggleSideMobileHeader()}
                 className="text-[20px] md:text-[25px] mr-3 block md:hidden"
               />
-              <Link to="/">
+              <Link to={routes.home.path}>
                 <h2 className="text-3xl  mb-2 font-bold tracking-wide text-zinc-900">
                   Blynde
                 </h2>
@@ -73,56 +83,20 @@ function Header() {
 
             <nav className="ml-10 hidden md:block">
               <ul className="me-lg-5 text-sm flex items-center font-semibold gap-3">
-                <li>
-                  <Link
-                    to="/"
-                    className={
-                      splitLocation[1] === ""
-                        ? "nav-link text-blue scrollto "
-                        : "nav-link scrollto"
-                    }
-                  >
-                    Home
-                  </Link>
-                </li>
-
-                <li>
-                  <Link
-                    className={
-                      splitLocation[1] === "shop"
-                        ? "nav-link text-blue scrollto "
-                        : "nav-link scrollto"
-                    }
-                    to="/shop"
-                  >
-                    Shop
-                  </Link>
-                </li>
-
-                <li>
-                  <Link
-                    className={
-                      splitLocation[1] === "about-us"
-                        ? "nav-link active scrollto "
-                        : "nav-link scrollto"
-                    }
-                    to="/about-us/"
-                  >
-                    About Us
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    className={
-                      splitLocation[1] === "contact-us"
-                        ? "nav-link active scrollto "
-                        : "nav-link scrollto"
-                    }
-                    to="/contact-us/"
-                  >
-                    Contact Us
-                  </Link>
-                </li>
+                {Object.values(routes).map((route) => (
+                  <li key={route.path}>
+                    <Link
+                      to={route.path}
+                      className={
+                        splitLocation[1] === route.path.slice(1)
+                          ? "nav-link text-blue scrollto "
+                          : "nav-link scrollto"
+                      }
+                    >
+                      {route.label}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </nav>
             <div className="ml-4">
@@ -134,7 +108,7 @@ function Header() {
             {userInfo ? (
               <ProfileDropDown />
             ) : (
-              <Link to="/login">
+              <Link to={routes.login.path}>
                 <RiUserReceived2Line className="text-[15px] md:text-[20px]" />
               </Link>
             )}
@@ -149,7 +123,10 @@ function Header() {
               </div>
             </div>
             {userInfo && (
-              <Link to="/my-wishlist" className="relative cursor-pointer">
+              <Link
+                to={routes.myWishlist.path}
+                className="relative cursor-pointer"
+              >
                 <FaRegHeart className="text-[15px] md:text-[20px]" />
 
                 <div className="absolute  aspect-square -top-3 -right-3 w-4 h-4 flex items-center justify-center text-white text-[12px] font-medium bg-[#717FE0]">
@@ -169,4 +146,4 @@ function Header() {
   );
 }
 
-export default Header;
+export default Navbar;

@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { User } from "../../types";
 import { AuthState } from "../../types/api/auth";
+import { RootState } from "../../types/redux";
 
 const userInfoFromStorage: User | null = JSON.parse(
   localStorage.getItem("userInfo") || "null"
@@ -35,6 +36,7 @@ const authSlice = createSlice({
     },
   },
 });
+export const selectUser = (state: RootState) => state.auth.userInfo;
 
 export const { logout, setUser, updateTokens } = authSlice.actions;
 export default authSlice.reducer;

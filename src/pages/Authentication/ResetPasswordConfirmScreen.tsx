@@ -3,7 +3,7 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { apiRequest } from "../../lib/axios/axiosClient";
 
-const ResetPasswordConfirmScreen: React.FC = () => {
+const ResetPasswordConfirmScreen = () => {
   const [searchParams] = useSearchParams();
   const token = searchParams.get("token");
   const navigate = useNavigate();

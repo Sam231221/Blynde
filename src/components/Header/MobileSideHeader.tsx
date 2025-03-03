@@ -1,7 +1,5 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { HiOutlineXMark } from "react-icons/hi2";
-import { useSelector } from "react-redux";
-import { RootState } from "../../types";
 import clsx from "clsx";
 
 interface CartRightBarProps {

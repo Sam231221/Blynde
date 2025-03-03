@@ -1,11 +1,11 @@
+import Navbar from "./Navbar";
 import Topbar from "./Topbar";
-import Header from "./Header";
 
-export default function index() {
+export default function Header() {
   return (
     <>
       <Topbar />
-      <Header />
+      <Navbar />
     </>
   );
 }

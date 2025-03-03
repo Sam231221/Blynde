@@ -1,11 +1,10 @@
-import React, { ReactElement, Suspense } from "react";
-import { ErrorBoundary } from "react-error-boundary";
-import Loader from "../components/Loader";
-import { ScrollRestoration } from "react-router-dom";
-import { Modal } from "../components/Modal";
-import ProductCompareToast from "../components/globals/ProductCompareToast";
-import { RootLayout } from "../layouts";
-import { ComponentType, ReactNode } from "react";
+import React from "react";
+import { lazyLoad } from "../helpers/lazyload";
+import ProtectedRoute from "./ProtectedRoute";
+import { RootLayout } from "../layouts/RootLayout";
+
+import AuthLayout from "../layouts/AuthLayout";
+import { ROUTES } from "./Routes";
 
 const HomeScreen = React.lazy(() => import("../pages/HomeScreen"));
 const ShopScreen = React.lazy(() => import("../pages/ShopScreen"));
@@ -37,105 +36,55 @@ const PlaceOrderScreen = React.lazy(() => import("../pages/PlaceOrderScreen"));
 const OrderScreen = React.lazy(() => import("../pages/OrderScreen"));
 const WishlistScreen = React.lazy(() => import("../pages/WishlistScreen"));
 const CompareScreen = React.lazy(() => import("../pages/CompareScreen"));
-type LayoutProps = {
-  children: ReactNode;
-};
-// Generic type for the withProviders function
-type WithProvidersType = <P extends object>(
-  Component: ComponentType<P>,
-  Layout?: ComponentType<LayoutProps>
-) => (props: P & React.Attributes) => ReactElement;
-
-const withProviders: WithProvidersType = (
-  Component,
-  Layout = React.Fragment
-) => {
-  return (props) => (
-    <Layout>
-      <Suspense fallback={<Loader />}>
-        <ErrorBoundary fallback={<div>Something went wrong</div>}>
-          <ScrollRestoration />
-          <Component {...props} />
-          <Modal />
-          <ProductCompareToast />
-        </ErrorBoundary>
-      </Suspense>
-    </Layout>
-  );
-};
 
 const routes = [
   {
-    path: "/",
-    element: withProviders(HomeScreen, RootLayout),
+    element: <RootLayout />,
+    children: [
+      { path: ROUTES.HOME, element: lazyLoad(HomeScreen) },
+      { path: ROUTES.SHOP, element: lazyLoad(ShopScreen) },
+      { path: ROUTES.PRODUCT_DETAILS, element: lazyLoad(ProductScreen) },
+      { path: ROUTES.CART, element: lazyLoad(CartScreen) },
+      { path: ROUTES.COMPARE, element: lazyLoad(CompareScreen) },
+
+      {
+        element: <ProtectedRoute />,
+        children: [
+          { path: ROUTES.USER_PROFILE, element: lazyLoad(ProfileScreen) },
+          { path: ROUTES.WISHLIST, element: lazyLoad(WishlistScreen) },
+          { path: ROUTES.ORDER_SHIPPING, element: lazyLoad(ShippingScreen) },
+          { path: ROUTES.ORDER_PAYMENT, element: lazyLoad(PaymentScreen) },
+          { path: ROUTES.PLACE_ORDER, element: lazyLoad(PlaceOrderScreen) },
+          { path: ROUTES.ORDER_DETAILS, element: lazyLoad(OrderScreen) },
+        ],
+      },
+
+      {
+        path: ROUTES.ORDER_PAYMENT_SUCCESS,
+        element: lazyLoad(PaymentSuccessScreen),
+      },
+      {
+        path: ROUTES.ORDER_PAYMENT_ERROR,
+        element: lazyLoad(PaymentErrorScreen),
+      },
+
+      { path: ROUTES.NOT_FOUND, element: lazyLoad(NotFoundScreen) },
+    ],
   },
   {
-    path: "/shop",
-    element: withProviders(ShopScreen),
-  },
-  {
-    path: "/my-wishlist",
-    element: withProviders(WishlistScreen),
-  },
-  {
-    path: "/compare",
-    element: withProviders(CompareScreen),
-  },
-  {
-    path: "/profile",
-    element: withProviders(ProfileScreen),
-  },
-  {
-    path: "/login",
-    element: withProviders(LoginScreen),
-  },
-  {
-    path: "/register",
-    element: withProviders(RegisterScreen),
-  },
-  {
-    path: "/request-reset-password",
-    element: withProviders(ResetRequestPasswordScreen),
-  },
-  {
-    path: "/request-reset-password/confirm",
-    element: withProviders(ResetPasswordConfirmScreen),
-  },
-  {
-    path: "/products/:slug",
-    element: withProviders(ProductScreen),
-  },
-  {
-    path: "/cart/*",
-    element: withProviders(CartScreen),
-  },
-  {
-    path: "/myorders/:order_number",
-    element: withProviders(OrderScreen),
-  },
-  {
-    path: "/placeorder",
-    element: withProviders(PlaceOrderScreen),
-  },
-  {
-    path: "/shipping",
-    element: withProviders(ShippingScreen),
-  },
-  {
-    path: "/payment",
-    element: withProviders(PaymentScreen),
-  },
-  {
-    path: "/payment/success",
-    element: withProviders(PaymentSuccessScreen),
-  },
-  {
-    path: "/payment/error",
-    element: withProviders(PaymentErrorScreen),
-  },
-  {
-    path: "*",
-    element: withProviders(NotFoundScreen),
+    element: <AuthLayout />,
+    children: [
+      { path: ROUTES.LOGIN, element: lazyLoad(LoginScreen) },
+      { path: ROUTES.REGISTER, element: lazyLoad(RegisterScreen) },
+      {
+        path: ROUTES.FORGOT_PASSWORD,
+        element: lazyLoad(ResetRequestPasswordScreen),
+      },
+      {
+        path: ROUTES.RESET_PASSWORD_CONFIRM,
+        element: lazyLoad(ResetPasswordConfirmScreen),
+      },
+    ],
   },
 ];
 

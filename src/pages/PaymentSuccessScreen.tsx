@@ -12,7 +12,7 @@ interface PaymentData {
   total_amount?: number;
 }
 
-const PaymentSuccessScreen: React.FC = () => {
+const PaymentSuccessScreen = () => {
   const [search] = useSearchParams();
   const navigate = useNavigate();
   const dataQuery = search.get("data");
