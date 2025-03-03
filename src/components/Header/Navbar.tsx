@@ -16,14 +16,13 @@ import { useUser } from "../../hooks/useAuth";
 import { useUserWishlist } from "../../hooks/useWishlist";
 import MobileSideHeader from "./MobileSideHeader";
 import { selectCartItemCount } from "../../redux/reducers/CartSlice";
+import { ROUTES } from "../../routes/Routes";
 
 const routes = {
   home: { path: "/", label: "Home" },
   shop: { path: "/shop", label: "Shop" },
   aboutUs: { path: "/about-us", label: "About Us" },
   contactUs: { path: "/contact-us", label: "Contact Us" },
-  login: { path: "/auth/login", label: "Login" },
-  myWishlist: { path: "/my-wishlist", label: "My Wishlist" },
 };
 
 function Navbar() {
@@ -108,7 +107,7 @@ function Navbar() {
             {userInfo ? (
               <ProfileDropDown />
             ) : (
-              <Link to={routes.login.path}>
+              <Link to={ROUTES.LOGIN}>
                 <RiUserReceived2Line className="text-[15px] md:text-[20px]" />
               </Link>
             )}
@@ -123,10 +122,7 @@ function Navbar() {
               </div>
             </div>
             {userInfo && (
-              <Link
-                to={routes.myWishlist.path}
-                className="relative cursor-pointer"
-              >
+              <Link to={ROUTES.WISHLIST} className="relative cursor-pointer">
                 <FaRegHeart className="text-[15px] md:text-[20px]" />
 
                 <div className="absolute  aspect-square -top-3 -right-3 w-4 h-4 flex items-center justify-center text-white text-[12px] font-medium bg-[#717FE0]">

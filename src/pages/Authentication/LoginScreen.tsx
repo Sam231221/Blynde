@@ -26,20 +26,18 @@ const LoginScreen = () => {
 
   const params = new URLSearchParams(window.location.search);
 
-  const redirect = params.get("redirect") ? params.get("redirect") : "/";
+  const redirect = params.get("redirect") || "/";
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     login(formData, {
       onSuccess: () => {
         toast.success("Login successfully.");
-        if (redirect === "shipping") {
-          navigate("/shipping");
-        }
+
         if (redirect === "/") {
           navigate("/");
         } else {
-          navigate("/" + redirect);
+          navigate(redirect);
         }
       },
       onError: (error: unknown) => {

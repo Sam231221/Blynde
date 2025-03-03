@@ -12,7 +12,7 @@ import {
   requestPasswordReset,
 } from "../lib/django/authApi";
 import { logout, setUser } from "../redux/reducers/AuthSlice";
-import { RootState, User } from "../types";
+import { User } from "../types";
 import {
   LoginFormData,
   LogoutData,
@@ -22,8 +22,10 @@ import {
   RequestPasswordResetFormData,
   RequestPasswordResetResponse,
 } from "../types/api/auth";
-import { ApiErrorResponse } from "../types/wishlist";
+
 import { toast } from "react-toastify";
+import { ApiErrorResponse } from "../types/common/response";
+import { RootState } from "../types/redux";
 
 export const useLogin = (
   options?: UseMutationOptions<User, ApiErrorResponse, LoginFormData>
