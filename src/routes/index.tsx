@@ -1,9 +1,11 @@
-import React, { Suspense } from "react";
+import React, { ReactElement, Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import Loader from "../components/Loader";
 import { ScrollRestoration } from "react-router-dom";
 import { Modal } from "../components/Modal";
 import ProductCompareToast from "../components/globals/ProductCompareToast";
+import { RootLayout } from "../layouts";
+import { ComponentType, ReactNode } from "react";
 
 const HomeScreen = React.lazy(() => import("../pages/HomeScreen"));
 const ShopScreen = React.lazy(() => import("../pages/ShopScreen"));
@@ -35,92 +37,105 @@ const PlaceOrderScreen = React.lazy(() => import("../pages/PlaceOrderScreen"));
 const OrderScreen = React.lazy(() => import("../pages/OrderScreen"));
 const WishlistScreen = React.lazy(() => import("../pages/WishlistScreen"));
 const CompareScreen = React.lazy(() => import("../pages/CompareScreen"));
+type LayoutProps = {
+  children: ReactNode;
+};
+// Generic type for the withProviders function
+type WithProvidersType = <P extends object>(
+  Component: ComponentType<P>,
+  Layout?: ComponentType<LayoutProps>
+) => (props: P & React.Attributes) => ReactElement;
 
-const lazyLoad = (
-  Component: React.LazyExoticComponent<React.ComponentType>
-) => (
-  <Suspense fallback={<Loader />}>
-    <ErrorBoundary fallback={<div>Something went wrong</div>}>
-      <ScrollRestoration />
-      <Component />
-      <Modal />
-      <ProductCompareToast />
-    </ErrorBoundary>
-  </Suspense>
-);
+const withProviders: WithProvidersType = (
+  Component,
+  Layout = React.Fragment
+) => {
+  return (props) => (
+    <Layout>
+      <Suspense fallback={<Loader />}>
+        <ErrorBoundary fallback={<div>Something went wrong</div>}>
+          <ScrollRestoration />
+          <Component {...props} />
+          <Modal />
+          <ProductCompareToast />
+        </ErrorBoundary>
+      </Suspense>
+    </Layout>
+  );
+};
 
 const routes = [
   {
     path: "/",
-    element: lazyLoad(HomeScreen),
+    element: withProviders(HomeScreen, RootLayout),
   },
   {
     path: "/shop",
-    element: lazyLoad(ShopScreen),
+    element: withProviders(ShopScreen),
   },
   {
     path: "/my-wishlist",
-    element: lazyLoad(WishlistScreen),
+    element: withProviders(WishlistScreen),
   },
   {
     path: "/compare",
-    element: lazyLoad(CompareScreen),
+    element: withProviders(CompareScreen),
   },
   {
     path: "/profile",
-    element: lazyLoad(ProfileScreen),
+    element: withProviders(ProfileScreen),
   },
   {
     path: "/login",
-    element: lazyLoad(LoginScreen),
+    element: withProviders(LoginScreen),
   },
   {
     path: "/register",
-    element: lazyLoad(RegisterScreen),
+    element: withProviders(RegisterScreen),
   },
   {
     path: "/request-reset-password",
-    element: lazyLoad(ResetRequestPasswordScreen),
+    element: withProviders(ResetRequestPasswordScreen),
   },
   {
     path: "/request-reset-password/confirm",
-    element: lazyLoad(ResetPasswordConfirmScreen),
+    element: withProviders(ResetPasswordConfirmScreen),
   },
   {
     path: "/products/:slug",
-    element: lazyLoad(ProductScreen),
+    element: withProviders(ProductScreen),
   },
   {
     path: "/cart/*",
-    element: lazyLoad(CartScreen),
+    element: withProviders(CartScreen),
   },
   {
     path: "/myorders/:order_number",
-    element: lazyLoad(OrderScreen),
+    element: withProviders(OrderScreen),
   },
   {
     path: "/placeorder",
-    element: lazyLoad(PlaceOrderScreen),
+    element: withProviders(PlaceOrderScreen),
   },
   {
     path: "/shipping",
-    element: lazyLoad(ShippingScreen),
+    element: withProviders(ShippingScreen),
   },
   {
     path: "/payment",
-    element: lazyLoad(PaymentScreen),
+    element: withProviders(PaymentScreen),
   },
   {
     path: "/payment/success",
-    element: lazyLoad(PaymentSuccessScreen),
+    element: withProviders(PaymentSuccessScreen),
   },
   {
     path: "/payment/error",
-    element: lazyLoad(PaymentErrorScreen),
+    element: withProviders(PaymentErrorScreen),
   },
   {
     path: "*",
-    element: lazyLoad(NotFoundScreen),
+    element: withProviders(NotFoundScreen),
   },
 ];
 

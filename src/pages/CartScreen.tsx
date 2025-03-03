@@ -7,7 +7,7 @@ import {
   flexRender,
   ColumnDef,
 } from "@tanstack/react-table";
-import PageContainer from "../components/PageContainer";
+
 import ProductPriceInput from "../components/ProductPriceInput";
 import {
   removeFromCart,
@@ -153,138 +153,136 @@ export default function CartScreen() {
   };
 
   return (
-    <PageContainer>
-      <div className="container mx-auto py-2 overflow-auto mt-10">
-        {/* Breadcrumbs */}
-        <nav className="text-xs mt-10" aria-label="Breadcrumb">
-          <ol className="flex items-center space-x-2">
-            {items.map((item, index) => (
-              <li className="flex items-center gap-2" key={index}>
-                <Link
-                  to={item.path}
-                  className="text-gray-500 hover:text-gray-700"
-                >
-                  {item.label}
-                </Link>
-                {index < items.length - 1 && (
-                  <span className="text-gray-300">/</span>
-                )}
-              </li>
-            ))}
-          </ol>
-        </nav>
+    <div className="container mx-auto py-2 overflow-auto mt-10">
+      {/* Breadcrumbs */}
+      <nav className="text-xs mt-10" aria-label="Breadcrumb">
+        <ol className="flex items-center space-x-2">
+          {items.map((item, index) => (
+            <li className="flex items-center gap-2" key={index}>
+              <Link
+                to={item.path}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                {item.label}
+              </Link>
+              {index < items.length - 1 && (
+                <span className="text-gray-300">/</span>
+              )}
+            </li>
+          ))}
+        </ol>
+      </nav>
 
-        <div className="flex flex-col md:flex-row gap-3 mt-10 mb-5">
-          <div className="md:flex-1 flex-col">
-            <div className="flex flex-col py-4 px-4 border border-gray-200">
-              <p className="text-sm">
-                Add <span className="font-medium text-sky-500">$300</span> to
-                cart and get free shipping!
-              </p>
-              <div className="relative mb-3">
-                <div
-                  className="absolute top-[9px] z-[3] left-0 h-2 bg-blue-500 rounded-lg"
-                  style={{ width: `20%` }}
-                ></div>
-                <div
-                  className="absolute top-[9px] z-[2] left-0 h-2 bg-gray-200 rounded-lg"
-                  style={{ width: `100%` }}
-                ></div>
-              </div>
-            </div>
-            <div className="p-4">
-              <h1 className="text-2xl font-bold mb-4">Your Cart</h1>
-
-              <div className="flex-1 md:flex-[3_1_0%]  overflow-x-auto">
-                <table className="min-w-full border border-gray-200">
-                  <thead className="bg-gray-100">
-                    {table.getHeaderGroups().map((headerGroup) => (
-                      <tr key={headerGroup.id}>
-                        {headerGroup.headers.map((header) => (
-                          <th
-                            key={header.id}
-                            className="p-2 text-left border-b whitespace-nowrap"
-                          >
-                            {header.isPlaceholder
-                              ? null
-                              : flexRender(
-                                  header.column.columnDef.header,
-                                  header.getContext()
-                                )}
-                          </th>
-                        ))}
-                      </tr>
-                    ))}
-                  </thead>
-                  <tbody>
-                    {table.getRowModel().rows.map((row) => (
-                      <tr key={row.id} className="border-b">
-                        {row.getVisibleCells().map((cell) => (
-                          <td key={cell.id} className="p-2 whitespace-nowrap">
-                            {flexRender(
-                              cell.column.columnDef.cell,
-                              cell.getContext()
-                            )}
-                          </td>
-                        ))}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              {/* Pagination Controls */}
-              <div className="flex items-center justify-between mt-4">
-                <button
-                  onClick={() => table.previousPage()}
-                  disabled={!table.getCanPreviousPage()}
-                  className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
-                >
-                  Previous
-                </button>
-                <span>
-                  Page{" "}
-                  <strong>
-                    {pagination.pageIndex + 1} of {table.getPageCount()}
-                  </strong>
-                </span>
-                <button
-                  onClick={() => table.nextPage()}
-                  disabled={!table.getCanNextPage()}
-                  className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
-                >
-                  Next
-                </button>
-              </div>
+      <div className="flex flex-col md:flex-row gap-3 mt-10 mb-5">
+        <div className="md:flex-1 flex-col">
+          <div className="flex flex-col py-4 px-4 border border-gray-200">
+            <p className="text-sm">
+              Add <span className="font-medium text-sky-500">$300</span> to cart
+              and get free shipping!
+            </p>
+            <div className="relative mb-3">
+              <div
+                className="absolute top-[9px] z-[3] left-0 h-2 bg-blue-500 rounded-lg"
+                style={{ width: `20%` }}
+              ></div>
+              <div
+                className="absolute top-[9px] z-[2] left-0 h-2 bg-gray-200 rounded-lg"
+                style={{ width: `100%` }}
+              ></div>
             </div>
           </div>
-          <div className="md:w-1/4 border  mb-2  px-5 py-3">
-            <h1 className="text-xl py-2 border-b border-gray-200 uppercase">
-              Cart Totals
-            </h1>
+          <div className="p-4">
+            <h1 className="text-2xl font-bold mb-4">Your Cart</h1>
 
-            <div className="flex border-b py-2 border-gray-200 justify-between text-sm my-3">
-              <span> Total Items:</span>
-              <span>{totalCartItems} items</span>
-            </div>
-            <div className="flex border-b py-2 border-gray-200 justify-between text-sm my-3">
-              <span> Subtotal:</span>
-              <span>$ {totalCartAmount}</span>
+            <div className="flex-1 md:flex-[3_1_0%]  overflow-x-auto">
+              <table className="min-w-full border border-gray-200">
+                <thead className="bg-gray-100">
+                  {table.getHeaderGroups().map((headerGroup) => (
+                    <tr key={headerGroup.id}>
+                      {headerGroup.headers.map((header) => (
+                        <th
+                          key={header.id}
+                          className="p-2 text-left border-b whitespace-nowrap"
+                        >
+                          {header.isPlaceholder
+                            ? null
+                            : flexRender(
+                                header.column.columnDef.header,
+                                header.getContext()
+                              )}
+                        </th>
+                      ))}
+                    </tr>
+                  ))}
+                </thead>
+                <tbody>
+                  {table.getRowModel().rows.map((row) => (
+                    <tr key={row.id} className="border-b">
+                      {row.getVisibleCells().map((cell) => (
+                        <td key={cell.id} className="p-2 whitespace-nowrap">
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
 
-            <div>
+            {/* Pagination Controls */}
+            <div className="flex items-center justify-between mt-4">
               <button
-                type="button"
-                className="w-full uppercase bg-zinc-800 hover:bg-sky-600 text-white font-medium text-xs px-5 py-4 my-6"
-                disabled={cartItems.length === 0}
-                onClick={checkoutHandler}
+                onClick={() => table.previousPage()}
+                disabled={!table.getCanPreviousPage()}
+                className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
               >
-                Proceed To Checkout
+                Previous
+              </button>
+              <span>
+                Page{" "}
+                <strong>
+                  {pagination.pageIndex + 1} of {table.getPageCount()}
+                </strong>
+              </span>
+              <button
+                onClick={() => table.nextPage()}
+                disabled={!table.getCanNextPage()}
+                className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+              >
+                Next
               </button>
             </div>
           </div>
         </div>
+        <div className="md:w-1/4 border  mb-2  px-5 py-3">
+          <h1 className="text-xl py-2 border-b border-gray-200 uppercase">
+            Cart Totals
+          </h1>
+
+          <div className="flex border-b py-2 border-gray-200 justify-between text-sm my-3">
+            <span> Total Items:</span>
+            <span>{totalCartItems} items</span>
+          </div>
+          <div className="flex border-b py-2 border-gray-200 justify-between text-sm my-3">
+            <span> Subtotal:</span>
+            <span>$ {totalCartAmount}</span>
+          </div>
+
+          <div>
+            <button
+              type="button"
+              className="w-full uppercase bg-zinc-800 hover:bg-sky-600 text-white font-medium text-xs px-5 py-4 my-6"
+              disabled={cartItems.length === 0}
+              onClick={checkoutHandler}
+            >
+              Proceed To Checkout
+            </button>
+          </div>
+        </div>
       </div>
-    </PageContainer>
+    </div>
   );
 }

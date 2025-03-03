@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-
-import PageContainer from "../../components/PageContainer";
 import Testimonials from "./components/Testimonials";
 import DiscountOffers from "./components/DiscountOffers";
 import ImageSlider from "./components/ImageSlider";
@@ -14,13 +12,13 @@ const HomeScreen = () => {
     setSLides(imageData);
   }, []);
   return (
-    <PageContainer>
+    <>
       <ImageSlider slides={slides} />
       <HomeBanner />
       <RecentProductsContainer />
       <DiscountOffers />
       <Testimonials />
-    </PageContainer>
+    </>
   );
 };
 export default HomeScreen;
