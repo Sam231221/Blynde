@@ -1,19 +1,21 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import FormContainer from "../components/FormContainer";
 import CheckoutSteps from "../components/CheckoutSteps";
 
-import { RootState } from "../types";
 import { saveShippingAddress } from "../redux/reducers/CartSlice";
+
+import { useAppSelector } from "../redux/store";
+import { selectUser } from "../redux/reducers/AuthSlice";
 const items = [
   { label: "Home", path: "/" },
   { label: "Shipping", path: "/shipping" },
 ];
 
 function ShippingScreen() {
-  const { userInfo } = useSelector((state: RootState) => state.auth);
-  const cart = useSelector((state: RootState) => state.cart);
+  const user = useAppSelector(selectUser);
+  const cart = useAppSelector((state) => state.cart);
   const shippingAddress = cart.shippingAddress || {
     address: "",
     city: "",
@@ -31,10 +33,10 @@ function ShippingScreen() {
   );
   const [country, setCountry] = useState<string>(shippingAddress.country || "");
   useEffect(() => {
-    if (!userInfo) {
+    if (!user) {
       navigate("/login?redirect=shipping");
     }
-  }, [userInfo, navigate]);
+  }, [user, navigate]);
   const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -74,12 +76,6 @@ function ShippingScreen() {
       </nav>
       <FormContainer>
         <div className="form-signin px-4 py-3 border w-100 m-auto">
-          {/*
-             On Shipping Screen
-             there are only 2 steps
-             step1: User must be logged in
-             step2: User Shipping Address 
-            */}
           <h3 className="text-center font-bold text-gray-800 tracking-wide text-2xl my-3">
             {" "}
             Checkout Process

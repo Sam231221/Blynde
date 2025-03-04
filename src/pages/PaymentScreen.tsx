@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import CheckoutSteps from "../components/CheckoutSteps";
 
 import FormContainer from "../components/FormContainer";
 import { savePaymentMethod } from "../redux/reducers/CartSlice";
-import { RootState } from "../types";
+import { useAppSelector } from "../redux/store";
+import { selectUser } from "../redux/reducers/AuthSlice";
 
 const items = [
   { label: "Home", path: "/" },
@@ -15,8 +16,8 @@ const items = [
 ];
 
 function PaymentScreen() {
-  const { userInfo } = useSelector((state: RootState) => state.auth);
-  const cart = useSelector((state: RootState) => state.cart);
+  const user = useAppSelector(selectUser);
+  const cart = useAppSelector((state) => state.cart);
   const { shippingAddress } = cart;
 
   const dispatch = useDispatch();
@@ -24,10 +25,10 @@ function PaymentScreen() {
 
   const [paymentMethod, setPaymentMethod] = useState("Esewa");
   useEffect(() => {
-    if (!userInfo) {
+    if (!user) {
       navigate("/login?redirect=payment");
     }
-  }, [userInfo, navigate]);
+  }, [user, navigate]);
   if (!shippingAddress?.address) {
     navigate("/shipping");
   }

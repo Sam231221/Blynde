@@ -3,8 +3,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { useLogin } from "../../hooks/useAuth";
 import Spinner from "../../components/Spinner";
 import { toast } from "react-toastify";
-import { ApiErrorResponse } from "../../types/wishlist";
+
 import { LoginFormData } from "../../types/api/auth";
+import { ApiErrorResponse } from "../../types/common/response";
 
 const LoginScreen = () => {
   const [formData, setFormData] = useState<LoginFormData>({

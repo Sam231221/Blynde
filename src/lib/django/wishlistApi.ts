@@ -1,10 +1,8 @@
-import { WishlistItem } from "../../types";
+import { apiRequest } from "../axios/axiosClient";
 import {
   WishlistAddOrDeleteResponse,
   WishlistItemsListResponse,
-  WishlistResponse,
-} from "../../types/wishlist";
-import { apiRequest } from "../axios/axiosClient";
+} from "../../types/api/wishlist";
 
 export const fetchUserWishlist = async () => {
   const response = await apiRequest<WishlistItemsListResponse>({

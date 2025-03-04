@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   useReactTable,
   getCoreRowModel,
@@ -11,13 +11,15 @@ import {
 import ProductPriceInput from "../components/ProductPriceInput";
 import {
   removeFromCart,
+  selectCart,
   selectCartItemCount,
   selectCartTotal,
   updateQuantity,
 } from "../redux/reducers/CartSlice";
-import { RootState } from "../types";
+
 import { useMemo, useState } from "react";
 import { FiTrash } from "react-icons/fi";
+import { useAppSelector } from "../redux/store";
 
 const items = [
   { label: "Home", path: "/" },
@@ -37,14 +39,12 @@ interface CartItem {
 export default function CartScreen() {
   const dispatch = useDispatch();
   const redirect = useNavigate();
-  const totalCartItems = useSelector(selectCartItemCount);
-  const totalCartAmount = useSelector(selectCartTotal);
-
-  const cart = useSelector((state: RootState) => state.cart);
-  const { cartItems } = cart;
+  const totalCartItems = useAppSelector(selectCartItemCount);
+  const totalCartAmount = useAppSelector(selectCartTotal);
+  const cart = useAppSelector(selectCart);
 
   const data = useMemo(() => {
-    return cartItems.flatMap((product) =>
+    return cart.flatMap((product) =>
       product.variations.map((variant) => ({
         productId: product.productId,
         name: product.name,
@@ -55,7 +55,7 @@ export default function CartScreen() {
         size: variant.size,
       }))
     );
-  }, [cartItems]);
+  }, [cart]);
 
   const handleDeleteVariant = (rowData: CartItem) => {
     dispatch(
@@ -275,7 +275,7 @@ export default function CartScreen() {
             <button
               type="button"
               className="w-full uppercase bg-zinc-800 hover:bg-sky-600 text-white font-medium text-xs px-5 py-4 my-6"
-              disabled={cartItems.length === 0}
+              disabled={cart.length === 0}
               onClick={checkoutHandler}
             >
               Proceed To Checkout

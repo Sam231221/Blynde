@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { usePasswordReset } from "../../hooks/useAuth";
 import { toast, ToastContainer } from "react-toastify";
-import { ApiErrorResponse } from "../../types/wishlist";
+import { ApiErrorResponse } from "../../types/common/response";
 
 const ResetRequestPasswordScreen = () => {
   const [email, setEmail] = useState("");

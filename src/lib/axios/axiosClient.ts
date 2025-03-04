@@ -5,8 +5,6 @@ import axios, {
 } from "axios";
 import store from "../../redux/store";
 import { logout, updateTokens } from "../../redux/reducers/AuthSlice";
-import { toast } from "react-toastify";
-
 export const endpoint: string = import.meta.env.VITE_APP_API as string;
 
 declare module "axios" {

@@ -3,19 +3,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { CiBookmark } from "react-icons/ci";
 import { Message } from "../components/Message";
 
-import { Order, RootState } from "../types";
+import { Order } from "../types";
 import { createOrder } from "../lib/django/orderApi";
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "../lib/axios/queryClient";
-import {
-  clearCart,
-  selectCartItems,
-  selectCartTotal,
-} from "../redux/reducers/CartSlice";
+import { clearCart, selectCartTotal } from "../redux/reducers/CartSlice";
 import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "react-toastify";
 import { HiOutlineShoppingBag } from "react-icons/hi2";
+import { RootState } from "../types/redux";
 const items = [
   { label: "Home", path: "/" },
   { label: "Shipping", path: "/shipping" },
@@ -25,7 +22,7 @@ const items = [
 function PlaceOrderScreen() {
   const cart = useSelector((state: RootState) => state.cart);
   const { userInfo } = useSelector((state: RootState) => state.auth);
-  const cartItems = useSelector(selectCartItems);
+
   const totalCartItems = useSelector(selectCartTotal);
   const dispatch = useDispatch();
   const navigate = useNavigate();

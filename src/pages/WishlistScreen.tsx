@@ -59,7 +59,8 @@ function WishlistScreen() {
           )}
           {!isLoading &&
             !error &&
-            wishlist?.length > 0 &&
+            wishlist &&
+            wishlist.length > 0 &&
             wishlist.map((item, i) => (
               <div className="relative" key={i}>
                 <button
@@ -74,7 +75,7 @@ function WishlistScreen() {
                       name={item.product.name}
                       img_albums={item.product.image_albums}
                     />
-                    {item.product.sale_price ? (
+                    {item.product.discounted_price ? (
                       <p
                         className={`absolute font-medium z-[3]  rounded-sm  text-white text-[12px]  bg-black top-[8px] px-10 py-1 left-[-29px] captialize -rotate-45  ${
                           item.product.priceBadge === "blue" &&
@@ -120,14 +121,14 @@ function WishlistScreen() {
                       color={"#fc8c04"}
                       fontSize={14}
                       value={item.product.rating}
-                      text={`${item.product.review_count} reviews`}
+                      text={`${item.product.reviews_count} reviews`}
                     />
 
                     <div className="flex px-1 gap-3 text-gray-800 mb-2 text-sm">
                       <p className="font-bold">${item.product.price}</p>
-                      {item.product.sale_price && (
+                      {item.product.discounted_price && (
                         <del className="text-gray-400">
-                          ${item.product.sale_price}
+                          ${item.product.discounted_price}
                         </del>
                       )}
                     </div>

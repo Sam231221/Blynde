@@ -1,3 +1,5 @@
+import { CartItem } from "./redux/cart";
+
 export interface User {
   _id: string;
   id: string;
@@ -89,7 +91,7 @@ export interface Order {
   _id?: string;
   order_number: string;
   user: User;
-  orderItems: OrderItem[];
+  orderItems: OrderItem[] | CartItem[];
   shippingAddress: ShippingAddress;
   paymentMethod: string;
   itemsPrice: number;

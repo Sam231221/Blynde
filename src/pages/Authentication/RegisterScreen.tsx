@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import { useSelector } from "react-redux";
-import { RootState } from "../../types";
 import { useRegister } from "../../hooks/useAuth";
 import Spinner from "../../components/Spinner";
 import { toast } from "react-toastify";
 import { RegisterFormData } from "../../types/api/auth";
-import { ApiErrorResponse } from "../../types/wishlist";
+import { useAppSelector } from "../../redux/store";
+import { selectUser } from "../../redux/reducers/AuthSlice";
+import { ApiErrorResponse } from "../../types/common/response";
 
 const RegistrationScreen = () => {
   const [formData, setFormData] = useState<RegisterFormData>({
@@ -29,9 +29,7 @@ const RegistrationScreen = () => {
     setErrors((prev) => ({ ...prev, [name]: "" }));
   };
   const navigate = useNavigate();
-
-  const { userInfo } = useSelector((state: RootState) => state.auth);
-
+  const user = useAppSelector(selectUser);
   const { mutate: register, isPending } = useRegister();
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,10 +51,10 @@ const RegistrationScreen = () => {
   };
 
   useEffect(() => {
-    if (userInfo) {
+    if (user) {
       navigate("/");
     }
-  }, [navigate, userInfo]);
+  }, [navigate, user]);
 
   return (
     <div className="min-h-screen bg-zinc-200/20 flex items-center justify-center p-4">
