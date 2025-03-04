@@ -11,10 +11,12 @@ import { useSelector } from "react-redux";
 
 import Reviews from "./components/Reviews";
 import { RootState } from "../../types/redux";
+import { ROUTES } from "../../routes/Routes";
+import { BreadCrumbs } from "../../components/BreadCrumbs";
 
 const items = [
-  { label: "Home", path: "/" },
-  { label: "Shop", path: "/shop" },
+  { label: "Home", path: ROUTES.HOME },
+  { label: "Shop", path: "#" },
 ];
 export default function ProductScreen() {
   const { slug } = useParams<{ slug: string }>();
@@ -49,35 +51,8 @@ export default function ProductScreen() {
 
   return (
     <div className="container mx-auto mt-24">
-      {/* Breadcrumbs */}
-      <nav className="text-xs mt-3" aria-label="Breadcrumb">
-        <ol className="flex items-center space-x-2">
-          {items.map((item, index) => (
-            <li className="flex items-center gap-2" key={index}>
-              <Link
-                to={item.path}
-                className="text-gray-500 hover:text-gray-700"
-              >
-                {item.label}
-              </Link>
-              {index < items.length - 1 && (
-                <span className="text-gray-300">/</span>
-              )}
-            </li>
-          ))}
-          <li className="flex items-center gap-2">
-            <span className="text-gray-300">/</span>
-            <Link
-              to={`/products/${productDetail?.slug}`}
-              className="text-gray-500 hover:text-gray-700"
-            >
-              {productDetail?.name}
-            </Link>
-          </li>
-        </ol>
-      </nav>
+      <BreadCrumbs items={items} />
       <ProductDetail product={productDetail} />
-
       <Reviews
         productId={String(productDetail._id)}
         productSlug={productDetail.slug}
