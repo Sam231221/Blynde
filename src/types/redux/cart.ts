@@ -7,9 +7,9 @@ export interface CartState {
   paymentMethod: string | null;
 }
 export interface CartItem {
-  _id: string;
   productId: string;
   name: string;
+  qty: number;
   price: number;
   thumbnailUrl: string;
   variations: CartItemVariation[];

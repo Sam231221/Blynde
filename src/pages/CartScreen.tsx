@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import {
   useReactTable,
@@ -20,10 +20,12 @@ import {
 import { useMemo, useState } from "react";
 import { FiTrash } from "react-icons/fi";
 import { useAppSelector } from "../redux/store";
+import { ROUTES } from "../routes/Routes";
+import { BreadCrumbs } from "../components/BreadCrumbs";
 
 const items = [
-  { label: "Home", path: "/" },
-  { label: "Cart", path: "/cart" },
+  { label: "Home", path: ROUTES.HOME },
+  { label: "Cart", path: ROUTES.CART },
 ];
 
 interface CartItem {
@@ -154,24 +156,7 @@ export default function CartScreen() {
 
   return (
     <div className="container mx-auto py-2 overflow-auto mt-10">
-      {/* Breadcrumbs */}
-      <nav className="text-xs mt-10" aria-label="Breadcrumb">
-        <ol className="flex items-center space-x-2">
-          {items.map((item, index) => (
-            <li className="flex items-center gap-2" key={index}>
-              <Link
-                to={item.path}
-                className="text-gray-500 hover:text-gray-700"
-              >
-                {item.label}
-              </Link>
-              {index < items.length - 1 && (
-                <span className="text-gray-300">/</span>
-              )}
-            </li>
-          ))}
-        </ol>
-      </nav>
+      <BreadCrumbs items={items} />
 
       <div className="flex flex-col md:flex-row gap-3 mt-10 mb-5">
         <div className="md:flex-1 flex-col">

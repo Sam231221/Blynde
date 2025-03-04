@@ -8,6 +8,7 @@ import {
   selectCartTotal,
 } from "../../redux/reducers/CartSlice";
 import { RootState } from "../../types/redux";
+import { ROUTES } from "../../routes/Routes";
 
 interface CartRightBarProps {
   sideCartNav: boolean;
@@ -26,7 +27,7 @@ export default function CartRightBar({
   const totalAmount = useSelector(selectCartTotal);
 
   const checkoutHandler = () => {
-    navigate("/shipping");
+    navigate(ROUTES.ORDER_SHIPPING);
   };
 
   const showSideCartNav = () => {
@@ -166,7 +167,7 @@ export default function CartRightBar({
                             onClick={() => {
                               dispatch(
                                 removeFromCart({
-                                  productId: item._id,
+                                  productId: item.productId,
                                   color: variant.color,
                                   size: variant.size,
                                 })
@@ -209,7 +210,7 @@ export default function CartRightBar({
                 whileTap={{ scale: 0.97 }}
               >
                 <Link
-                  to="/cart/"
+                  to={ROUTES.CART}
                   className="flex justify-center items-center h-12 rounded-full bg-gray-100 text-gray-800 font-medium hover:bg-gray-200 transition-colors"
                 >
                   View Cart

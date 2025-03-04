@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { HiOutlineXMark } from "react-icons/hi2";
 import clsx from "clsx";
+import { ROUTES } from "../../routes/Routes";
 
 interface CartRightBarProps {
   sideMobileHeader: boolean;
@@ -43,7 +44,7 @@ export default function MobileSideHeader({
         <nav className="">
           <ul className="me-lg-5 text-sm flex flex-col items-center font-semibold gap-3">
             <Link
-              to="/"
+              to={ROUTES.HOME}
               className={clsx(
                 "w-full py-1 hover:bg-slate-200 ",
                 splitLocation[1] === ""
@@ -56,7 +57,7 @@ export default function MobileSideHeader({
               </li>
             </Link>
             <Link
-              to="/shop"
+              to={ROUTES.SHOP}
               className={clsx(
                 "w-full py-1 hover:bg-slate-200 ",
                 splitLocation[1] === "shop"
@@ -70,7 +71,7 @@ export default function MobileSideHeader({
             </Link>
 
             <Link
-              to="/about-us"
+              to={ROUTES.ABOUT_US}
               className={clsx(
                 "w-full py-1 hover:bg-slate-200 ",
                 splitLocation[1] === "about-us"

@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { removeProduct } from "../../redux/reducers/CompareProductsSlice";
 import { Link } from "react-router-dom";
 import { RootState } from "../../types/redux";
+import { ROUTES } from "../../routes/Routes";
 
 export default function ProductCompareToast() {
   const dispatch = useDispatch();
@@ -116,7 +117,7 @@ export default function ProductCompareToast() {
                 {compareProducts.length >= 2 && (
                   <div className="p-3 bg-gray-50 border-t">
                     <Link
-                      to="/compare"
+                      to={ROUTES.COMPARE}
                       className="w-full block text-center bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition-colors text-sm"
                     >
                       Compare Now

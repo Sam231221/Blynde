@@ -8,6 +8,8 @@ import {
 } from "../../lib/django/userApi";
 import Avatar from "./components/Avatar";
 import { favoriteProducts, recentOrders } from "./data";
+import { BreadCrumbs } from "../../components/BreadCrumbs";
+import { ROUTES } from "../../routes/Routes";
 
 interface UserProfileData {
   first_name: string;
@@ -15,6 +17,10 @@ interface UserProfileData {
   email: string;
   profile_pic_url?: string;
 }
+const items = [
+  { label: "Home", path: ROUTES.HOME },
+  { label: "Profile", path: "#" },
+];
 export default function ProfileScreen() {
   const [activeTab, setActiveTab] = useState("orders");
   const { register, handleSubmit, setValue } = useForm<UserProfileData>();
@@ -45,6 +51,7 @@ export default function ProfileScreen() {
 
   return (
     <div className="container mx-auto mt-14 px-4 py-8">
+      <BreadCrumbs items={items} />
       <div className="flex flex-col md:flex-row items-center md:items-start gap-8 mb-8">
         <div className="w-32 h-32 rounded-full overflow-hidden">
           <img

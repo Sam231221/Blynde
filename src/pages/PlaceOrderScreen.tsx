@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { CiBookmark } from "react-icons/ci";
 import { Message } from "../components/Message";
@@ -13,12 +13,16 @@ import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "react-toastify";
 import { HiOutlineShoppingBag } from "react-icons/hi2";
 import { RootState } from "../types/redux";
+import { ROUTES } from "../routes/Routes";
+import { BreadCrumbs } from "../components/BreadCrumbs";
 const items = [
-  { label: "Home", path: "/" },
-  { label: "Shipping", path: "/shipping" },
-  { label: "Payment", path: "/payment" },
-  { label: "Place Order", path: "/placeorder" },
+  { label: "Home", path: ROUTES.HOME },
+  { label: "Order", path: "#" },
+  { label: "Shipping", path: ROUTES.ORDER_SHIPPING },
+  { label: "Payment", path: ROUTES.ORDER_SHIPPING },
+  { label: "Place Order", path: "#" },
 ];
+
 function PlaceOrderScreen() {
   const cart = useSelector((state: RootState) => state.cart);
   const { userInfo } = useSelector((state: RootState) => state.auth);
@@ -47,7 +51,7 @@ function PlaceOrderScreen() {
     }
   }, [userInfo, navigate]);
   if (!cart.paymentMethod) {
-    navigate("/payment");
+    navigate(ROUTES.ORDER_PAYMENT);
   }
 
   const { mutate: placeUserOrder, isError: error } = useMutation({
@@ -84,24 +88,7 @@ function PlaceOrderScreen() {
   };
   return (
     <div className="container mx-auto py-2 overflow-auto mt-10">
-      {/* Breadcrumbs */}
-      <nav className="text-xs mt-10" aria-label="Breadcrumb">
-        <ol className="flex items-center space-x-2">
-          {items.map((item, index) => (
-            <li className="flex items-center gap-2" key={index}>
-              <Link
-                to={item.path}
-                className="text-gray-500 hover:text-gray-700"
-              >
-                {item.label}
-              </Link>
-              {index < items.length - 1 && (
-                <span className="text-gray-300">/</span>
-              )}
-            </li>
-          ))}
-        </ol>
-      </nav>
+      <BreadCrumbs items={items} />
       <div className="p-3 mt-2 ">
         <div className="flex flex-col py-4 px-4 bg-gray-100  border border-gray-200">
           <div className="text-sm flex items-center">

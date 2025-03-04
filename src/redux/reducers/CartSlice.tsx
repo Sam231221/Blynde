@@ -51,11 +51,11 @@ const cartSlice = createSlice({
         }
       } else {
         state.cartItems.push({
-          _id: productId,
           productId,
           name,
           price,
           thumbnailUrl,
+          qty,
           variations: [{ qty, color, size }],
         });
       }

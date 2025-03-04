@@ -4,7 +4,7 @@ import AuthReducer from "./reducers/AuthSlice";
 
 import ProductReducer from "./reducers/ProductSlice";
 import CartReducer from "./reducers/CartSlice";
-import OrderReducer from "./reducers/OrderSlice";
+
 import FilterProductReducer from "./reducers/FilterProductSlice";
 import CompareProductsReducer from "./reducers/CompareProductsSlice";
 
@@ -17,7 +17,6 @@ const store = configureStore({
     comparelist: CompareProductsReducer,
     productfilters: FilterProductReducer,
     cart: CartReducer,
-    orders: OrderReducer,
   },
 
   middleware: (getDefaultMiddleware) =>

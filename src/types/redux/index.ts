@@ -1,4 +1,4 @@
-import { Order, Product, ShippingAddress } from "..";
+import { Order, OrderItem, Product, ShippingAddress, User } from "..";
 import store from "../../redux/store";
 export interface FilterState {
   categories: string[];
@@ -14,12 +14,10 @@ export interface CompareState {
   products: Product[];
 }
 
-export interface OrderState {
-  orders: Order[];
-  isPaid: boolean;
-  isDelivered: boolean;
-  selectedOrder: Order | null;
-  shippingAddress: ShippingAddress | null;
+export interface OrderResponseState extends Order {
+  orderItems: OrderItem[];
+  user: User;
+  shippingAddress: ShippingAddress;
 }
 
 export type RootState = ReturnType<typeof store.getState>;

@@ -5,6 +5,7 @@ import { BsBoxArrowRight, BsGear, BsPerson } from "react-icons/bs";
 
 import { Link } from "react-router-dom";
 import { useLogout, useUser } from "../../hooks/useAuth";
+import { ROUTES } from "../../routes/Routes";
 
 interface ProfileDropDownProps {
   classes?: string;
@@ -71,7 +72,7 @@ export const ProfileDropDown = ({ classes }: ProfileDropDownProps) => {
           <li>
             <Link
               className="px-3 py-2 bg-none hover:bg-[#eef2fa] transition-all duration-500 ease-out flex items-center gap-2 text-xs"
-              to="/profile"
+              to={ROUTES.USER_PROFILE}
             >
               <BsPerson /> My profile
             </Link>
@@ -79,7 +80,7 @@ export const ProfileDropDown = ({ classes }: ProfileDropDownProps) => {
           <li>
             <a
               className="px-3 py-2 bg-none hover:bg-[#eef2fa] transition-all duration-500 ease-out flex items-center gap-2 text-xs"
-              href="/profile#settings"
+              href={ROUTES.USER_PROFILE + "#settings"}
             >
               <BsGear /> Acccount Setting
             </a>

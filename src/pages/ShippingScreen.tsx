@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import FormContainer from "../components/FormContainer";
 import CheckoutSteps from "../components/CheckoutSteps";
@@ -8,9 +8,12 @@ import { saveShippingAddress } from "../redux/reducers/CartSlice";
 
 import { useAppSelector } from "../redux/store";
 import { selectUser } from "../redux/reducers/AuthSlice";
+import { BreadCrumbs } from "../components/BreadCrumbs";
+import { ROUTES } from "../routes/Routes";
 const items = [
-  { label: "Home", path: "/" },
-  { label: "Shipping", path: "/shipping" },
+  { label: "Home", path: ROUTES.HOME },
+  { label: "Order", path: "#" },
+  { label: "Shipping", path: "#" },
 ];
 
 function ShippingScreen() {
@@ -51,29 +54,12 @@ function ShippingScreen() {
         country,
       })
     );
-    navigate("/payment");
+    navigate(ROUTES.ORDER_PAYMENT);
   };
 
   return (
     <div className="container mx-auto py-2 overflow-auto mt-10">
-      {/* Breadcrumbs */}
-      <nav className="text-xs mt-10" aria-label="Breadcrumb">
-        <ol className="flex items-center space-x-2">
-          {items.map((item, index) => (
-            <li className="flex items-center gap-2" key={index}>
-              <Link
-                to={item.path}
-                className="text-gray-500 hover:text-gray-700"
-              >
-                {item.label}
-              </Link>
-              {index < items.length - 1 && (
-                <span className="text-gray-300">/</span>
-              )}
-            </li>
-          ))}
-        </ol>
-      </nav>
+      <BreadCrumbs items={items} />
       <FormContainer>
         <div className="form-signin px-4 py-3 border w-100 m-auto">
           <h3 className="text-center font-bold text-gray-800 tracking-wide text-2xl my-3">

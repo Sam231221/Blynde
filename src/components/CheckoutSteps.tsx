@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { FaLongArrowAltRight } from "react-icons/fa";
+import { ROUTES } from "../routes/Routes";
 interface CheckoutStepsProps {
   step1?: boolean;
   step2?: boolean;
@@ -15,7 +16,7 @@ function CheckoutSteps({ step1, step2, step3, step4 }: CheckoutStepsProps) {
           <div className="flex items-center gap-2">
             <Link
               className="font-medium text-sky-400 uppercase tracking-wider"
-              to="/login"
+              to={ROUTES.LOGIN}
             >
               Login
             </Link>
@@ -39,7 +40,7 @@ function CheckoutSteps({ step1, step2, step3, step4 }: CheckoutStepsProps) {
           <div className="flex items-center gap-2">
             <Link
               className="font-medium text-sky-400 uppercase tracking-wider"
-              to="/shipping"
+              to={ROUTES.ORDER_SHIPPING}
             >
               Shipping
             </Link>
@@ -63,7 +64,7 @@ function CheckoutSteps({ step1, step2, step3, step4 }: CheckoutStepsProps) {
           <div className="flex items-center gap-2">
             <Link
               className="font-medium text-sky-400 uppercase tracking-wider"
-              to="/payment"
+              to={ROUTES.ORDER_PAYMENT}
             >
               Payment
             </Link>
@@ -87,7 +88,7 @@ function CheckoutSteps({ step1, step2, step3, step4 }: CheckoutStepsProps) {
           <div className="flex items-center gap-2">
             <Link
               className="font-medium text-sky-400 uppercase tracking-wider"
-              to="/placeorder"
+              to={ROUTES.PLACE_ORDER}
             >
               Place Order
             </Link>

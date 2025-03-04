@@ -1,55 +1,46 @@
 import { useState, useEffect } from "react";
 
 import { Link, useParams, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
 import Moment from "moment";
 
 import Loader from "../components/Loader";
 import { Message } from "../components/Message";
 
 import { useUser } from "../hooks/useAuth";
-import {
-  selectSelectedOrder,
-  setSelectedOrder,
-} from "../redux/reducers/OrderSlice";
+
 import { fetchOrder } from "../lib/django/orderApi";
 import { useQuery } from "@tanstack/react-query";
 
 import { EsewaPaymentForm } from "./EsewaPaymentForm";
+import { ROUTES } from "../routes/Routes";
 
 const items = [
-  { label: "Home", path: "/" },
-  { label: "Order", path: "/order" },
+  { label: "Home", path: ROUTES.HOME },
+  { label: "Order", path: "#" },
+  { label: "Order-Detail", path: "#" },
 ];
 
 export default function OrderScreen() {
   const { order_number } = useParams();
-  const dispatch = useDispatch();
   const redirect = useNavigate();
-  const selectedOrder = useSelector(selectSelectedOrder);
   const userInfo = useUser();
 
   const [sdkReady, setSdkReady] = useState(false);
 
   const {
-    data: fetchedOrders,
+    data: selectedOrder,
     isLoading,
-    error: fetchOrdersError,
+    error: fetchOrderError,
   } = useQuery({
     queryKey: ["order", order_number],
     queryFn: () => fetchOrder(order_number),
   });
 
-  useEffect(() => {
-    if (fetchedOrders) {
-      dispatch(setSelectedOrder(fetchedOrders));
-    }
-  }, [fetchedOrders, dispatch]);
   let finalOrder: {
     itemsPrice?: string;
     totalPrice?: number;
   } = {};
-  if (!isLoading && !fetchOrdersError) {
+  if (!isLoading && !fetchOrderError) {
     finalOrder = {
       ...selectedOrder,
       itemsPrice: selectedOrder?.orderItems
@@ -100,12 +91,12 @@ export default function OrderScreen() {
           ))}
         </ol>
       </nav>
-      {fetchOrdersError && (
+      {fetchOrderError && (
         <div className="text-center my-6">
-          <Message variant="alert">{fetchOrdersError.message}</Message>
+          <Message variant="alert">{fetchOrderError.message}</Message>
         </div>
       )}
-      {selectedOrder !== null && (
+      {selectedOrder && (
         <>
           <div className="mt-3 flex flex-col gap-2 md:flex-row">
             <div className="md:flex-1 bg-zinc-50 border p-4">
@@ -184,12 +175,9 @@ export default function OrderScreen() {
                     {selectedOrder?.orderItems.map((item, index) => (
                       <li key={index} className="flex items-center">
                         <div>
-                          <Link
-                            className="nav-links link-dark"
-                            to={`/product/${item._id}`}
-                          >
+                          <span>
                             {item.name} x {item.qty}
-                          </Link>
+                          </span>
                         </div>
                       </li>
                     ))}
