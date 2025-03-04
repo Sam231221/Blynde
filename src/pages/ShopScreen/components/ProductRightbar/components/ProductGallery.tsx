@@ -1,17 +1,18 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import ProductGridShowCase from "../../../../../components/reusables/ProductGridShowCase";
 
-import { AppDispatch, RootState } from "../../../../../types";
 import { setFilters } from "../../../../../redux/reducers/FilterProductSlice";
 import { ProductRightBarFilters } from "./ProductRightBarFilters";
 import { useProductsQuery } from "../../../../../hooks/useProducts";
 import PaginationControls from "./PaginationControls";
 import { GalleryLoading } from "./GalleryLoading";
 import NoProductsFound from "./NoProductsFound";
+import { RootState } from "../../../../../types/redux";
+import { useAppDispatch } from "../../../../../redux/store";
 
 export default function ProductGallery() {
   const filters = useSelector((state: RootState) => state.productfilters);
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const { data, isLoading, isError, error } = useProductsQuery();
   const handlePageChange = (page: number) => {

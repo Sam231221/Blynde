@@ -2,7 +2,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { apiRequest } from "../lib/axios/axiosClient";
 import { Discount } from "../types";
-import { applyOrderCoupon, applyProductCoupon } from "../lib/django/offersApi";
+import { applyProductCoupon } from "../lib/django/offersApi";
+import { ApplyCouponErrorResponse } from "../types/api/coupon";
 
 // Define the types for your input variables and the success response
 interface ApplyCouponVariables {
@@ -16,11 +17,6 @@ interface ApplyCouponSuccessResponse {
   valid: boolean;
 }
 
-// Define your error response type
-interface ApplyCouponErrorResponse {
-  error: string;
-}
-
 export const useProductCoupon = () => {
   return useMutation<
     ApplyCouponSuccessResponse,
@@ -32,16 +28,16 @@ export const useProductCoupon = () => {
     },
   });
 };
-export const useApplyOrderCoupon = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: ({ orderId, couponCode }) =>
-      applyOrderCoupon({ orderId, couponCode }),
-    onSuccess: (data, variables) => {
-      queryClient.invalidateQueries(["order", variables.orderId]);
-    },
-  });
-};
+// export const useApplyOrderCoupon = () => {
+//   const queryClient = useQueryClient();
+//   return useMutation({
+//     mutationFn: ({ orderId, couponCode }) =>
+//       applyOrderCoupon({ orderId, couponCode }),
+//     onSuccess: (data, variables) => {
+//       queryClient.invalidateQueries(["order", variables.orderId]);
+//     },
+//   });
+// };
 
 const fetchHighestDiscount = async () => {
   const response = await apiRequest({

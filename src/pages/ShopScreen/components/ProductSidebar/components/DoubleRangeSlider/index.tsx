@@ -1,12 +1,11 @@
 import { useState } from "react";
 import "./style.css";
 import DoubleSlider from "./DoubleSlider";
-import { AppDispatch } from "../../../../../../types";
-import { useDispatch } from "react-redux";
 import { setPrice } from "../../../../../../redux/reducers/FilterProductSlice";
+import { useAppDispatch } from "../../../../../../redux/store";
 
 export default function DoubleRangePriceSlider() {
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const [values, setValues] = useState<[number, number]>([0, 600]);
 

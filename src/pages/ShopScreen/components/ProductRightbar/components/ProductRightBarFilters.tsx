@@ -7,12 +7,13 @@ import {
 import { useMemo, useState } from "react";
 
 import { useProductsQuery } from "../../../../../hooks/useProducts";
-import { AppDispatch, RootState } from "../../../../../types";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../../types/redux";
+import { useAppDispatch } from "../../../../../redux/store";
 
 export const ProductRightBarFilters = () => {
   const filters = useSelector((state: RootState) => state.productfilters);
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { productsDisplayType, products_limit } = filters;
   const [productQtyPerPage, setProductQtyPerPage] = useState(8);
   const [sortOption, setSortOption] = useState("popularity");

@@ -1,4 +1,4 @@
-import { WishlistItem } from "..";
+import { Product, WishlistItem } from "..";
 import { ApiErrorResponse } from "../common/response";
 
 export interface WishlistItemsListResponse {
@@ -12,6 +12,6 @@ export type WishlistAddOrDeleteResponse =
 
 export interface WishlistAddResponse {
   id: number;
-  product: number;
+  product: Product;
   date_added: string;
 }

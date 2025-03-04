@@ -1,8 +1,9 @@
 import React, { useState, useCallback } from "react";
 import { IoCloseOutline } from "react-icons/io5";
-import { useDispatch } from "react-redux";
-import { AppDispatch, Category } from "../../../../../../../types";
+
+import { Category } from "../../../../../../../types";
 import { setFilterCategories } from "../../../../../../../redux/reducers/FilterProductSlice";
+import { useAppDispatch } from "../../../../../../../redux/store";
 
 type MultiLevelCheckboxProps = {
   data: Category[];
@@ -13,7 +14,7 @@ const MultiLevelCheckbox: React.FC<MultiLevelCheckboxProps> = ({ data }) => {
     {}
   );
   const [checkedItems, setCheckedItems] = useState<string[]>([]);
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   // Find parent categories (items with children)
   const parentCategories = data.filter(

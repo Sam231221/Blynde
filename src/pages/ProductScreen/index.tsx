@@ -8,8 +8,9 @@ import { ProductDetail } from "../../components/reusables/ProductDetail";
 import { useProductDetail } from "../../hooks/useProducts";
 
 import { useSelector } from "react-redux";
-import { RootState } from "../../types";
+
 import Reviews from "./components/Reviews";
+import { RootState } from "../../types/redux";
 
 const items = [
   { label: "Home", path: "/" },

@@ -1,10 +1,11 @@
 import React from "react";
-import { lazyLoad } from "../helpers/lazyload";
+
 import ProtectedRoute from "./ProtectedRoute";
 import { RootLayout } from "../layouts/RootLayout";
 
 import AuthLayout from "../layouts/AuthLayout";
 import { ROUTES } from "./Routes";
+import { lazyLoad } from "../helpers/lazyLoad";
 
 const HomeScreen = React.lazy(() => import("../pages/HomeScreen"));
 const ShopScreen = React.lazy(() => import("../pages/ShopScreen"));

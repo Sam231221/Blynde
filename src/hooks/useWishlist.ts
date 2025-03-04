@@ -4,7 +4,10 @@ import {
   createOrDeleteWishlistItem,
   fetchUserWishlist,
 } from "../lib/django/wishlistApi";
-import { WishlistItemsListResponse } from "../types/api/wishlist";
+import {
+  WishlistAddOrDeleteResponse,
+  WishlistItemsListResponse,
+} from "../types/api/wishlist";
 
 export const useUserWishlist = () => {
   return useQuery<WishlistItemsListResponse, Error>({
@@ -15,7 +18,7 @@ export const useUserWishlist = () => {
 };
 export function useCreateOrDeleteWishlistItem() {
   const queryClient = useQueryClient();
-  return useMutation({
+  return useMutation<WishlistAddOrDeleteResponse, unknown, string>({
     mutationFn: createOrDeleteWishlistItem,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["wishlistItems"] });

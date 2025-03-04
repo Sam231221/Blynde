@@ -1,13 +1,13 @@
 import MultiLevelCheckbox from "./MultiLevelCheckBox";
-import { AppDispatch } from "../../../../../../types";
-import { useDispatch } from "react-redux";
+
 import { setFilterCategories } from "../../../../../../redux/reducers/FilterProductSlice";
 
 import SideFiltersLoader from "../SideFiltersLoader";
 import { useProductCategories } from "../../../../../../hooks/useProducts";
+import { useAppDispatch } from "../../../../../../redux/store";
 
 function FilterByCategory() {
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const { data: categories, isLoading, isError } = useProductCategories();
   const handleCategoriesChange = (newSelectedCategory: string[]) => {

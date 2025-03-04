@@ -2,11 +2,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { HiOutlineXMark, HiOutlineShoppingBag } from "react-icons/hi2";
 import { useDispatch, useSelector } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
-import { RootState } from "../../types";
+
 import {
   removeFromCart,
   selectCartTotal,
 } from "../../redux/reducers/CartSlice";
+import { RootState } from "../../types/redux";
 
 interface CartRightBarProps {
   sideCartNav: boolean;

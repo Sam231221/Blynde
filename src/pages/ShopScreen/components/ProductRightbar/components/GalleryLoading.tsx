@@ -1,6 +1,7 @@
 import ContentLoader from "react-content-loader";
-import { RootState } from "../../../../../types";
+
 import { useSelector } from "react-redux";
+import { RootState } from "../../../../../types/redux";
 
 export const GalleryLoading = () => {
   const { productsDisplayType } = useSelector(

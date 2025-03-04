@@ -1,13 +1,15 @@
 import { useSelector } from "react-redux";
 
-import { Product, RootState } from "../../../types";
+import { Product } from "../../../types";
 
 import { ProductGridTypeCard } from "./ProductGridTypeCard";
 
 import { ProductListTypeCard } from "./ProductListTypeCard";
+import { RootState } from "../../../types/redux";
 
 interface ProductGridShowCaseProps {
   showtype?: string;
+  productheight?: string;
   products: Product[];
 }
 export default function ProductGridShowCase({

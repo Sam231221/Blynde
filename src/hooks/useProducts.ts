@@ -7,15 +7,10 @@ import {
   fetchRecentProducts,
 } from "../lib/django/productApi";
 
-import {
-  Category,
-  Color,
-  Pagination,
-  Product,
-  RootState,
-  Size,
-} from "../types";
+import { Category, Color, Product, Size } from "../types";
 import { apiRequest } from "../lib/axios/axiosClient";
+import { Pagination } from "../types/common/pagination";
+import { RootState } from "../types/redux";
 
 export const useProductCategories = () => {
   return useQuery<Category[], Error>({

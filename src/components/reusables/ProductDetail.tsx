@@ -53,9 +53,7 @@ export const ProductDetail = ({ product, openModal }: ProductDetailProps) => {
   const handleSizeChange = (size: string) => {
     setFilters((prev) => ({ ...prev, size }));
   };
-  const { mutate, isPending, isError, data, error } = useProductCoupon(
-    product.slug
-  );
+  const { mutate, isPending, isError, data, error } = useProductCoupon();
 
   const handleApplyCoupon = () => {
     mutate(
@@ -77,12 +75,11 @@ export const ProductDetail = ({ product, openModal }: ProductDetailProps) => {
     if (product._id === id && quantity && size && color) {
       dispatch(
         addToCart({
-          _id: String(product._id),
           productId: String(product._id),
           name: product.name,
           price: tempDisc.discounted_price
             ? tempDisc.discounted_price
-            : tempDisc.price,
+            : parseFloat(tempDisc.price),
           color,
           size,
           thumbnailUrl: product.thumbnail_url,

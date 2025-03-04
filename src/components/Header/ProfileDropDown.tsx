@@ -20,7 +20,7 @@ export const ProfileDropDown = ({ classes }: ProfileDropDownProps) => {
   const { mutate: logout, isPending } = useLogout();
 
   const handleLogout = () => {
-    logout();
+    logout({ refresh: userInfo?.refresh_token || "" });
   };
   useEffect(() => {
     const handler = (e: MouseEvent) => {

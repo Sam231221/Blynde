@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronUp, ChevronDown } from "lucide-react";
-import { RootState } from "../../types";
+
 import { useDispatch, useSelector } from "react-redux";
 import { removeProduct } from "../../redux/reducers/CompareProductsSlice";
 import { Link } from "react-router-dom";
+import { RootState } from "../../types/redux";
 
 export default function ProductCompareToast() {
   const dispatch = useDispatch();

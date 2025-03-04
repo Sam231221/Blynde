@@ -1,4 +1,5 @@
-import { Pagination, Product } from "../../types";
+import { Product } from "../../types";
+import { Pagination } from "../../types/common/pagination";
 import { apiRequest } from "../axios/axiosClient";
 
 export const fetchProducts = async (

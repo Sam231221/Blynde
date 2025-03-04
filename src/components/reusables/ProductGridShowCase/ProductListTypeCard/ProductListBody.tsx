@@ -32,12 +32,11 @@ export const ProductListBody = ({ product }: { product: Product }) => {
     if (product._id === id && quantity && size && color) {
       dispatch(
         addToCart({
-          _id: String(product._id),
           productId: String(product._id),
           name: product.name,
           price: product.discounted_price
             ? product.discounted_price
-            : product.price,
+            : parseFloat(product.price),
           color,
           size,
           thumbnailUrl: product.thumbnail_url,

@@ -1,4 +1,4 @@
-import { Product, RootState } from "../../../../types";
+import { Product } from "../../../../types";
 import { useDispatch, useSelector } from "react-redux";
 import {
   useCreateOrDeleteWishlistItem,
@@ -20,6 +20,7 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { addProduct } from "../../../../redux/reducers/CompareProductsSlice";
 import clsx from "clsx";
+import { RootState } from "../../../../types/redux";
 
 export const ProductCardActions = ({ product }: { product: Product }) => {
   const dispatch = useDispatch();
@@ -37,10 +38,10 @@ export const ProductCardActions = ({ product }: { product: Product }) => {
   const handleAddToWishlist = (wishlistItemId: string) => {
     if (userInfo) {
       addorDeletetoWishlist(wishlistItemId, {
-        onSuccess: (data) => {
-          if (data === 204) {
+        onSuccess: (response) => {
+          if (response === 204) {
             toast.success("Removed from wishlist");
-          } else if (typeof data !== "number" && data?.product) {
+          } else if (typeof response !== "number" && "product" in response) {
             toast.success("Added to wishlist");
           }
         },

@@ -1,12 +1,11 @@
 import ColorCheckBox from "./ColorCheckBox";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../../../../../types";
 import { setColor } from "../../../../../../redux/reducers/FilterProductSlice";
 import { useProductColors } from "../../../../../../hooks/useProducts";
 import SideFiltersLoader from "../SideFiltersLoader";
+import { useAppDispatch } from "../../../../../../redux/store";
 
 export default function Colors() {
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { data: colors, isLoading, isError } = useProductColors();
   const handleColorChange = (color: string) => {
     dispatch(setColor(color));

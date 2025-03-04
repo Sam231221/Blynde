@@ -1,13 +1,17 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Check, Copy, X } from "lucide-react";
+import {
+  ApplyCouponErrorResponse,
+  ApplyCouponSuccessResponse,
+} from "../../../../types/api/coupon";
 
 interface CouponInputProps {
   onApply: (coupon: string) => void;
   isLoading: boolean;
   isError: boolean;
-  error: { message: string } | null;
-  data: { message: string } | null;
+  error: ApplyCouponErrorResponse | null;
+  data: ApplyCouponSuccessResponse | undefined;
   onCouponChange?: (coupon: string) => void;
   placeholder?: string;
 }

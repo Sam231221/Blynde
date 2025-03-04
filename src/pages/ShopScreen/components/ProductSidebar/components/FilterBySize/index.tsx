@@ -1,17 +1,18 @@
 import { useCallback, useState } from "react";
 
 import Checkbox from "../../../../../../components/reusables/Checkbox";
-import { AppDispatch, Size } from "../../../../../../types";
-import { useDispatch } from "react-redux";
+
 import { setFilterSizes } from "../../../../../../redux/reducers/FilterProductSlice";
 import { IoCloseOutline } from "react-icons/io5";
 import { useProductSizes } from "../../../../../../hooks/useProducts";
 import SideFiltersLoader from "../SideFiltersLoader";
+import { useAppDispatch } from "../../../../../../redux/store";
+import { Size } from "../../../../../../types";
 
 export default function FilterBySize() {
   const [selectedSizes, setSelectedSizes] = useState<Size[]>([]);
 
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { data: sizes, isLoading, isError } = useProductSizes();
   const handleChange = useCallback(
     (size: Size) => {
