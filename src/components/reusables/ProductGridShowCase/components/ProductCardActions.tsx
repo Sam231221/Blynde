@@ -13,7 +13,7 @@ import {
   IoHeart,
   IoRepeatOutline,
 } from "react-icons/io5";
-import { ProductDetail } from "../../ProductDetail";
+
 import { useModalContext } from "../../../../providers/ModalProvider";
 import { MdOutlineZoomOutMap } from "react-icons/md";
 import { Link } from "react-router-dom";
@@ -21,6 +21,7 @@ import { useEffect, useState } from "react";
 import { addProduct } from "../../../../redux/reducers/CompareProductsSlice";
 import clsx from "clsx";
 import { RootState } from "../../../../types/redux";
+import { ProductDetail } from "../../ProductDetail";
 
 export const ProductCardActions = ({ product }: { product: Product }) => {
   const dispatch = useDispatch();

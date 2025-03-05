@@ -47,7 +47,7 @@ export const ProductDetail = ({ product, openModal }: ProductDetailProps) => {
   });
   const user = useAppSelector(selectUser);
   const { data: wishlist } = useUserWishlist();
-
+  console.log(product, openModal);
   const wishlistItems = wishlist?.items;
   const [isInWishlist, setIsInWishlist] = useState(false);
   const [tempDisc, setTempDisc] = useState({
@@ -270,7 +270,7 @@ export const ProductDetail = ({ product, openModal }: ProductDetailProps) => {
                 <button
                   onClick={() =>
                     openModal &&
-                    openModal(<ShareProduct id={String(product._id)} />)
+                    openModal(<ShareProduct slug={String(product.slug)} />)
                   }
                   className="text-zinc-800 flex items-center gap-2 font-medium tracking-wide text-sm my-2"
                 >

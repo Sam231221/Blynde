@@ -3,6 +3,7 @@ import { IoCloseOutline } from "react-icons/io5";
 export const Modal = () => {
   const { isModalOpen, closeModal, content } = useModalContext();
   if (!isModalOpen) return null;
+  console.log("Modal rendered");
 
   return (
     <div className="fixed h-screen z-[998] inset-0 bg-black bg-opacity-50 flex justify-center items-center">

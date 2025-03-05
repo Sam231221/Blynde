@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import Loader from "../../components/Loader";
 import { Message } from "../../components/Message";
 
-import { ProductDetail } from "../../components/reusables/ProductDetail";
 import { useProductDetail } from "../../hooks/useProducts";
 
 import { useSelector } from "react-redux";
@@ -12,12 +11,15 @@ import Reviews from "./components/Reviews";
 import { RootState } from "../../types/redux";
 import { ROUTES } from "../../routes/Routes";
 import { BreadCrumbs } from "../../components/BreadCrumbs";
+import { useModalContext } from "../../providers/ModalProvider";
+import { ProductDetail } from "../../components/reusables/ProductDetail";
 
 const items = [
   { label: "Home", path: ROUTES.HOME },
   { label: "Shop", path: "#" },
 ];
 export default function ProductScreen() {
+  const { openModal } = useModalContext();
   const { slug } = useParams<{ slug: string }>();
   const { userInfo } = useSelector((state: RootState) => state.auth);
   const {
@@ -51,7 +53,7 @@ export default function ProductScreen() {
   return (
     <div className="container mx-auto mt-24">
       <BreadCrumbs items={items} />
-      <ProductDetail product={productDetail} />
+      <ProductDetail openModal={openModal} product={productDetail} />
       <Reviews
         productId={String(productDetail._id)}
         productSlug={productDetail.slug}
