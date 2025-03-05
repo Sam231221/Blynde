@@ -43,7 +43,6 @@ const LoginScreen = () => {
       },
       onError: (error: unknown) => {
         const errorResponse = error as ApiErrorResponse;
-        console.log(errorResponse);
         if (errorResponse.errors.general) {
           toast.error(errorResponse.errors.general);
         } else if (errorResponse.errors) {

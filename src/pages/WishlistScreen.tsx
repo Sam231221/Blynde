@@ -18,7 +18,6 @@ const items = [
 function WishlistScreen() {
   const { data, isLoading, error } = useUserWishlist();
   const wishlist = data?.items;
-  console.log(data);
   const { mutate } = useCreateOrDeleteWishlistItem();
   const handleDeleteWishlistItem = (wishlistItemId: string) => {
     mutate(wishlistItemId, {
