@@ -98,7 +98,7 @@ export const apiRequest = async <T>(options: ApiRequestOptions): Promise<T> => {
     });
 
     if (response.status === 204) {
-      return response.data;
+      return response.status as unknown as T;
     } else if (response.status >= 200 && response.status < 300) {
       return response.data;
     } else {

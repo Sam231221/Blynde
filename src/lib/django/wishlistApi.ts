@@ -12,11 +12,11 @@ export const fetchUserWishlist = async () => {
   return (response as WishlistItemsListResponse) || [];
 };
 
-export const createOrDeleteWishlistItem = async (wishlistItemId: string) => {
+export const createOrDeleteWishlistItem = async (productId: string) => {
   const response = await apiRequest<WishlistAddOrDeleteResponse>({
     url: "/api/users/wishlist/",
     method: "POST",
-    data: { wishlistItemId },
+    data: { product: productId },
   });
   return response as WishlistAddOrDeleteResponse;
 };

@@ -11,13 +11,21 @@ import ProductColorSelect from "../ProductColorSelect";
 import SizeVariant from "../SizeVariant";
 import ProductPriceInput from "../ProductPriceInput";
 import { ShareProduct } from "./ShareProduct";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../redux/reducers/CartSlice";
 import { Product } from "../../types";
 import { toast } from "react-toastify";
 import Coupon from "./ProductGridShowCase/components/Coupon";
 import { useProductCoupon } from "../../hooks/useOffers";
+import { selectUser } from "../../redux/reducers/AuthSlice";
+import { useAppSelector } from "../../redux/store";
+import {
+  useCreateOrDeleteWishlistItem,
+  useUserWishlist,
+} from "../../hooks/useWishlist";
+import { IoHeart } from "react-icons/io5";
+import Spinner from "../Spinner";
 
 export interface ProductDetailProps {
   product: Product;
@@ -37,6 +45,11 @@ export const ProductDetail = ({ product, openModal }: ProductDetailProps) => {
     color: "",
     size: "",
   });
+  const user = useAppSelector(selectUser);
+  const { data: wishlist } = useUserWishlist();
+
+  const wishlistItems = wishlist?.items;
+  const [isInWishlist, setIsInWishlist] = useState(false);
   const [tempDisc, setTempDisc] = useState({
     price: product.price,
     discounted_price: product.discounted_price,
@@ -53,6 +66,9 @@ export const ProductDetail = ({ product, openModal }: ProductDetailProps) => {
   const handleSizeChange = (size: string) => {
     setFilters((prev) => ({ ...prev, size }));
   };
+  const { mutate: addorDeletetoWishlist, isPending: wishlistPending } =
+    useCreateOrDeleteWishlistItem();
+
   const { mutate, isPending, isError, data, error } = useProductCoupon();
 
   const handleApplyCoupon = () => {
@@ -68,6 +84,27 @@ export const ProductDetail = ({ product, openModal }: ProductDetailProps) => {
         },
       }
     );
+  };
+
+  const handleAddToWishlist = (wishlistItemId: string) => {
+    if (user) {
+      addorDeletetoWishlist(wishlistItemId, {
+        onSuccess: (response) => {
+          if (response === 204) {
+            toast.success("Removed from wishlist");
+          } else if (typeof response !== "number" && "product" in response) {
+            toast.success("Added to wishlist");
+          }
+        },
+        onError: (error) => {
+          console.error("Failed to add to wishlist", error);
+        },
+      });
+    } else {
+      if (!user) {
+        toast.error("Please login to add to wishlist");
+      }
+    }
   };
   const addToCartHandler = (id: string) => {
     const { quantity, size, color } = filters;
@@ -91,6 +128,15 @@ export const ProductDetail = ({ product, openModal }: ProductDetailProps) => {
       toast.error("Please select size and color");
     }
   };
+
+  useEffect(() => {
+    if (wishlistItems) {
+      const productInWishlist = wishlistItems.find(
+        (item) => item.product._id === product._id
+      );
+      setIsInWishlist(!!productInWishlist);
+    }
+  }, [wishlistItems, product._id]);
   if (!product) return <>No product found.</>;
 
   return (
@@ -199,9 +245,27 @@ export const ProductDetail = ({ product, openModal }: ProductDetailProps) => {
                   <PiGlobeThin size={20} />
                   <span>Size Guide</span>
                 </a>{" "}
-                <button className="text-zinc-800 flex items-center gap-2 font-medium tracking-wide text-sm my-2">
-                  <PiHeartStraightLight size={20} />
-                  <span>Add to Wishlist</span>
+                <button
+                  onClick={() => handleAddToWishlist(String(product._id))}
+                  className="text-zinc-800 flex items-center gap-2 font-medium tracking-wide text-sm my-2"
+                >
+                  {wishlistPending ? (
+                    <Spinner width={4} height={4} />
+                  ) : (
+                    <>
+                      {isInWishlist ? (
+                        <>
+                          <IoHeart size={20} />
+                          <span>Remove from Wishlist</span>
+                        </>
+                      ) : (
+                        <>
+                          <PiHeartStraightLight size={20} />
+                          <span>Add to Wishlist</span>
+                        </>
+                      )}
+                    </>
+                  )}
                 </button>
                 <button
                   onClick={() =>

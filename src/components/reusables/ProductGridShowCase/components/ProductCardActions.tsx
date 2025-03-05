@@ -35,9 +35,9 @@ export const ProductCardActions = ({ product }: { product: Product }) => {
   const { mutate: addorDeletetoWishlist, isPending } =
     useCreateOrDeleteWishlistItem();
 
-  const handleAddToWishlist = (wishlistItemId: string) => {
+  const handleAddToWishlist = (productId: string) => {
     if (userInfo) {
-      addorDeletetoWishlist(wishlistItemId, {
+      addorDeletetoWishlist(productId, {
         onSuccess: (response) => {
           if (response === 204) {
             toast.success("Removed from wishlist");
