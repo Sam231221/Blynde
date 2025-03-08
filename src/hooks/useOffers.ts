@@ -28,16 +28,6 @@ export const useProductCoupon = () => {
     },
   });
 };
-// export const useApplyOrderCoupon = () => {
-//   const queryClient = useQueryClient();
-//   return useMutation({
-//     mutationFn: ({ orderId, couponCode }) =>
-//       applyOrderCoupon({ orderId, couponCode }),
-//     onSuccess: (data, variables) => {
-//       queryClient.invalidateQueries(["order", variables.orderId]);
-//     },
-//   });
-// };
 
 const fetchHighestDiscount = async () => {
   const response = await apiRequest({
