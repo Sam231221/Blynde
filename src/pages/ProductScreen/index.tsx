@@ -13,6 +13,7 @@ import { ROUTES } from "../../routes/Routes";
 import { BreadCrumbs } from "../../components/BreadCrumbs";
 import { useModalContext } from "../../providers/ModalProvider";
 import { ProductDetail } from "../../components/reusables/ProductDetail";
+import { RelatedProducts } from "./components/RelatedProducts";
 
 const items = [
   { label: "Home", path: ROUTES.HOME },
@@ -29,15 +30,6 @@ export default function ProductScreen() {
   } = useProductDetail(slug || "");
   if (isLoading) {
     return <Loader />;
-  }
-  if (fetchProductError) {
-    return (
-      <>
-        <div className="container mx-auto mt-24">
-          <Message variant="danger">{fetchProductError.message}</Message>
-        </div>
-      </>
-    );
   }
 
   if (!productDetail) {
@@ -59,6 +51,7 @@ export default function ProductScreen() {
         productSlug={productDetail.slug}
         userInfo={userInfo}
       />
+      <RelatedProducts productSlug={productDetail.slug} />
     </div>
   );
 }

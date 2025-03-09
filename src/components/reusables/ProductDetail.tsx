@@ -47,7 +47,7 @@ export const ProductDetail = ({ product, openModal }: ProductDetailProps) => {
   });
   const user = useAppSelector(selectUser);
   const { data: wishlist } = useUserWishlist();
-  console.log(product, openModal);
+
   const wishlistItems = wishlist?.items;
   const [isInWishlist, setIsInWishlist] = useState(false);
   const [tempDisc, setTempDisc] = useState({
@@ -141,147 +141,145 @@ export const ProductDetail = ({ product, openModal }: ProductDetailProps) => {
 
   return (
     <div className="flex my-8 flex-col md:flex-row md:h-screen gap-3">
-      {product.image_albums.length > 0 && (
-        <>
-          {/* ProductSlider*/}
-          <div className="md:flex-1 lg:flex-[3] ">
-            <ProductSlider>
-              {product.image_albums?.map((album, index) => (
-                <LazyLoadImage
-                  effect="blur"
-                  key={index}
-                  src={album.image_url}
-                  alt="productimage"
-                />
-              ))}
-            </ProductSlider>
-          </div>
+      <>
+        {/* ProductSlider*/}
+        <div className="md:flex-1 lg:flex-[3] ">
+          <ProductSlider>
+            {product.image_albums?.map((album, index) => (
+              <LazyLoadImage
+                effect="blur"
+                key={index}
+                src={album.image_url}
+                alt="productimage"
+              />
+            ))}
+          </ProductSlider>
+        </div>
 
-          {/* Rightbar */}
-          <div className="md:flex-1 lg:flex-[2] ">
-            <div>
-              <h2 className="text-zinc-800 font-semibold text-2xl">
-                {product.name}
-              </h2>
-              <div className="flex gap-2 items-center">
-                <Rating
-                  fontSize={12}
-                  value={product.rating}
-                  text={`${product.reviews_count} reviews`}
-                  color={"#fc8c04"}
-                />
-              </div>
-              <div className="flex gap-2 items-center">
-                {tempDisc.discounted_price !== parseFloat(tempDisc.price) ? (
-                  <>
-                    <del className="text-gray-300  tracking-wide text-lg my-2 ">
-                      ${tempDisc.price}
-                    </del>
-                    <p className="text-slate-800 font-medium tracking-wide text-lg my-2 ">
-                      ${tempDisc.discounted_price}
-                    </p>
-                  </>
-                ) : (
-                  <p className="text-slate-800 font-medium tracking-wide text-lg my-2 ">
+        {/* Rightbar */}
+        <div className="md:flex-1 lg:flex-[2] ">
+          <div>
+            <h2 className="text-zinc-800 font-semibold text-2xl">
+              {product.name}
+            </h2>
+            <div className="flex gap-2 items-center">
+              <Rating
+                fontSize={12}
+                value={product.rating}
+                text={`${product.reviews_count} reviews`}
+                color={"#fc8c04"}
+              />
+            </div>
+            <div className="flex gap-2 items-center">
+              {tempDisc.discounted_price !== parseFloat(tempDisc.price) ? (
+                <>
+                  <del className="text-gray-300  tracking-wide text-lg my-2 ">
                     ${tempDisc.price}
+                  </del>
+                  <p className="text-slate-800 font-medium tracking-wide text-lg my-2 ">
+                    ${tempDisc.discounted_price}
                   </p>
-                )}
-              </div>
-
-              {product.description && (
-                <p className="text-zinc-800 font-medium tracking-wide text-[12px] my-2 ">
-                  {product.description}
+                </>
+              ) : (
+                <p className="text-slate-800 font-medium tracking-wide text-lg my-2 ">
+                  ${tempDisc.price}
                 </p>
               )}
-              {product.colors && (
-                <ProductColorSelect
-                  handleColorChange={handleColorChange}
-                  colors={product.colors}
-                />
-              )}
-              {product.sizes && (
-                <SizeVariant
-                  handleSizeChange={handleSizeChange}
-                  sizes={product.sizes}
-                />
-              )}
+            </div>
 
-              <span className="bg-slate-100 mt-4 inline-block px-3 text-xs font-semibold text-green-600 rounded-lg p-2">
-                {product.countInStock > 0 ? "In Stock" : "Out of Stock"}
-              </span>
-              <Coupon
-                onApply={handleApplyCoupon}
-                isLoading={isPending}
-                isError={isError}
-                error={error}
-                data={data}
-                onCouponChange={setProductCoupon}
+            {product.description && (
+              <p className="text-zinc-800 font-medium tracking-wide text-[12px] my-2 ">
+                {product.description}
+              </p>
+            )}
+            {product.colors && (
+              <ProductColorSelect
+                handleColorChange={handleColorChange}
+                colors={product.colors}
               />
+            )}
+            {product.sizes && (
+              <SizeVariant
+                handleSizeChange={handleSizeChange}
+                sizes={product.sizes}
+              />
+            )}
 
-              <div className="flex mt-3 gap-2 items-center">
-                {product.countInStock > 0 && (
-                  <ProductPriceInput handleChange={handleQuantityChange} />
+            <span className="bg-slate-100 mt-4 inline-block px-3 text-xs font-semibold text-green-600 rounded-lg p-2">
+              {product.countInStock > 0 ? "In Stock" : "Out of Stock"}
+            </span>
+            <Coupon
+              onApply={handleApplyCoupon}
+              isLoading={isPending}
+              isError={isError}
+              error={error}
+              data={data}
+              onCouponChange={setProductCoupon}
+            />
+
+            <div className="flex mt-3 gap-2 items-center">
+              {product.countInStock > 0 && (
+                <ProductPriceInput handleChange={handleQuantityChange} />
+              )}
+
+              <button
+                onClick={() => addToCartHandler(product._id)}
+                className={`${
+                  product.countInStock <= 0
+                    ? "bg-sky-200"
+                    : "bg-sky-500 hover:bg-sky-600"
+                } w-full font-medium  text-white py-2 px-4`}
+                disabled={product.countInStock <= 0}
+                type="button"
+              >
+                {" "}
+                Add to Cart
+              </button>
+            </div>
+            <div className="flex my-2 justify-between items-center">
+              <a
+                href="#"
+                className="text-zinc-800 flex items-center gap-2 font-medium tracking-wide text-sm my-2"
+              >
+                <PiGlobeThin size={20} />
+                <span>Size Guide</span>
+              </a>{" "}
+              <button
+                onClick={() => handleAddToWishlist(String(product._id))}
+                className="text-zinc-800 flex items-center gap-2 font-medium tracking-wide text-sm my-2"
+              >
+                {wishlistPending ? (
+                  <Spinner width={4} height={4} />
+                ) : (
+                  <>
+                    {isInWishlist ? (
+                      <>
+                        <IoHeart size={20} />
+                        <span>Remove from Wishlist</span>
+                      </>
+                    ) : (
+                      <>
+                        <PiHeartStraightLight size={20} />
+                        <span>Add to Wishlist</span>
+                      </>
+                    )}
+                  </>
                 )}
-
-                <button
-                  onClick={() => addToCartHandler(product._id)}
-                  className={`${
-                    product.countInStock <= 0
-                      ? "bg-sky-200"
-                      : "bg-sky-500 hover:bg-sky-600"
-                  } w-full font-medium  text-white py-2 px-4`}
-                  disabled={product.countInStock <= 0}
-                  type="button"
-                >
-                  {" "}
-                  Add to Cart
-                </button>
-              </div>
-              <div className="flex my-2 justify-between items-center">
-                <a
-                  href="#"
-                  className="text-zinc-800 flex items-center gap-2 font-medium tracking-wide text-sm my-2"
-                >
-                  <PiGlobeThin size={20} />
-                  <span>Size Guide</span>
-                </a>{" "}
-                <button
-                  onClick={() => handleAddToWishlist(String(product._id))}
-                  className="text-zinc-800 flex items-center gap-2 font-medium tracking-wide text-sm my-2"
-                >
-                  {wishlistPending ? (
-                    <Spinner width={4} height={4} />
-                  ) : (
-                    <>
-                      {isInWishlist ? (
-                        <>
-                          <IoHeart size={20} />
-                          <span>Remove from Wishlist</span>
-                        </>
-                      ) : (
-                        <>
-                          <PiHeartStraightLight size={20} />
-                          <span>Add to Wishlist</span>
-                        </>
-                      )}
-                    </>
-                  )}
-                </button>
-                <button
-                  onClick={() =>
-                    openModal &&
-                    openModal(<ShareProduct slug={String(product.slug)} />)
-                  }
-                  className="text-zinc-800 flex items-center gap-2 font-medium tracking-wide text-sm my-2"
-                >
-                  <PiShareNetworkLight size={20} />
-                  <span>Share this Product</span>
-                </button>
-              </div>
+              </button>
+              <button
+                onClick={() =>
+                  openModal &&
+                  openModal(<ShareProduct slug={String(product.slug)} />)
+                }
+                className="text-zinc-800 flex items-center gap-2 font-medium tracking-wide text-sm my-2"
+              >
+                <PiShareNetworkLight size={20} />
+                <span>Share this Product</span>
+              </button>
             </div>
           </div>
-        </>
-      )}
+        </div>
+      </>
     </div>
   );
 };

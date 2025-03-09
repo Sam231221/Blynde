@@ -22,16 +22,33 @@ export default function ProductGridShowCase({
     <>
       {productsDisplayType === "grid" && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {products.map((product, i) => (
-            <ProductGridTypeCard key={i} imageHeight={300} product={product} />
-          ))}
+          {products.length === 0 ? (
+            <>No Products</>
+          ) : (
+            <>
+              {products.map((product, i) => (
+                <ProductGridTypeCard
+                  key={i}
+                  imageHeight={300}
+                  product={product}
+                />
+              ))}
+            </>
+          )}
         </div>
       )}
+
       {productsDisplayType === "list" && (
         <div className={`relative`}>
-          {products.map((product, i) => (
-            <ProductListTypeCard key={i} product={product} />
-          ))}
+          {products.length === 0 ? (
+            <>No Products</>
+          ) : (
+            <>
+              {products.map((product, i) => (
+                <ProductListTypeCard key={i} product={product} />
+              ))}
+            </>
+          )}
         </div>
       )}
     </>

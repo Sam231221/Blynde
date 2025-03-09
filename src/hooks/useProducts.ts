@@ -5,6 +5,7 @@ import {
   fetchProductDetail,
   fetchProducts,
   fetchRecentProducts,
+  fetchRelatedProducts,
 } from "../lib/django/productApi";
 
 import { Category, Color, Product, Size } from "../types";
@@ -72,12 +73,16 @@ export const useRecentProducts = () => {
     queryFn: fetchRecentProducts,
   });
 };
+export const useRelatedProducts = (productSlug: string | undefined) => {
+  return useQuery<Product[]>({
+    queryKey: ["relatedProducts", productSlug],
+    queryFn: () => fetchRelatedProducts(productSlug),
+  });
+};
 
 export const useProductDetail = (productSlug: string | undefined) => {
   return useQuery<Product>({
     queryKey: ["productDetail", productSlug],
     queryFn: () => fetchProductDetail(productSlug),
-
-    // Better staleTime configuration for mutations
   });
 };
