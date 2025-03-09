@@ -46,7 +46,7 @@ export const fetchRecentProducts = async () => {
 };
 
 export const fetchRelatedProducts = async (productSlug: string | undefined) => {
-  const response = await apiRequest({
+  const response = await apiRequest<Product[]>({
     url: `api/products/${productSlug}/related/`,
     method: "GET",
     requiresToken: false,

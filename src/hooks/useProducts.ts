@@ -64,19 +64,20 @@ export const useProductsQuery = () => {
     queryKey: ["products", debouncedFilters],
     queryFn: () =>
       fetchProducts(debouncedFilters as unknown as Record<string, string>),
-    staleTime: 1000 * 60 * 5, // Cache for 5 minutes
+    staleTime: 1000 * 60 * 5,
   });
 };
 export const useRecentProducts = () => {
-  return useQuery({
+  return useQuery<Product[]>({
     queryKey: ["recentProducts"],
     queryFn: fetchRecentProducts,
   });
 };
 export const useRelatedProducts = (productSlug: string | undefined) => {
-  return useQuery({
+  return useQuery<Product[]>({
     queryKey: ["relatedProducts", productSlug],
     queryFn: () => fetchRelatedProducts(productSlug),
+    enabled: !!productSlug,
   });
 };
 

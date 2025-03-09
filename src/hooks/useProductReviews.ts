@@ -1,5 +1,4 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-
 import { addProductReview, fetchProductReviews } from "../lib/django/reviewApi";
 
 export const useProductReviews = (productSlug: string) => {

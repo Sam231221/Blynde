@@ -18,7 +18,7 @@ export const useUserWishlist = () => {
 };
 export function useCreateOrDeleteWishlistItem() {
   const queryClient = useQueryClient();
-  return useMutation<WishlistAddOrDeleteResponse, unknown, string>({
+  return useMutation<WishlistAddOrDeleteResponse, Error, string>({
     mutationFn: createOrDeleteWishlistItem,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["wishlistItems"] });

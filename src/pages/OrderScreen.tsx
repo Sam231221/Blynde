@@ -1,18 +1,16 @@
 import { useState, useEffect } from "react";
 
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Moment from "moment";
 
 import Loader from "../components/Loader";
 import { Message } from "../components/Message";
 
 import { useUser } from "../hooks/useAuth";
-
-import { fetchOrder } from "../lib/django/orderApi";
-import { useQuery } from "@tanstack/react-query";
-
 import { EsewaPaymentForm } from "./EsewaPaymentForm";
 import { ROUTES } from "../routes/Routes";
+import { useOrders } from "../hooks/useOrders";
+import { BreadCrumbs } from "../components/BreadCrumbs";
 
 const items = [
   { label: "Home", path: ROUTES.HOME },
@@ -31,11 +29,7 @@ export default function OrderScreen() {
     data: selectedOrder,
     isLoading,
     error: fetchOrderError,
-  } = useQuery({
-    queryKey: ["order", order_number],
-    queryFn: () => fetchOrder(order_number),
-  });
-
+  } = useOrders(order_number);
   let finalOrder: {
     itemsPrice?: string;
     totalPrice?: number;
@@ -74,23 +68,7 @@ export default function OrderScreen() {
   return (
     <div className="container mx-auto py-2 overflow-auto mt-10">
       {/* Breadcrumbs */}
-      <nav className="text-xs mt-10" aria-label="Breadcrumb">
-        <ol className="flex items-center space-x-2">
-          {items.map((item, index) => (
-            <li className="flex items-center gap-2" key={index}>
-              <Link
-                to={item.path}
-                className="text-gray-500 hover:text-gray-700"
-              >
-                {item.label}
-              </Link>
-              {index < items.length - 1 && (
-                <span className="text-gray-300">/</span>
-              )}
-            </li>
-          ))}
-        </ol>
-      </nav>
+      <BreadCrumbs items={items} />
       {fetchOrderError && (
         <div className="text-center my-6">
           <Message variant="alert">{fetchOrderError.message}</Message>

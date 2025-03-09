@@ -23,11 +23,7 @@ export default function ProductScreen() {
   const { openModal } = useModalContext();
   const { slug } = useParams<{ slug: string }>();
   const { userInfo } = useSelector((state: RootState) => state.auth);
-  const {
-    data: productDetail,
-    isLoading,
-    error: fetchProductError,
-  } = useProductDetail(slug || "");
+  const { data: productDetail, isLoading } = useProductDetail(slug);
   if (isLoading) {
     return <Loader />;
   }
