@@ -13,10 +13,7 @@ export const RelatedProducts = ({ productSlug }: { productSlug: string }) => {
       <h2 className="text-2xl md:text-3xl my-2 font-semibold text-zinc-900">
         Related Products
       </h2>
-      <ProductGridShowCase
-        productheight={`h-[300px] sm:h-[400px]`}
-        products={data}
-      />
+      {data && <ProductGridShowCase products={data} />}
     </div>
   );
 };

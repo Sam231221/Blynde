@@ -74,7 +74,7 @@ export const useRecentProducts = () => {
   });
 };
 export const useRelatedProducts = (productSlug: string | undefined) => {
-  return useQuery<Product[]>({
+  return useQuery({
     queryKey: ["relatedProducts", productSlug],
     queryFn: () => fetchRelatedProducts(productSlug),
   });
