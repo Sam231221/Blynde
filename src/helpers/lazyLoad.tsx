@@ -12,11 +12,3 @@ export const lazyLoad = (
     </Suspense>
   </ErrorBoundary>
 );
-
-// export const lazyLoad = (Component: React.LazyExoticComponent<React.FC>) => {
-//   return (
-//     <React.Suspense fallback={<div>Loading...</div>}>
-//       <Component />
-//     </React.Suspense>
-//   );
-// };
