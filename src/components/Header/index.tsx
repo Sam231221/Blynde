@@ -1,11 +1,15 @@
+import { useHighestPriorityDiscount } from "../../hooks/useOffers";
 import Navbar from "./Navbar";
-import Topbar from "./Topbar";
+import SaleBanner from "./SaleBanner";
 
 export default function Header() {
+  const { data: discount } = useHighestPriorityDiscount();
+  const isBannerVisible = Boolean(discount);
+
   return (
     <>
-      <Topbar />
-      <Navbar />
+      <SaleBanner />
+      <Navbar isBannerVisible={isBannerVisible} />
     </>
   );
 }

@@ -34,10 +34,9 @@ export default function SaleBanner() {
   const { mutate: deleteDiscount } = useDeleteHighestDiscount();
   const [timeLeft, setTimeLeft] = useState<TimeUnit[]>([]);
   const [isVisible, setIsVisible] = useState(true);
+
   useEffect(() => {
-    if (!discount || !discount.end_date) {
-      return;
-    }
+    if (!discount?.end_date) return;
 
     const endDate = new Date(discount.end_date);
 
@@ -50,16 +49,11 @@ export default function SaleBanner() {
         return;
       }
 
-      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
-      const minutes = Math.floor((difference / 1000 / 60) % 60);
-      const seconds = Math.floor((difference / 1000) % 60);
-
       setTimeLeft([
-        { value: days, label: "D" },
-        { value: hours, label: "H" },
-        { value: minutes, label: "M" },
-        { value: seconds, label: "S" },
+        { value: Math.floor(difference / (1000 * 60 * 60 * 24)), label: "D" },
+        { value: Math.floor((difference / (1000 * 60 * 60)) % 24), label: "H" },
+        { value: Math.floor((difference / 1000 / 60) % 60), label: "M" },
+        { value: Math.floor((difference / 1000) % 60), label: "S" },
       ]);
     };
 
@@ -69,8 +63,7 @@ export default function SaleBanner() {
     return () => clearInterval(timer);
   }, [discount, deleteDiscount]);
 
-  if (isLoading) return null;
-  if (error || !discount) return null;
+  if (isLoading || error || !discount) return null;
 
   return (
     <AnimatePresence>
@@ -130,6 +123,7 @@ export default function SaleBanner() {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     className="hover:scale-110 transition-transform"
+                    aria-hidden="true"
                   >
                     <path d="M18 6 6 18" />
                     <path d="m6 6 12 12" />
