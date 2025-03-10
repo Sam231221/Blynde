@@ -1,18 +1,9 @@
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
 import ProductGridShowCase from "../../../components/reusables/ProductGridShowCase";
 import { useRecentProducts } from "../../../hooks/useProducts";
 
-import { setRecentProducts } from "../../../redux/reducers/ProductSlice";
-
 export default function RecentProductsContainer() {
-  const dispatch = useDispatch();
   const { isPending, error, data } = useRecentProducts();
-  useEffect(() => {
-    if (data) {
-      dispatch(setRecentProducts(data));
-    }
-  }, [data, dispatch]);
+
   if (isPending) return "Loading...";
 
   if (error) return "An error has occurred: " + error.message;
