@@ -9,12 +9,13 @@ import { GalleryLoading } from "./GalleryLoading";
 import NoProductsFound from "./NoProductsFound";
 import { RootState } from "../../../../../types/redux";
 import { useAppDispatch } from "../../../../../redux/store";
+import { ServerDownError } from "../../../../../components/Fallbacks/ServerDownError";
 
 export default function ProductGallery() {
   const filters = useSelector((state: RootState) => state.productfilters);
   const dispatch = useAppDispatch();
 
-  const { data, isLoading, isError, error } = useProductsQuery();
+  const { data, isLoading, isError, refetch } = useProductsQuery();
   const handlePageChange = (page: number) => {
     dispatch(setFilters({ ...filters, page }));
   };
@@ -28,13 +29,7 @@ export default function ProductGallery() {
     );
   }
 
-  if (isError) {
-    return (
-      <div>
-        Error: {error instanceof Error ? error.message : "Unknown error"}
-      </div>
-    );
-  }
+  if (isError) return <ServerDownError refetch={refetch} />;
 
   return (
     <>
