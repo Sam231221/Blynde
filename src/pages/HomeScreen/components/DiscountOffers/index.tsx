@@ -43,7 +43,6 @@ const DiscountOffers: React.FC = () => {
   const [offers, setOffers] = useState<Offer[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
-
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
@@ -106,6 +105,21 @@ const DiscountOffers: React.FC = () => {
     return () => clearInterval(intervalId);
   }, []);
 
+  if (isLoading) return <div>Loading...</div>;
+  if (error) {
+    return (
+      <div className="container mx-auto py-8 px-4">
+        <div
+          className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+          role="alert"
+        >
+          <strong className="font-bold">Error: </strong>
+          <span className="block sm:inline">{error.message}</span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto">
       <div className="flex flex-col md:flex-row justify-between md:items-center">
@@ -119,19 +133,7 @@ const DiscountOffers: React.FC = () => {
         </p>
       </div>
       <div className="container">
-        {isLoading ? (
-          <p>Loading offers...</p>
-        ) : error ? (
-          <div className="container mx-auto py-8 px-4">
-            <div
-              className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-              role="alert"
-            >
-              <strong className="font-bold">Error: </strong>
-              <span className="block sm:inline">{error.message}</span>
-            </div>
-          </div>
-        ) : offers.length > 0 ? (
+        {offers.length > 0 ? (
           <div
             className="flex items-center mb-10 mt-4 gap-5 overflow-x-auto has-scrollbar"
             style={{
@@ -225,9 +227,7 @@ const DiscountOffers: React.FC = () => {
             ))}
           </div>
         ) : (
-          <>
-            <NoDiscountOffers />
-          </>
+          <NoDiscountOffers />
         )}
       </div>
     </div>
