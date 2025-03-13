@@ -30,6 +30,16 @@ export interface Discount {
   end_date: string;
   priority: number;
 }
+export interface Offer {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  sale_price: number;
+  thumbnail: string;
+  countInStock: number;
+  end_date: string;
+}
 
 export interface ShippingAddress {
   _id?: string;

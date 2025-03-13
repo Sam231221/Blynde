@@ -1,5 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { applyProductCoupon } from "../lib/django/offersApi";
+import {
+  applyProductCoupon,
+  fetchDiscountOffers,
+} from "../lib/django/offersApi";
 import {
   ApplyCouponErrorResponse,
   ApplyCouponSuccessResponse,
@@ -10,6 +13,7 @@ import {
   deleteHighestDiscount,
   fetchHighestDiscount,
 } from "../lib/django/coupon";
+import { Offer } from "../types";
 
 export const useProductCoupon = () => {
   return useMutation<
@@ -22,7 +26,12 @@ export const useProductCoupon = () => {
     },
   });
 };
-
+export const useDiscountOffers = () => {
+  return useQuery<Offer[]>({
+    queryKey: ["discountOffers"],
+    queryFn: fetchDiscountOffers,
+  });
+};
 export const useHighestPriorityDiscount = () => {
   return useQuery({
     queryKey: ["highestDiscount"],
