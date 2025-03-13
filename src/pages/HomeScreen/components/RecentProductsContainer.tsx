@@ -1,12 +1,10 @@
-import NoProductsFound from "../../../components/NoProductsFound";
 import ProductGridShowCase from "../../../components/reusables/ProductGridShowCase";
 import { useRecentProducts } from "../../../hooks/useProducts";
+import { GalleryLoading } from "../../../components/Fallbacks/Loadings/GalleryLoading";
+import { ServerDownError } from "../../../components/Fallbacks/Errors/ServerDownError";
 
 export default function RecentProductsContainer() {
-  const { isLoading, error, data } = useRecentProducts();
-
-  if (isLoading) return "Loading...";
-  if (error) return "An error has occurred: " + error.message;
+  const { isLoading, isError, data, refetch } = useRecentProducts();
 
   return (
     <div className="container mx-auto my-12">
@@ -19,14 +17,13 @@ export default function RecentProductsContainer() {
         suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan
         lacus vel facilisis.
       </p>
-
-      {data ? (
+      {isLoading && <GalleryLoading count={4} />}
+      {isError && <ServerDownError refetch={refetch} />}
+      {!isLoading && !isError && data && (
         <ProductGridShowCase
           productheight={`h-[300px] sm:h-[400px]`}
           products={data}
         />
-      ) : (
-        <NoProductsFound />
       )}
     </div>
   );

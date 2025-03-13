@@ -2,7 +2,7 @@ import MultiLevelCheckbox from "./MultiLevelCheckBox";
 
 import { setFilterCategories } from "../../../../../../redux/reducers/FilterProductSlice";
 
-import SideFiltersLoader from "../SideFiltersLoader";
+import SideFiltersLoader from "../../../../../../components/Fallbacks/Loadings/SideFiltersLoader";
 import { useProductCategories } from "../../../../../../hooks/useProducts";
 import { useAppDispatch } from "../../../../../../redux/store";
 

@@ -7,7 +7,7 @@ import { Modal } from "../components/Modal";
 import { ErrorBoundary } from "react-error-boundary";
 import { Suspense } from "react";
 import Loader from "../components/Loader";
-import GlobalErrorFallback from "../components/Fallbacks/GlobalErrorFallback";
+import GlobalErrorFallback from "../components/Fallbacks/Errors/GlobalErrorFallback";
 
 export const RootLayout = () => {
   return (

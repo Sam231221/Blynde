@@ -1,8 +1,9 @@
+import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { RefreshCw, Server, WifiOff } from "lucide-react";
 
 interface ServerDownErrorProps {
-  refetch: () => Promise<void>;
+  refetch: (options?: RefetchOptions) => Promise<QueryObserverResult>;
 }
 
 export function ServerDownError({ refetch }: ServerDownErrorProps) {

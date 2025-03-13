@@ -5,7 +5,7 @@ import Checkbox from "../../../../../../components/reusables/Checkbox";
 import { setFilterSizes } from "../../../../../../redux/reducers/FilterProductSlice";
 import { IoCloseOutline } from "react-icons/io5";
 import { useProductSizes } from "../../../../../../hooks/useProducts";
-import SideFiltersLoader from "../SideFiltersLoader";
+import SideFiltersLoader from "../../../../../../components/Fallbacks/Loadings/SideFiltersLoader";
 import { useAppDispatch } from "../../../../../../redux/store";
 import { Size } from "../../../../../../types";
 

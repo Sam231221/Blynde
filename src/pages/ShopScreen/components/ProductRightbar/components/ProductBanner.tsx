@@ -3,14 +3,12 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 export default function ProductBanner() {
   return (
     <>
-      <div className="container">
-        <LazyLoadImage
-          effect="blur"
-          className="w-full h-full object-contain"
-          src={banner4}
-          alt="banner"
-        />
-      </div>
+      <LazyLoadImage
+        effect="blur"
+        className="w-full h-full object-cover"
+        src={banner4}
+        alt="banner"
+      />
 
       <div className="absolute flex justify-start top-4 left-6 sm:top-16 sm:left-10">
         <div className="w-[66%] sm:w-[57%] p-2">
