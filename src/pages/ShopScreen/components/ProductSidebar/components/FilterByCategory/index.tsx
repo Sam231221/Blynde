@@ -9,7 +9,12 @@ import { useAppDispatch } from "../../../../../../redux/store";
 function FilterByCategory() {
   const dispatch = useAppDispatch();
 
-  const { data: categories, isLoading, isError } = useProductCategories();
+  const {
+    data: categories,
+    isLoading,
+    isError,
+    refetch,
+  } = useProductCategories();
   const handleCategoriesChange = (newSelectedCategory: string[]) => {
     dispatch(setFilterCategories(newSelectedCategory));
   };
@@ -21,14 +26,20 @@ function FilterByCategory() {
       </h2>
       {isLoading && <SideFiltersLoader />}
       {isError && (
-        <span className="text-sm">
-          Error loading categories. Please try again later.
-        </span>
+        <div className="text-sm text-red-600 flex items-center space-x-2">
+          <span>Error loading categories. Please try again later.</span>
+          <button
+            className="text-blue-600 hover:underline"
+            onClick={() => refetch()}
+          >
+            Retry
+          </button>
+        </div>
       )}
-      {!isLoading && !isError && (
+      {!isLoading && !isError && categories && (
         <MultiLevelCheckbox
           handleChange={handleCategoriesChange}
-          data={categories || []} // Fallback to an empty array if categories is undefined
+          data={categories}
         />
       )}
     </div>

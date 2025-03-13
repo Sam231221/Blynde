@@ -22,7 +22,7 @@ export const useProductCategories = () => {
         method: "GET",
         requiresToken: false,
       });
-      return data as Category[];
+      return (data as Category[]) || [];
     },
     staleTime: 1000 * 60 * 5,
   });

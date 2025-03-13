@@ -6,7 +6,7 @@ import { useAppDispatch } from "../../../../../../redux/store";
 
 export default function Colors() {
   const dispatch = useAppDispatch();
-  const { data: colors, isLoading, isError } = useProductColors();
+  const { data: colors, isLoading, isError, refetch } = useProductColors();
   const handleColorChange = (color: string) => {
     dispatch(setColor(color));
   };
@@ -17,9 +17,15 @@ export default function Colors() {
       </h2>
       {isLoading && <SideFiltersLoader itemCount={8} />}
       {isError && (
-        <span className="text-sm">
-          Error loading Colors. Please try again later.
-        </span>
+        <div className="text-sm text-red-600 flex items-center space-x-2">
+          <span>Error loading Colors. Please try again later.</span>
+          <button
+            className="text-blue-600 hover:underline"
+            onClick={() => refetch()}
+          >
+            Retry
+          </button>
+        </div>
       )}
       {!isLoading && !isError && (
         <div className="px-3">

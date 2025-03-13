@@ -13,7 +13,7 @@ export default function FilterBySize() {
   const [selectedSizes, setSelectedSizes] = useState<Size[]>([]);
 
   const dispatch = useAppDispatch();
-  const { data: sizes, isLoading, isError } = useProductSizes();
+  const { data: sizes, isLoading, isError, refetch } = useProductSizes();
   const handleChange = useCallback(
     (size: Size) => {
       const newSelected = selectedSizes.includes(size)
@@ -32,9 +32,17 @@ export default function FilterBySize() {
       </h2>
       {isLoading && <SideFiltersLoader itemCount={5} />}
       {isError && (
-        <span className="text-sm">
-          Error loading Sizes. Please try again later.
-        </span>
+        <div className="text-sm text-red-600 flex items-center space-x-2">
+          <span className="text-sm">
+            Error loading Sizes. Please try again later.
+          </span>
+          <button
+            className="text-blue-600 hover:underline"
+            onClick={() => refetch()}
+          >
+            Retry
+          </button>
+        </div>
       )}
       {!isLoading && !isError && (
         <div className="px-3">
