@@ -22,6 +22,7 @@ import { FiTrash } from "react-icons/fi";
 import { useAppSelector } from "../redux/store";
 import { ROUTES } from "../routes/Routes";
 import { BreadCrumbs } from "../components/BreadCrumbs";
+import clsx from "clsx";
 
 const items = [
   { label: "Home", path: ROUTES.HOME },
@@ -151,7 +152,7 @@ export default function CartScreen() {
   });
 
   const checkoutHandler = () => {
-    redirect("/shipping");
+    redirect(ROUTES.ORDER_SHIPPING);
   };
 
   return (
@@ -201,18 +202,29 @@ export default function CartScreen() {
                   ))}
                 </thead>
                 <tbody>
-                  {table.getRowModel().rows.map((row) => (
-                    <tr key={row.id} className="border-b">
-                      {row.getVisibleCells().map((cell) => (
-                        <td key={cell.id} className="p-2 whitespace-nowrap">
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
-                        </td>
-                      ))}
+                  {table.getRowModel().rows.length > 0 ? (
+                    table.getRowModel().rows.map((row) => (
+                      <tr key={row.id} className="border-b">
+                        {row.getVisibleCells().map((cell) => (
+                          <td key={cell.id} className="p-2 whitespace-nowrap">
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}
+                          </td>
+                        ))}
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td
+                        colSpan={columns.length}
+                        className="text-center p-4 text-gray-500"
+                      >
+                        Your cart is empty.
+                      </td>
                     </tr>
-                  ))}
+                  )}
                 </tbody>
               </table>
             </div>
@@ -259,7 +271,11 @@ export default function CartScreen() {
           <div>
             <button
               type="button"
-              className="w-full uppercase bg-zinc-800 hover:bg-sky-600 text-white font-medium text-xs px-5 py-4 my-6"
+              className={clsx(
+                "w-full uppercase bg-zinc-800 hover:bg-sky-600 text-white font-medium text-xs px-5 py-4 my-6",
+                cart.length === 0 &&
+                  "opacity-50 hover:bg-none cursor-not-allowed"
+              )}
               disabled={cart.length === 0}
               onClick={checkoutHandler}
             >
