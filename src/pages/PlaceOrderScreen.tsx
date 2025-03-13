@@ -8,7 +8,6 @@ import { createOrder } from "../lib/django/orderApi";
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "../lib/axios/queryClient";
 import { clearCart, selectCartTotal } from "../redux/reducers/CartSlice";
-import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "react-toastify";
 import { HiOutlineShoppingBag } from "react-icons/hi2";
@@ -25,8 +24,6 @@ const items = [
 
 function PlaceOrderScreen() {
   const cart = useSelector((state: RootState) => state.cart);
-  const { userInfo } = useSelector((state: RootState) => state.auth);
-
   const totalCartItems = useSelector(selectCartTotal);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -45,11 +42,7 @@ function PlaceOrderScreen() {
     taxPrice: taxPrice,
     totalPrice: totalPrice.toFixed(2),
   };
-  useEffect(() => {
-    if (!userInfo) {
-      navigate("/login?redirect=placeorder");
-    }
-  }, [userInfo, navigate]);
+
   if (!cart.paymentMethod) {
     navigate(ROUTES.ORDER_PAYMENT);
   }
@@ -59,7 +52,7 @@ function PlaceOrderScreen() {
     onSuccess: (newOrder: Partial<Order>) => {
       queryClient.invalidateQueries({ queryKey: ["orders"] });
       dispatch(clearCart());
-      navigate(`/myorders/${newOrder.order_number}`);
+      navigate(`/orders/${newOrder.order_number}`);
     },
     onError: (error) => {
       console.error(error);

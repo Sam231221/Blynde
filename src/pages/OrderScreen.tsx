@@ -55,9 +55,6 @@ export default function OrderScreen() {
   };
 
   useEffect(() => {
-    if (!userInfo) {
-      redirect("/login");
-    }
     if (!selectedOrder?.isPaid && !sdkReady) {
       addPayPalScript();
     }
