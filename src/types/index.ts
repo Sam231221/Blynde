@@ -76,6 +76,7 @@ export type Product = {
   _id: string;
   slug: string;
   name: string;
+  brand: string;
   price: string;
   thumbnail_url: string;
   discounted_price: number;
@@ -85,7 +86,7 @@ export type Product = {
   date: Date;
   sizes: Size[];
   categories: Category[];
-  colors: [];
+  colors: Color[];
   reviews_count: number;
   rating: number;
   priceBadge: string;
