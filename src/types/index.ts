@@ -31,7 +31,7 @@ export interface Discount {
   priority: number;
 }
 export interface Offer {
-  id: string;
+  _id: string;
   name: string;
   description: string;
   price: number;

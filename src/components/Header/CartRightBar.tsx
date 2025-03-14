@@ -152,11 +152,15 @@ export default function CartRightBar({
                           className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-sm"
                         >
                           <div className="text-gray-600">
-                            <span
-                              className="inline-block w-3 h-3 rounded-full mr-1"
-                              style={{ backgroundColor: variant.color }}
-                            ></span>
-                            {variant.color}, Size: {variant.size}
+                            {variant.color !== "" && variant.size !== "" && (
+                              <>
+                                <span
+                                  className="inline-block w-3 h-3 rounded-full mr-1"
+                                  style={{ backgroundColor: variant.color }}
+                                ></span>
+                                {variant.color}, Size: {variant.size}
+                              </>
+                            )}
                             <span className="font-medium ml-1">
                               ({variant.qty} × ${item.price})
                             </span>
