@@ -5,7 +5,6 @@ function ComponentErrorFallback({
   error: Error;
   resetErrorBoundary: () => void;
 }) {
-  console.log(error);
   return (
     <section className="text-center h-screen flex items-center justify-center mx-auto py-2 overflow-auto mt-10">
       <div>

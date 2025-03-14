@@ -15,7 +15,6 @@ export const DiscountOffersList = ({
 
   offers,
 }: DiscountOffersListProps) => {
-  console.log(offers);
   const dispatch = useAppDispatch();
   const addToCartHandler = (offer: Offer) => {
     if (offer) {
