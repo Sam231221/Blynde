@@ -2,6 +2,7 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { queryClient } from "../axios/queryClient";
 import { apiRequest, RequestBody } from "../axios/axiosClient";
 import { User } from "../../types";
+import { ApiErrorResponse } from "../../types/common/response";
 
 export const useUsersQuery = () =>
   useQuery({
@@ -51,9 +52,6 @@ export const useUpdateUserMutation = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
     },
-    onError: (error) => {
-      console.error("Error updating user:", error);
-    },
   });
 };
 
@@ -89,7 +87,7 @@ export const useGetUserProfileQuery = () => {
 };
 
 export const useUpdateProfileMutation = () => {
-  return useMutation<void, Error, RequestBody>({
+  return useMutation<void, ApiErrorResponse, RequestBody>({
     mutationFn: async (formData: RequestBody) => {
       await apiRequest({
         url: "/api/users/profile/",

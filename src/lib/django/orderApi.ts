@@ -32,7 +32,15 @@ export const fetchOrder = async (
 
   return response as Order;
 };
+export const fetchRecentUserOrders = async (userId: string | undefined) => {
+  const response = await apiRequest<Order[]>({
+    url: `/api/users/${userId}/orders/recent/`,
+    method: "GET",
+    requiresToken: true,
+  });
 
+  return response as Order[];
+};
 // Create an order
 export const createOrder = (order: Partial<Order>): Promise<Partial<Order>> => {
   const data = apiRequest({

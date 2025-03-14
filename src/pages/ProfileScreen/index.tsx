@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Mail, Package, Heart } from "lucide-react";
+import { Mail, Package } from "lucide-react";
 import { useForm } from "react-hook-form";
 
 import {
@@ -7,9 +7,15 @@ import {
   useUpdateProfileMutation,
 } from "../../lib/django/userApi";
 import Avatar from "./components/Avatar";
-import { favoriteProducts, recentOrders } from "./data";
+
 import { BreadCrumbs } from "../../components/BreadCrumbs";
 import { ROUTES } from "../../routes/Routes";
+import { useRecentUserOrders } from "../../hooks/useOrders";
+import { ServerDownError } from "../../components/Fallbacks/Errors/ServerDownError";
+import Spinner from "../../components/Spinner";
+import { Link } from "react-router-dom";
+import Moment from "moment";
+import { toast } from "react-toastify";
 
 interface UserProfileData {
   first_name: string;
@@ -27,8 +33,15 @@ export default function ProfileScreen() {
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
   const { isLoading, error, data } = useGetUserProfileQuery();
+
   const { mutate: updateUserProfile, isPending } = useUpdateProfileMutation();
 
+  const {
+    data: recentOrders,
+    isLoading: isUserOrdersLoading,
+    isError,
+    refetch,
+  } = useRecentUserOrders(data?._id);
   useEffect(() => {
     if (data) {
       setValue("first_name", data.first_name);
@@ -43,16 +56,23 @@ export default function ProfileScreen() {
     if (avatarFile) {
       formData.append("avatar", avatarFile);
     }
-    updateUserProfile(formData);
+    updateUserProfile(formData, {
+      onSuccess: () => {
+        toast.success("Profile Updated Successfully");
+      },
+      onError: (error) => {
+        toast.error(error.errors.general);
+      },
+    });
   };
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>{error.message}</p>;
 
   return (
-    <div className="container mx-auto mt-14 px-4 py-8">
+    <div className="container mx-auto mt-10 px-4 py-8">
       <BreadCrumbs items={items} />
-      <div className="flex flex-col md:flex-row items-center md:items-start gap-8 mb-8">
+      <div className="mt-3 flex flex-col md:flex-row items-center md:items-start gap-8 mb-8">
         <div className="w-32 h-32 rounded-full overflow-hidden">
           <img
             src={
@@ -86,16 +106,7 @@ export default function ProfileScreen() {
           >
             Recent Orders
           </button>
-          <button
-            className={`px-4 py-2 font-medium ${
-              activeTab === "favorites"
-                ? "border-b-2 border-blue-500 text-blue-500"
-                : "text-gray-500"
-            }`}
-            onClick={() => setActiveTab("favorites")}
-          >
-            Favorites
-          </button>
+
           <button
             className={`px-4 py-2 font-medium ${
               activeTab === "settings"
@@ -119,8 +130,10 @@ export default function ProfileScreen() {
           <div className="p-3 w-full flex flex-col items-center">
             <div className="w-[200px] mt-3 sm:w-[400px] md:w-[500px] lg:w-[700px]">
               {/* Avatar */}
+
               <Avatar
                 initialImage={
+                  data?.profile_pic_url ||
                   "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
                 }
                 size={100}
@@ -181,54 +194,57 @@ export default function ProfileScreen() {
             View your order history and track shipments.
           </p>
           <div className="space-y-4">
-            {recentOrders.map((order) => (
-              <div
-                key={order.id}
-                className="flex items-center justify-between border-b pb-2"
-              >
-                <div>
-                  <p className="font-medium">{order.product}</p>
-                  <p className="text-sm text-gray-600">{order.date}</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span
-                    className={`px-2 py-1 rounded-full text-xs ${
-                      order.status === "Delivered"
-                        ? "bg-green-100 text-green-800"
-                        : order.status === "Shipped"
-                        ? "bg-blue-100 text-blue-800"
-                        : "bg-yellow-100 text-yellow-800"
-                    }`}
-                  >
-                    {order.status}
-                  </span>
-                  <Package className="w-4 h-4 text-gray-400" />
-                </div>
+            {isUserOrdersLoading && (
+              <div className="flex items-center justify-center w-full h-[300px]">
+                <Spinner />
               </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {activeTab === "favorites" && (
-        <div className="bg-white shadow rounded-lg p-6">
-          <h2 className="text-xl font-semibold mb-2">Favorite Products</h2>
-          <p className="text-gray-600 mb-4">
-            Your saved items for quick access.
-          </p>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {favoriteProducts.map((product) => (
-              <div
-                key={product.id}
-                className="border rounded-lg p-4 flex justify-between items-center"
-              >
-                <div>
-                  <p className="font-medium">{product.name}</p>
-                  <p className="text-sm text-gray-600">{product.price}</p>
-                </div>
-                <Heart className="w-5 h-5 text-red-500" />
-              </div>
-            ))}
+            )}
+            {isError && <ServerDownError refetch={refetch} />}
+            {!isUserOrdersLoading && !isError && recentOrders && (
+              <>
+                {recentOrders.length > 0 ? (
+                  <>
+                    {recentOrders.map((order) => (
+                      <div
+                        key={order._id}
+                        className="flex items-center justify-between border-b pb-2"
+                      >
+                        <div>
+                          <Link
+                            to={`/orders/${order.order_number}`}
+                            className="font-medium hover:text-sky-700"
+                          >
+                            {order.order_number}
+                          </Link>
+                          <p className="text-sm text-gray-600">
+                            on{" "}
+                            {Moment(order.createdAt).format(
+                              "MMMM Do YYYY, h:mm a"
+                            )}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span
+                            className={`px-2 py-1 rounded-full text-xs ${
+                              order.status === "Delivered"
+                                ? "bg-green-100 text-green-800"
+                                : order.status === "Shipped"
+                                ? "bg-blue-100 text-blue-800"
+                                : "bg-yellow-100 text-yellow-800"
+                            }`}
+                          >
+                            {order.status}
+                          </span>
+                          <Package className="w-4 h-4 text-gray-400" />
+                        </div>
+                      </div>
+                    ))}
+                  </>
+                ) : (
+                  <>No Orders were made in recent times.</>
+                )}
+              </>
+            )}
           </div>
         </div>
       )}

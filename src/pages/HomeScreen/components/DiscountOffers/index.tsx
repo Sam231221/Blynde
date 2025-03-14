@@ -30,9 +30,9 @@ const DiscountOffers: React.FC = () => {
             remaining.remainingMinutes <= 0 &&
             remaining.remainingSeconds <= 0
           ) {
-            deleteExpiredOffer(offer.id).catch(console.error);
+            deleteExpiredOffer(offer._id).catch(console.error);
             queryClient.setQueryData(["discountOffers"], (oldData: Offer[]) =>
-              oldData ? oldData.filter((o) => o.id !== offer.id) : oldData
+              oldData ? oldData.filter((o) => o._id !== offer._id) : oldData
             );
           }
         });
