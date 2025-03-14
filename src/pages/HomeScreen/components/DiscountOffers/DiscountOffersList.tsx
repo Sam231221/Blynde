@@ -50,11 +50,11 @@ export const DiscountOffersList = ({
             return (
               <div
                 key={i}
-                className="min-w-full p-8 border border-gray-200 rounded-sm "
+                className="min-w-full p-2 border border-gray-200 rounded-sm "
                 style={{ scrollSnapAlign: "start" }}
               >
                 <div className="flex flex-col sm:flex-row sm:gap-4">
-                  <div className="max-w-[900px] w-[800px] h-[400px]">
+                  <div className="max-w-[300px] sm:h-[250px] lg:max-w-[900px] w-[800px] lg:h-[400px]">
                     <img
                       src={offer.thumbnail_url}
                       alt={offer.name}
