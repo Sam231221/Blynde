@@ -59,7 +59,7 @@ export default function ProductCompareToast() {
             animate={isFullVersion ? "full" : "mini"}
             variants={toastVariants}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="fixed bg-white shadow-lg rounded-lg overflow-hidden z-50 border"
+            className="fixed bg-white shadow-lg rounded-lg overflow-hidden z-[997]"
           >
             {isFullVersion ? (
               <div className="w-full h-full flex flex-col">
