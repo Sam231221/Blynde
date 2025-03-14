@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import { calculateRemainingTime } from "../../../../helpers/utils";
 import { Offer } from "../../../../types";
-import { endpoint } from "../../../../lib/axios/axiosClient";
 import NoDiscountOffers from "./NoDiscountOffers";
 
 interface DiscountOffersListProps {
@@ -35,7 +34,7 @@ export const DiscountOffersList = ({
                 <div className="flex flex-col sm:flex-row sm:gap-4">
                   <div className="max-w-[900px] w-[800px] h-[400px]">
                     <img
-                      src={`${endpoint}${product.thumbnail}`}
+                      src={product.thumbnail_url}
                       alt={product.name}
                       className="w-full h-full object-cover"
                     />

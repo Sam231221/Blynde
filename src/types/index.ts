@@ -36,7 +36,7 @@ export interface Offer {
   description: string;
   price: number;
   sale_price: number;
-  thumbnail: string;
+  thumbnail_url: string;
   countInStock: number;
   end_date: string;
 }
