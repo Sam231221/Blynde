@@ -86,7 +86,11 @@ export const deliverOrder = async ({
   return data;
 };
 
-export const payOrder = async ({ orderNumber }: { orderNumber: string }) => {
+export const payOrder = async ({
+  orderNumber,
+}: {
+  orderNumber: string | null;
+}) => {
   const data = await apiRequest({
     url: `/api/orders/${orderNumber}/pay/`,
     method: "PUT",

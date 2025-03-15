@@ -1,6 +1,16 @@
-import { useQuery } from "@tanstack/react-query";
-import { fetchOrder, fetchRecentUserOrders } from "../lib/django/orderApi";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  createOrder,
+  fetchOrder,
+  fetchRecentUserOrders,
+  payOrder,
+} from "../lib/django/orderApi";
 import { Order } from "../types";
+import { useAppDispatch } from "../redux/store";
+import { useNavigate } from "react-router-dom";
+import { clearCart } from "../redux/reducers/CartSlice";
+import { queryClient } from "../lib/axios/queryClient";
+import { toast } from "react-toastify";
 
 export const useOrders = (order_number: string | undefined) => {
   return useQuery({
@@ -13,5 +23,31 @@ export const useRecentUserOrders = (userId: string | undefined) => {
     queryKey: ["userOrders", userId, "recent"],
     queryFn: () => fetchRecentUserOrders(userId),
     enabled: !!userId,
+  });
+};
+
+export const usePlaceUserOrder = () => {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  return useMutation({
+    mutationFn: createOrder,
+    onSuccess: (newOrder: Partial<Order>) => {
+      queryClient.invalidateQueries({ queryKey: ["orders"] });
+      dispatch(clearCart());
+      navigate(`/orders/${newOrder.order_number}`);
+    },
+    onError: (error) => {
+      console.error(error);
+      toast.error("There was an error while creating your order.");
+    },
+  });
+};
+
+export const usePayUserOrder = (order_number: string | null) => {
+  return useMutation({
+    mutationFn: () => payOrder({ orderNumber: order_number }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["order", order_number] });
+    },
   });
 };

@@ -1,23 +1,15 @@
 import { useNavigate } from "react-router-dom";
 import { CiBookmark } from "react-icons/ci";
 import { Message } from "../components/Message";
-
-import { Order } from "../types";
-import { createOrder } from "../lib/django/orderApi";
-import { useMutation } from "@tanstack/react-query";
-import { queryClient } from "../lib/axios/queryClient";
-import {
-  clearCart,
-  selectCartTotal,
-  useCart,
-} from "../redux/reducers/CartSlice";
+import { selectCartTotal, useCart } from "../redux/reducers/CartSlice";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "react-toastify";
 import { HiOutlineShoppingBag } from "react-icons/hi2";
 
 import { ROUTES } from "../routes/Routes";
 import { BreadCrumbs } from "../components/BreadCrumbs";
-import { useAppDispatch, useAppSelector } from "../redux/store";
+import { useAppSelector } from "../redux/store";
+import { usePlaceUserOrder } from "../hooks/useOrders";
 const items = [
   { label: "Home", path: ROUTES.HOME },
   { label: "Order", path: "#" },
@@ -29,7 +21,6 @@ const items = [
 function PlaceOrderScreen() {
   const cart = useCart();
   const totalCartItems = useAppSelector(selectCartTotal);
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const itemsPrice: number = totalCartItems;
@@ -51,25 +42,14 @@ function PlaceOrderScreen() {
     navigate(ROUTES.ORDER_PAYMENT);
   }
 
-  const { mutate: placeUserOrder, isError: error } = useMutation({
-    mutationFn: createOrder,
-    onSuccess: (newOrder: Partial<Order>) => {
-      queryClient.invalidateQueries({ queryKey: ["orders"] });
-      dispatch(clearCart());
-      navigate(`/orders/${newOrder.order_number}`);
-    },
-    onError: (error) => {
-      console.error(error);
-      toast.error("There was an error while creating your order.");
-    },
-  });
+  const { mutate: placeOrder, isError: error } = usePlaceUserOrder();
 
-  const placeOrder = (): void => {
+  const handlePlaceOrder = (): void => {
     if (cart.cartItems.length === 0) {
       toast.error("Your cart is empty");
     } else {
       if (cart.shippingAddress && cart.paymentMethod) {
-        placeUserOrder({
+        placeOrder({
           orderItems: cart.cartItems,
           shippingAddress: cart.shippingAddress,
           paymentMethod: cart.paymentMethod,
@@ -147,7 +127,7 @@ function PlaceOrderScreen() {
                 type="button"
                 className="uppercase bg-zinc-800 hover:bg-sky-600 my-4 text-white  font-medium text-sm px-3 py-2"
                 disabled={cart.cartItems.length === 0}
-                onClick={placeOrder}
+                onClick={handlePlaceOrder}
               >
                 Place Order
               </button>

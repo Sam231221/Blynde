@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
-import { queryClient } from "../lib/axios/queryClient";
-import { payOrder } from "../lib/django/orderApi";
+
 import { toast } from "react-toastify";
+import { usePayUserOrder } from "../hooks/useOrders";
 
 interface PaymentData {
   transaction_code?: string;
@@ -19,16 +18,10 @@ const PaymentSuccessScreen = () => {
   const order_number = search.get("order_number");
   const [data, setData] = useState<PaymentData>({});
 
-  const { mutate: payUserOrder } = useMutation({
-    mutationFn: payOrder,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["order", order_number] });
-    },
-  });
-
+  const { mutate: payUserOrder } = usePayUserOrder(order_number);
   useEffect(() => {
     if (order_number) {
-      payUserOrder({ orderNumber: order_number });
+      payUserOrder();
     } else {
       toast.error("Invalid order id.");
     }
