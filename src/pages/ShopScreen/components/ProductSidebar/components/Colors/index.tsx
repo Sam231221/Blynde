@@ -2,7 +2,7 @@ import ColorCheckBox from "./ColorCheckBox";
 import { setColor } from "../../../../../../redux/reducers/FilterProductSlice";
 import { useProductColors } from "../../../../../../hooks/useProducts";
 import SideFiltersLoader from "../../../../../../components/Fallbacks/Loadings/SideFiltersLoader";
-import { useAppDispatch } from "../../../../../../redux/store";
+import { useAppDispatch } from "../../../../../../types/redux";
 
 export default function Colors() {
   const dispatch = useAppDispatch();

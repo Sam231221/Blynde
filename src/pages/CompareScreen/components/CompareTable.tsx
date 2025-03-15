@@ -1,6 +1,6 @@
 import Rating from "../../../components/Rating";
 import { removeProduct } from "../../../redux/reducers/CompareProductsSlice";
-import { useAppDispatch, useAppSelector } from "../../../redux/store";
+import { useAppDispatch, useAppSelector } from "../../../types/redux";
 
 const CompareTable = () => {
   const { products } = useAppSelector((state) => state.comparelist);

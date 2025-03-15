@@ -1,4 +1,3 @@
-import { useAppDispatch } from "../../redux/store";
 import {
   clearCompare,
   useCompareProducts,
@@ -7,6 +6,7 @@ import {
 import { BreadCrumbs } from "../../components/BreadCrumbs";
 import { ROUTES } from "../../routes/Routes";
 import CompareTable from "./components/CompareTable";
+import { useAppDispatch } from "../../types/redux";
 const items = [
   { label: "Home", path: ROUTES.HOME },
   { label: "Compare", path: ROUTES.COMPARE },

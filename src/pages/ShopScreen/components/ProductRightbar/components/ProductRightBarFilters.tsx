@@ -8,7 +8,7 @@ import {
 import { useMemo, useState } from "react";
 
 import { useProductsQuery } from "../../../../../hooks/useProducts";
-import { useAppDispatch } from "../../../../../redux/store";
+import { useAppDispatch } from "../../../../../types/redux";
 
 export const ProductRightBarFilters = () => {
   const filters = useProductFilters();

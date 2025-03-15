@@ -9,7 +9,7 @@ import {
   useCart,
 } from "../../redux/reducers/CartSlice";
 import { ROUTES } from "../../routes/Routes";
-import { useAppDispatch, useAppSelector } from "../../redux/store";
+import { useAppDispatch, useAppSelector } from "../../types/redux";
 
 interface CartRightBarProps {
   sideCartNav: boolean;

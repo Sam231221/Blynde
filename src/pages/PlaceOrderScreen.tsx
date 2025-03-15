@@ -8,8 +8,9 @@ import { HiOutlineShoppingBag } from "react-icons/hi2";
 
 import { ROUTES } from "../routes/Routes";
 import { BreadCrumbs } from "../components/BreadCrumbs";
-import { useAppSelector } from "../redux/store";
+
 import { usePlaceUserOrder } from "../hooks/useOrders";
+import { useAppSelector } from "../types/redux";
 const items = [
   { label: "Home", path: ROUTES.HOME },
   { label: "Order", path: "#" },

@@ -5,10 +5,10 @@ import CheckoutSteps from "../components/CheckoutSteps";
 
 import { saveShippingAddress, useCart } from "../redux/reducers/CartSlice";
 
-import { useAppDispatch } from "../redux/store";
 import { useUser } from "../redux/reducers/AuthSlice";
 import { BreadCrumbs } from "../components/BreadCrumbs";
 import { ROUTES } from "../routes/Routes";
+import { useAppDispatch } from "../types/redux";
 const items = [
   { label: "Home", path: ROUTES.HOME },
   { label: "Order", path: "#" },

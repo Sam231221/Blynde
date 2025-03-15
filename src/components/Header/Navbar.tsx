@@ -16,7 +16,7 @@ import MobileSideHeader from "./MobileSideHeader";
 import { selectCartItemCount } from "../../redux/reducers/CartSlice";
 import { ROUTES } from "../../routes/Routes";
 import { useUser } from "../../redux/reducers/AuthSlice";
-import { useAppSelector } from "../../redux/store";
+import { useAppSelector } from "../../types/redux";
 
 const routes = {
   home: { path: "/", label: "Home" },

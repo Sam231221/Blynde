@@ -10,8 +10,8 @@ import PaginationControls from "./PaginationControls";
 import { GalleryLoading } from "../../../../../components/Fallbacks/Loadings/GalleryLoading";
 import NoProductsFound from "./NoProductsFound";
 
-import { useAppDispatch } from "../../../../../redux/store";
 import { ServerDownError } from "../../../../../components/Fallbacks/Errors/ServerDownError";
+import { useAppDispatch } from "../../../../../types/redux";
 
 export default function ProductGallery() {
   const filters = useProductFilters();

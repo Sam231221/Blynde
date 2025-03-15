@@ -25,7 +25,7 @@ import clsx from "clsx";
 
 import { ProductDetail } from "../../ProductDetail";
 import { useUser } from "../../../../redux/reducers/AuthSlice";
-import { useAppDispatch } from "../../../../redux/store";
+import { useAppDispatch } from "../../../../types/redux";
 
 export const ProductCardActions = ({ product }: { product: Product }) => {
   const [isInWishlist, setIsInWishlist] = useState(false);

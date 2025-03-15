@@ -8,7 +8,7 @@ import { addToCart } from "../../../../redux/reducers/CartSlice";
 
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
-import { useAppDispatch } from "../../../../redux/store";
+import { useAppDispatch } from "../../../../types/redux";
 
 export const ProductListBody = ({ product }: { product: Product }) => {
   const [data, setData] = useState({

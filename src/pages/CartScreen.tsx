@@ -18,10 +18,10 @@ import {
 
 import { useMemo, useState } from "react";
 import { FiTrash } from "react-icons/fi";
-import { useAppDispatch, useAppSelector } from "../redux/store";
 import { ROUTES } from "../routes/Routes";
 import { BreadCrumbs } from "../components/BreadCrumbs";
 import clsx from "clsx";
+import { useAppDispatch, useAppSelector } from "../types/redux";
 
 const items = [
   { label: "Home", path: ROUTES.HOME },

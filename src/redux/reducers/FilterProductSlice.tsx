@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { FilterState } from "../../types/redux";
-import { useAppSelector } from "../store";
+import { FilterState, useAppSelector } from "../../types/redux";
 
 export const initialState: FilterState = {
   categories: [],

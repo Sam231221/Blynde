@@ -1,7 +1,6 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { Product } from "../../types";
-import { CompareState } from "../../types/redux";
-import { useAppSelector } from "../store";
+import { CompareState, useAppSelector } from "../../types/redux";
 
 const loadState = (): CompareState => {
   try {

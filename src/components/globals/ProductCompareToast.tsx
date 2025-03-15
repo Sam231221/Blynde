@@ -8,7 +8,7 @@ import {
 import { Link } from "react-router-dom";
 
 import { ROUTES } from "../../routes/Routes";
-import { useAppDispatch } from "../../redux/store";
+import { useAppDispatch } from "../../types/redux";
 
 export default function ProductCompareToast() {
   const dispatch = useAppDispatch();

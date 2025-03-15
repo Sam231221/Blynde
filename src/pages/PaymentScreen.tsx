@@ -5,10 +5,11 @@ import CheckoutSteps from "../components/CheckoutSteps";
 
 import FormContainer from "../components/FormContainer";
 import { savePaymentMethod } from "../redux/reducers/CartSlice";
-import { useAppDispatch, useAppSelector } from "../redux/store";
+
 import { useUser } from "../redux/reducers/AuthSlice";
 import { BreadCrumbs } from "../components/BreadCrumbs";
 import { ROUTES } from "../routes/Routes";
+import { useAppDispatch, useAppSelector } from "../types/redux";
 
 const items = [
   { label: "Home", path: ROUTES.HOME },

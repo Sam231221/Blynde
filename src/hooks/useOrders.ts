@@ -6,11 +6,11 @@ import {
   payOrder,
 } from "../lib/django/orderApi";
 import { Order } from "../types";
-import { useAppDispatch } from "../redux/store";
 import { useNavigate } from "react-router-dom";
 import { clearCart } from "../redux/reducers/CartSlice";
 import { queryClient } from "../lib/axios/queryClient";
 import { toast } from "react-toastify";
+import { useAppDispatch } from "../types/redux";
 
 export const useOrders = (order_number: string | undefined) => {
   return useQuery({

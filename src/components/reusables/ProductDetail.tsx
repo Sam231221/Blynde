@@ -26,7 +26,7 @@ import {
 } from "../../hooks/useWishlist";
 import { IoHeart } from "react-icons/io5";
 import Spinner from "../Spinner";
-import { useAppDispatch } from "../../redux/store";
+import { useAppDispatch } from "../../types/redux";
 
 export interface ProductDetailProps {
   product: Product;

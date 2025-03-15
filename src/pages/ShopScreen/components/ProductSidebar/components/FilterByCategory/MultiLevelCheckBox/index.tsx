@@ -3,7 +3,7 @@ import { IoCloseOutline } from "react-icons/io5";
 
 import { Category } from "../../../../../../../types";
 import { setFilterCategories } from "../../../../../../../redux/reducers/FilterProductSlice";
-import { useAppDispatch } from "../../../../../../../redux/store";
+import { useAppDispatch } from "../../../../../../../types/redux";
 
 type MultiLevelCheckboxProps = {
   data: Category[];

@@ -3,8 +3,9 @@ import { calculateRemainingTime } from "../../../../helpers/utils";
 import { Offer } from "../../../../types";
 import NoDiscountOffers from "./NoDiscountOffers";
 import { toast } from "react-toastify";
-import { useAppDispatch } from "../../../../redux/store";
+
 import { addToCart } from "../../../../redux/reducers/CartSlice";
+import { useAppDispatch } from "../../../../types/redux";
 
 interface DiscountOffersListProps {
   offers: Offer[];

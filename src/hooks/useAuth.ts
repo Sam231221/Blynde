@@ -25,7 +25,7 @@ import {
 
 import { toast } from "react-toastify";
 import { ApiErrorResponse } from "../types/common/response";
-import { useAppDispatch } from "../redux/store";
+import { useAppDispatch } from "../types/redux";
 
 export const useLogin = (
   options?: UseMutationOptions<User, ApiErrorResponse, LoginFormData>

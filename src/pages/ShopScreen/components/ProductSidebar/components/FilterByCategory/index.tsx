@@ -4,7 +4,7 @@ import { setFilterCategories } from "../../../../../../redux/reducers/FilterProd
 
 import SideFiltersLoader from "../../../../../../components/Fallbacks/Loadings/SideFiltersLoader";
 import { useProductCategories } from "../../../../../../hooks/useProducts";
-import { useAppDispatch } from "../../../../../../redux/store";
+import { useAppDispatch } from "../../../../../../types/redux";
 
 function FilterByCategory() {
   const dispatch = useAppDispatch();

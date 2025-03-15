@@ -6,8 +6,9 @@ import { setFilterSizes } from "../../../../../../redux/reducers/FilterProductSl
 import { IoCloseOutline } from "react-icons/io5";
 import { useProductSizes } from "../../../../../../hooks/useProducts";
 import SideFiltersLoader from "../../../../../../components/Fallbacks/Loadings/SideFiltersLoader";
-import { useAppDispatch } from "../../../../../../redux/store";
+
 import { Size } from "../../../../../../types";
+import { useAppDispatch } from "../../../../../../types/redux";
 
 export default function FilterBySize() {
   const [selectedSizes, setSelectedSizes] = useState<Size[]>([]);

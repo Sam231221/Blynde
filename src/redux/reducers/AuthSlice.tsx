@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { User } from "../../types";
 import { AuthState } from "../../types/api/auth";
-import { useAppSelector } from "../store";
+import { useAppSelector } from "../../types/redux";
 
 const authFromStorage: AuthState = JSON.parse(
   localStorage.getItem("authState") ||

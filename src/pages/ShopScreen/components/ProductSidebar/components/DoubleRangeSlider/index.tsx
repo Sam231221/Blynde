@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./style.css";
 import DoubleSlider from "./DoubleSlider";
 import { setPrice } from "../../../../../../redux/reducers/FilterProductSlice";
-import { useAppDispatch } from "../../../../../../redux/store";
+import { useAppDispatch } from "../../../../../../types/redux";
 
 export default function DoubleRangePriceSlider() {
   const dispatch = useAppDispatch();
