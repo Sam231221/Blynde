@@ -10,22 +10,23 @@ import {
 } from "../../types/api/auth";
 import { User } from "../../types";
 
-const getRefreshToken = (): string | undefined => {
-  return store.getState().auth.userInfo?.refresh_token;
+const getRefreshToken = (): string | null => {
+  return store.getState().auth.refreshToken;
 };
 
 export const loginUser = async (loginData: LoginFormData) => {
   const user = await apiRequest<User>({
-    url: "/api/users/login/",
+    url: "/api/auth/login/",
     method: "POST",
     data: loginData,
+    requiresToken: false,
   });
   return user as User;
 };
 
 export const registerUser = async (registerData: RegisterFormData) => {
   const response = await apiRequest<RegisterResponse>({
-    url: "/api/users/register/",
+    url: "/api/auth/register/",
     method: "POST",
     data: registerData,
   });
@@ -35,11 +36,12 @@ export const registerUser = async (registerData: RegisterFormData) => {
 export const logoutUser = async () => {
   const refreshToken = getRefreshToken();
   const response = await apiRequest<LogoutResponse>({
-    url: "/api/users/logout/",
+    url: "/api/auth/logout/",
     method: "POST",
     data: {
       refresh: refreshToken,
     },
+    requiresToken: true,
   });
   return response as LogoutResponse;
 };
@@ -48,7 +50,7 @@ export const requestPasswordReset = async ({
   email,
 }: RequestPasswordResetFormData) => {
   const response = await apiRequest<RequestPasswordResetResponse>({
-    url: "/api/users/password-reset-request/",
+    url: "/api/auth/password-reset-request/",
     method: "POST",
     data: { email },
     requiresToken: false,

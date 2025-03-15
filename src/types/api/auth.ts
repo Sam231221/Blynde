@@ -1,7 +1,9 @@
 import { User } from "..";
 import { ApiErrorResponse } from "../common/response";
 export interface AuthState {
-  userInfo: User | null;
+  user: User | null;
+  accessToken: string | null;
+  refreshToken: string | null;
 }
 export interface LoginFormData extends Record<string, unknown> {
   email: string;

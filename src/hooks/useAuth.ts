@@ -36,7 +36,13 @@ export const useLogin = (
   return useMutation<User, ApiErrorResponse, LoginFormData>({
     mutationFn: loginUser,
     onSuccess: (user) => {
-      dispatch(setUser(user as User));
+      dispatch(
+        setUser({
+          user,
+          accessToken: user.access_token,
+          refreshToken: user.refresh_token,
+        })
+      );
       queryClient.setQueryData(["user"], user);
     },
     ...options,
@@ -86,5 +92,5 @@ export const usePasswordReset = (
 };
 
 export const useUser = () => {
-  return useSelector((state: RootState) => state.auth.userInfo);
+  return useSelector((state: RootState) => state.auth.user);
 };

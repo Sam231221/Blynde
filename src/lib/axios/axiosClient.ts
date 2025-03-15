@@ -25,7 +25,7 @@ const axiosClient: AxiosInstance = axios.create({
 axiosClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     config.headers = config.headers || {};
-    const token = store.getState().auth.userInfo?.access_token;
+    const token = store.getState().auth.accessToken;
 
     if (config.requiresToken !== false && token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -47,22 +47,23 @@ axiosClient.interceptors.response.use(
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-
       try {
-        const refreshToken = store.getState().auth.userInfo?.refresh_token;
+        const refreshToken = store.getState().auth.refreshToken;
+
         if (!refreshToken) {
           store.dispatch(logout());
           return Promise.reject(error);
         }
 
-        const { data } = await axios.post(`${endpoint}/api/token/refresh/`, {
-          refresh: refreshToken,
-        });
+        const { data } = await axios.post(
+          `${endpoint}/api/auth/token/refresh/`,
+          { refresh: refreshToken }
+        );
 
         store.dispatch(
           updateTokens({
-            access_token: data.access,
-            refresh_token: data.refresh,
+            accessToken: data.access,
+            refreshToken: data.refresh,
           })
         );
 
@@ -107,7 +108,6 @@ export const apiRequest = async <T>(options: ApiRequestOptions): Promise<T> => {
   } catch (error) {
     if (axios.isAxiosError(error)) {
       const errData = error.response?.data;
-
       // (V.Imp)Return the error data so that your onError callback can process field-level errors.
       return Promise.reject(errData);
     } else {
