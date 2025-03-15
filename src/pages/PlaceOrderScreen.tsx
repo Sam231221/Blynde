@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
 import { CiBookmark } from "react-icons/ci";
 import { Message } from "../components/Message";
 
@@ -7,13 +6,18 @@ import { Order } from "../types";
 import { createOrder } from "../lib/django/orderApi";
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "../lib/axios/queryClient";
-import { clearCart, selectCartTotal } from "../redux/reducers/CartSlice";
+import {
+  clearCart,
+  selectCartTotal,
+  useCart,
+} from "../redux/reducers/CartSlice";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "react-toastify";
 import { HiOutlineShoppingBag } from "react-icons/hi2";
-import { RootState } from "../types/redux";
+
 import { ROUTES } from "../routes/Routes";
 import { BreadCrumbs } from "../components/BreadCrumbs";
+import { useAppDispatch, useAppSelector } from "../redux/store";
 const items = [
   { label: "Home", path: ROUTES.HOME },
   { label: "Order", path: "#" },
@@ -23,9 +27,9 @@ const items = [
 ];
 
 function PlaceOrderScreen() {
-  const cart = useSelector((state: RootState) => state.cart);
-  const totalCartItems = useSelector(selectCartTotal);
-  const dispatch = useDispatch();
+  const cart = useCart();
+  const totalCartItems = useAppSelector(selectCartTotal);
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const itemsPrice: number = totalCartItems;
@@ -62,7 +66,7 @@ function PlaceOrderScreen() {
 
   const placeOrder = (): void => {
     if (cart.cartItems.length === 0) {
-      alert("Your cart is empty");
+      toast.error("Your cart is empty");
     } else {
       if (cart.shippingAddress && cart.paymentMethod) {
         placeUserOrder({

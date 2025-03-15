@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
 import clsx from "clsx";
 
 import { RiUserReceived2Line } from "react-icons/ri";
@@ -11,12 +10,13 @@ import { FaRegHeart } from "react-icons/fa6";
 import CartRightBar from "./CartRightBar";
 import { ProfileDropDown } from "./ProfileDropDown";
 import Searchbar from "./Searchbar";
-import { useUser } from "../../hooks/useAuth";
 
 import { useUserWishlist } from "../../hooks/useWishlist";
 import MobileSideHeader from "./MobileSideHeader";
 import { selectCartItemCount } from "../../redux/reducers/CartSlice";
 import { ROUTES } from "../../routes/Routes";
+import { useUser } from "../../redux/reducers/AuthSlice";
+import { useAppSelector } from "../../redux/store";
 
 const routes = {
   home: { path: "/", label: "Home" },
@@ -30,10 +30,10 @@ interface NavbarProps {
 function Navbar({ isBannerVisible }: NavbarProps) {
   const [sideCartNav, setSideCartNav] = useState(false);
   const [sideMobileHeader, setSideMobileHeader] = useState(false);
-  const totalCartItems = useSelector(selectCartItemCount);
+  const totalCartItems = useAppSelector(selectCartItemCount);
 
   const { data } = useUserWishlist();
-  const userInfo = useUser();
+  const user = useUser();
 
   const location = useLocation();
 
@@ -108,7 +108,7 @@ function Navbar({ isBannerVisible }: NavbarProps) {
           </div>
           {/* lefmost navitems */}
           <div className="flex px-4 mr-5 items-center gap-3">
-            {userInfo ? (
+            {user ? (
               <ProfileDropDown />
             ) : (
               <Link to={ROUTES.LOGIN}>
@@ -125,7 +125,7 @@ function Navbar({ isBannerVisible }: NavbarProps) {
                 {totalCartItems}
               </div>
             </div>
-            {userInfo && (
+            {user && (
               <Link to={ROUTES.WISHLIST} className="relative cursor-pointer">
                 <FaRegHeart className="text-[15px] md:text-[20px]" />
 

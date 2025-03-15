@@ -1,4 +1,3 @@
-import { useSelector } from "react-redux";
 import { useDebounce } from "use-debounce";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -11,7 +10,7 @@ import {
 import { Category, Color, Product, Size } from "../types";
 import { apiRequest } from "../lib/axios/axiosClient";
 import { Pagination } from "../types/common/pagination";
-import { RootState } from "../types/redux";
+import { useProductFilters } from "../redux/reducers/FilterProductSlice";
 
 export const useProductCategories = () => {
   return useQuery<Category[], Error>({
@@ -57,7 +56,7 @@ export const useProductSizes = () => {
 };
 
 export const useProductsQuery = () => {
-  const filters = useSelector((state: RootState) => state.productfilters);
+  const filters = useProductFilters();
   const [debouncedFilters] = useDebounce(filters, 500);
 
   return useQuery<{ results: Product[]; pagination: Pagination }>({

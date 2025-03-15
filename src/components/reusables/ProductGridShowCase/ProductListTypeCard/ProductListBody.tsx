@@ -5,9 +5,10 @@ import ProductColorSelect from "../../../ProductColorSelect";
 import SizeVariant from "../../../SizeVariant";
 import ProductPriceInput from "../../../ProductPriceInput";
 import { addToCart } from "../../../../redux/reducers/CartSlice";
-import { useDispatch } from "react-redux";
+
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import { useAppDispatch } from "../../../../redux/store";
 
 export const ProductListBody = ({ product }: { product: Product }) => {
   const [data, setData] = useState({
@@ -15,7 +16,7 @@ export const ProductListBody = ({ product }: { product: Product }) => {
     color: "",
     size: "",
   });
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const handleQuantityChange = (quantity: number) => {
     setData((prev) => ({ ...prev, quantity }));
   };

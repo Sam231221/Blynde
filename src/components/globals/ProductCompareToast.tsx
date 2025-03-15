@@ -1,24 +1,24 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronUp, ChevronDown } from "lucide-react";
-
-import { useDispatch, useSelector } from "react-redux";
-import { removeProduct } from "../../redux/reducers/CompareProductsSlice";
+import {
+  removeProduct,
+  useCompareProducts,
+} from "../../redux/reducers/CompareProductsSlice";
 import { Link } from "react-router-dom";
-import { RootState } from "../../types/redux";
+
 import { ROUTES } from "../../routes/Routes";
+import { useAppDispatch } from "../../redux/store";
 
 export default function ProductCompareToast() {
-  const dispatch = useDispatch();
-  const { products: compareProducts } = useSelector(
-    (state: RootState) => state.comparelist
-  );
+  const dispatch = useAppDispatch();
+  const { products } = useCompareProducts();
   const [isFullVersion, setIsFullVersion] = useState(false);
   const timerRef = useRef<number | null>(null);
 
   const handleRemoveProduct = (productId: string) => {
     dispatch(removeProduct(productId));
-    if (compareProducts.length <= 1) {
+    if (products.length <= 1) {
       setIsFullVersion(false);
     }
   };
@@ -28,7 +28,7 @@ export default function ProductCompareToast() {
   };
 
   useEffect(() => {
-    if (compareProducts.length > 0) {
+    if (products.length > 0) {
       setIsFullVersion(true);
       if (timerRef.current) {
         clearTimeout(timerRef.current);
@@ -43,7 +43,7 @@ export default function ProductCompareToast() {
         clearTimeout(timerRef.current);
       }
     };
-  }, [compareProducts]);
+  }, [products]);
 
   const toastVariants = {
     mini: { height: "48px", width: "148px", bottom: "16px", right: "16px" },
@@ -53,7 +53,7 @@ export default function ProductCompareToast() {
   return (
     <>
       <AnimatePresence>
-        {compareProducts.length > 0 && (
+        {products.length > 0 && (
           <motion.div
             initial="mini"
             animate={isFullVersion ? "full" : "mini"}
@@ -65,7 +65,7 @@ export default function ProductCompareToast() {
               <div className="w-full h-full flex flex-col">
                 <div className="p-3 bg-blue-600 text-white flex justify-between items-center">
                   <h3 className="font-medium">
-                    Compare Products ({compareProducts.length})
+                    Compare Products ({products.length})
                   </h3>
                   <button
                     onClick={toggleVersion}
@@ -77,7 +77,7 @@ export default function ProductCompareToast() {
 
                 <div className="max-h-80 overflow-y-auto flex-grow">
                   <AnimatePresence>
-                    {compareProducts.map((product) => (
+                    {products.map((product) => (
                       <motion.div
                         key={product._id}
                         initial={{ opacity: 0, height: 0 }}
@@ -114,7 +114,7 @@ export default function ProductCompareToast() {
                   </AnimatePresence>
                 </div>
 
-                {compareProducts.length >= 2 && (
+                {products.length >= 2 && (
                   <div className="p-3 bg-gray-50 border-t">
                     <Link
                       to={ROUTES.COMPARE}

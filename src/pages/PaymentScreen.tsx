@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
 
 import CheckoutSteps from "../components/CheckoutSteps";
 
 import FormContainer from "../components/FormContainer";
 import { savePaymentMethod } from "../redux/reducers/CartSlice";
-import { useAppSelector } from "../redux/store";
-import { selectUser } from "../redux/reducers/AuthSlice";
+import { useAppDispatch, useAppSelector } from "../redux/store";
+import { useUser } from "../redux/reducers/AuthSlice";
 import { BreadCrumbs } from "../components/BreadCrumbs";
 import { ROUTES } from "../routes/Routes";
 
@@ -19,11 +18,11 @@ const items = [
 ];
 
 function PaymentScreen() {
-  const user = useAppSelector(selectUser);
+  const user = useUser();
   const cart = useAppSelector((state) => state.cart);
   const { shippingAddress } = cart;
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const [paymentMethod, setPaymentMethod] = useState("Esewa");

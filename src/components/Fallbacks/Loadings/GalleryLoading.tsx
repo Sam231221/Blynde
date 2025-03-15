@@ -1,6 +1,5 @@
 import ContentLoader from "react-content-loader";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../types/redux";
+import { useProductFilters } from "../../../redux/reducers/FilterProductSlice";
 
 const GridItemLoader = () => (
   <div className="relative h-[200px] sm:h-[300px]">
@@ -63,9 +62,7 @@ const ListItemLoader = () => (
 );
 
 export const GalleryLoading = ({ count }: { count: number }) => {
-  const { productsDisplayType } = useSelector(
-    (state: RootState) => state.productfilters
-  );
+  const { productsDisplayType } = useProductFilters();
 
   return (
     <div className="my-2">

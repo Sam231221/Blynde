@@ -1,8 +1,7 @@
-import { X } from "lucide-react";
-import { useAppDispatch, useAppSelector } from "../../redux/store";
+import { useAppDispatch } from "../../redux/store";
 import {
   clearCompare,
-  removeProduct,
+  useCompareProducts,
 } from "../../redux/reducers/CompareProductsSlice";
 
 import { BreadCrumbs } from "../../components/BreadCrumbs";
@@ -13,12 +12,8 @@ const items = [
   { label: "Compare", path: ROUTES.COMPARE },
 ];
 export default function ComparePage() {
-  const compareProducts = useAppSelector((state) => state.comparelist.products);
+  const { products } = useCompareProducts();
   const dispatch = useAppDispatch();
-
-  const handleRemoveProduct = (productId: string) => {
-    dispatch(removeProduct(productId));
-  };
 
   const handleClearAll = () => {
     dispatch(clearCompare());
@@ -28,7 +23,7 @@ export default function ComparePage() {
     <div className="container mx-auto py-2 mt-10">
       <BreadCrumbs items={items} />
 
-      {compareProducts.length === 0 ? (
+      {products.length === 0 ? (
         <div className="bg-white h-[60vh] flex items-center justify-center border border-gray-200 rounded-lg p-6 my-4 text-center shadow-sm">
           <div className="flex flex-col items-center">
             <svg

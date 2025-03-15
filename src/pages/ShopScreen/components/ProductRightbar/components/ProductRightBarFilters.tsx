@@ -3,16 +3,15 @@ import { RxDashboard } from "react-icons/rx";
 import {
   setFilters,
   setProductsDisplayType,
+  useProductFilters,
 } from "../../../../../redux/reducers/FilterProductSlice";
 import { useMemo, useState } from "react";
 
 import { useProductsQuery } from "../../../../../hooks/useProducts";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../../types/redux";
 import { useAppDispatch } from "../../../../../redux/store";
 
 export const ProductRightBarFilters = () => {
-  const filters = useSelector((state: RootState) => state.productfilters);
+  const filters = useProductFilters();
   const dispatch = useAppDispatch();
   const { productsDisplayType, products_limit } = filters;
   const [productQtyPerPage, setProductQtyPerPage] = useState(8);

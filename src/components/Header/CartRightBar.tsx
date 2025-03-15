@@ -1,14 +1,15 @@
 import { Link, useNavigate } from "react-router-dom";
 import { HiOutlineXMark, HiOutlineShoppingBag } from "react-icons/hi2";
-import { useDispatch, useSelector } from "react-redux";
+
 import { motion, AnimatePresence } from "framer-motion";
 
 import {
   removeFromCart,
   selectCartTotal,
+  useCart,
 } from "../../redux/reducers/CartSlice";
-import { RootState } from "../../types/redux";
 import { ROUTES } from "../../routes/Routes";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
 
 interface CartRightBarProps {
   sideCartNav: boolean;
@@ -20,11 +21,10 @@ export default function CartRightBar({
   setSideCartNav,
 }: CartRightBarProps) {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const cart = useSelector((state: RootState) => state.cart);
-  const { cartItems } = cart;
+  const dispatch = useAppDispatch();
+  const { cartItems } = useCart();
 
-  const totalAmount = useSelector(selectCartTotal);
+  const totalAmount = useAppSelector(selectCartTotal);
 
   const checkoutHandler = () => {
     navigate(ROUTES.ORDER_SHIPPING);

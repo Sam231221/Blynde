@@ -5,15 +5,14 @@ import { Message } from "../../components/Message";
 
 import { useProductDetail } from "../../hooks/useProducts";
 
-import { useSelector } from "react-redux";
-
 import Reviews from "./components/Reviews";
-import { RootState } from "../../types/redux";
+
 import { ROUTES } from "../../routes/Routes";
 import { BreadCrumbs } from "../../components/BreadCrumbs";
 import { useModalContext } from "../../providers/ModalProvider";
 import { ProductDetail } from "../../components/reusables/ProductDetail";
 import { RelatedProducts } from "./components/RelatedProducts";
+import { useUser } from "../../redux/reducers/AuthSlice";
 
 const items = [
   { label: "Home", path: ROUTES.HOME },
@@ -22,7 +21,7 @@ const items = [
 export default function ProductScreen() {
   const { openModal } = useModalContext();
   const { slug } = useParams<{ slug: string }>();
-  const { userInfo } = useSelector((state: RootState) => state.auth);
+  const user = useUser();
   const { data: productDetail, isLoading } = useProductDetail(slug);
   if (isLoading) {
     return <Loader />;
@@ -45,7 +44,7 @@ export default function ProductScreen() {
       <Reviews
         productId={String(productDetail._id)}
         productSlug={productDetail.slug}
-        userInfo={userInfo}
+        user={user}
       />
       <RelatedProducts productSlug={productDetail.slug} />
     </div>

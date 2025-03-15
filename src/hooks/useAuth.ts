@@ -4,7 +4,7 @@ import {
   UseMutationResult,
   useQueryClient,
 } from "@tanstack/react-query";
-import { useDispatch, useSelector } from "react-redux";
+
 import {
   loginUser,
   logoutUser,
@@ -25,12 +25,12 @@ import {
 
 import { toast } from "react-toastify";
 import { ApiErrorResponse } from "../types/common/response";
-import { RootState } from "../types/redux";
+import { useAppDispatch } from "../redux/store";
 
 export const useLogin = (
   options?: UseMutationOptions<User, ApiErrorResponse, LoginFormData>
 ): UseMutationResult<User, ApiErrorResponse, LoginFormData> => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const queryClient = useQueryClient();
 
   return useMutation<User, ApiErrorResponse, LoginFormData>({
@@ -61,7 +61,7 @@ export const useRegister = (
 export const useLogout = (
   options?: UseMutationOptions<LogoutResponse, unknown, LogoutData>
 ): UseMutationResult<LogoutResponse, unknown, LogoutData> => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const queryClient = useQueryClient();
   return useMutation<LogoutResponse, unknown, LogoutData>({
     mutationFn: logoutUser,
@@ -89,8 +89,4 @@ export const usePasswordReset = (
     mutationFn: requestPasswordReset,
     ...options,
   });
-};
-
-export const useUser = () => {
-  return useSelector((state: RootState) => state.auth.user);
 };

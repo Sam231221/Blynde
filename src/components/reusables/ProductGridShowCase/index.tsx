@@ -1,11 +1,7 @@
-import { useSelector } from "react-redux";
-
 import { Product } from "../../../types";
-
 import { ProductGridTypeCard } from "./ProductGridTypeCard";
-
 import { ProductListTypeCard } from "./ProductListTypeCard";
-import { RootState } from "../../../types/redux";
+import { useProductFilters } from "../../../redux/reducers/FilterProductSlice";
 
 interface ProductGridShowCaseProps {
   showtype?: string;
@@ -15,7 +11,7 @@ interface ProductGridShowCaseProps {
 export default function ProductGridShowCase({
   products,
 }: ProductGridShowCaseProps) {
-  const filters = useSelector((state: RootState) => state.productfilters);
+  const filters = useProductFilters();
   const { productsDisplayType } = filters;
 
   return (

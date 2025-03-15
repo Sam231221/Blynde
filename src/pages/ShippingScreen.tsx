@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import FormContainer from "../components/FormContainer";
 import CheckoutSteps from "../components/CheckoutSteps";
 
-import { saveShippingAddress } from "../redux/reducers/CartSlice";
+import { saveShippingAddress, useCart } from "../redux/reducers/CartSlice";
 
-import { useAppSelector } from "../redux/store";
-import { selectUser } from "../redux/reducers/AuthSlice";
+import { useAppDispatch } from "../redux/store";
+import { useUser } from "../redux/reducers/AuthSlice";
 import { BreadCrumbs } from "../components/BreadCrumbs";
 import { ROUTES } from "../routes/Routes";
 const items = [
@@ -17,8 +16,8 @@ const items = [
 ];
 
 function ShippingScreen() {
-  const user = useAppSelector(selectUser);
-  const cart = useAppSelector((state) => state.cart);
+  const user = useUser();
+  const cart = useCart();
   const shippingAddress = cart.shippingAddress || {
     address: "",
     city: "",
@@ -26,7 +25,7 @@ function ShippingScreen() {
     country: "",
   };
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const [address, setAddress] = useState<string>(shippingAddress.address || "");

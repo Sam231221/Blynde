@@ -3,6 +3,7 @@ import { ShippingAddress } from "../../types";
 import { getLocalStorageItem } from "../../helpers/utils";
 import { CartItem, CartState } from "../../types/redux/cart";
 import { RootState } from "../../types/redux";
+import { useAppSelector } from "../store";
 
 const cartItemsFromStorage: CartItem[] = getLocalStorageItem("cartItems", []);
 const shippingAddressFromStorage = getLocalStorageItem("shippingAddress", null);
@@ -164,6 +165,7 @@ export const {
   saveShippingAddress,
 } = cartSlice.actions;
 
-export const selectCart = (state: RootState) => state.cart.cartItems;
-
+export const useCart = () => {
+  return useAppSelector((state) => state.cart);
+};
 export default cartSlice.reducer;

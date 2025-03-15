@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { FilterState } from "../../types/redux";
+import { useAppSelector } from "../store";
 
 export const initialState: FilterState = {
   categories: [],
@@ -51,7 +52,9 @@ const filterSlice = createSlice({
     },
   },
 });
-
+export const useProductFilters = () => {
+  return useAppSelector((state) => state.productfilters);
+};
 export const {
   setFilters,
   setFilterCategories,

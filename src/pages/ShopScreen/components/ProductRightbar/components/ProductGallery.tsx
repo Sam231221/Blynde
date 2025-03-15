@@ -1,19 +1,20 @@
-import { useSelector } from "react-redux";
+import { useCallback } from "react";
 import ProductGridShowCase from "../../../../../components/reusables/ProductGridShowCase";
-
-import { setFilters } from "../../../../../redux/reducers/FilterProductSlice";
+import {
+  setFilters,
+  useProductFilters,
+} from "../../../../../redux/reducers/FilterProductSlice";
 import { ProductRightBarFilters } from "./ProductRightBarFilters";
 import { useProductsQuery } from "../../../../../hooks/useProducts";
 import PaginationControls from "./PaginationControls";
 import { GalleryLoading } from "../../../../../components/Fallbacks/Loadings/GalleryLoading";
 import NoProductsFound from "./NoProductsFound";
-import { RootState } from "../../../../../types/redux";
+
 import { useAppDispatch } from "../../../../../redux/store";
 import { ServerDownError } from "../../../../../components/Fallbacks/Errors/ServerDownError";
-import { useCallback } from "react";
 
 export default function ProductGallery() {
-  const filters = useSelector((state: RootState) => state.productfilters);
+  const filters = useProductFilters();
   const dispatch = useAppDispatch();
 
   const { data, isLoading, isError, refetch } = useProductsQuery();

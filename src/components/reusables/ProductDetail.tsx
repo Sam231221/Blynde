@@ -12,20 +12,21 @@ import SizeVariant from "../SizeVariant";
 import ProductPriceInput from "../ProductPriceInput";
 import { ShareProduct } from "./ShareProduct";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+
 import { addToCart } from "../../redux/reducers/CartSlice";
 import { Product } from "../../types";
 import { toast } from "react-toastify";
 import Coupon from "./ProductGridShowCase/components/Coupon";
 import { useProductCoupon } from "../../hooks/useOffers";
-import { selectUser } from "../../redux/reducers/AuthSlice";
-import { useAppSelector } from "../../redux/store";
+import { useUser } from "../../redux/reducers/AuthSlice";
+
 import {
   useCreateOrDeleteWishlistItem,
   useUserWishlist,
 } from "../../hooks/useWishlist";
 import { IoHeart } from "react-icons/io5";
 import Spinner from "../Spinner";
+import { useAppDispatch } from "../../redux/store";
 
 export interface ProductDetailProps {
   product: Product;
@@ -45,7 +46,7 @@ export const ProductDetail = ({ product, openModal }: ProductDetailProps) => {
     color: "",
     size: "",
   });
-  const user = useAppSelector(selectUser);
+  const user = useUser();
   const { data: wishlist } = useUserWishlist();
 
   const wishlistItems = wishlist?.items;
@@ -56,7 +57,7 @@ export const ProductDetail = ({ product, openModal }: ProductDetailProps) => {
     discount_percentage: product.discount_percentage,
   });
   const [productCoupon, setProductCoupon] = useState("");
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const handleQuantityChange = (quantity: number) => {
     setFilters((prev) => ({ ...prev, quantity }));
   };

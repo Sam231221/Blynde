@@ -1,5 +1,4 @@
 import { Product } from "../../../../types";
-import { useDispatch, useSelector } from "react-redux";
 import {
   useCreateOrDeleteWishlistItem,
   useUserWishlist,
@@ -18,26 +17,30 @@ import { useModalContext } from "../../../../providers/ModalProvider";
 import { MdOutlineZoomOutMap } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { addProduct } from "../../../../redux/reducers/CompareProductsSlice";
+import {
+  addProduct,
+  useCompareProducts,
+} from "../../../../redux/reducers/CompareProductsSlice";
 import clsx from "clsx";
-import { RootState } from "../../../../types/redux";
+
 import { ProductDetail } from "../../ProductDetail";
+import { useUser } from "../../../../redux/reducers/AuthSlice";
+import { useAppDispatch } from "../../../../redux/store";
 
 export const ProductCardActions = ({ product }: { product: Product }) => {
-  const dispatch = useDispatch();
-  const { data } = useUserWishlist();
-  const { products: compareProducts } = useSelector(
-    (state: RootState) => state.comparelist
-  );
-  const wishlistItems = data?.items;
   const [isInWishlist, setIsInWishlist] = useState(false);
-  const { userInfo } = useSelector((state: RootState) => state.auth);
+  const dispatch = useAppDispatch();
+  const { data } = useUserWishlist();
+  const { products } = useCompareProducts();
+  const wishlistItems = data?.items;
+
+  const user = useUser();
   const { openModal } = useModalContext();
   const { mutate: addorDeletetoWishlist, isPending } =
     useCreateOrDeleteWishlistItem();
 
   const handleAddToWishlist = (productId: string) => {
-    if (userInfo) {
+    if (user) {
       addorDeletetoWishlist(productId, {
         onSuccess: (response) => {
           if (response === 204) {
@@ -51,14 +54,14 @@ export const ProductCardActions = ({ product }: { product: Product }) => {
         },
       });
     } else {
-      if (!userInfo) {
+      if (!user) {
         toast.error("Please login to add to wishlist");
       }
     }
   };
   // Function to add a product to compare list
   const handleAddToCompare = (product: Product) => {
-    if (compareProducts.length < 3) {
+    if (products.length < 3) {
       dispatch(addProduct(product));
     } else {
       toast.error("You can compare up to 3 products at a time.");
@@ -133,16 +136,16 @@ export const ProductCardActions = ({ product }: { product: Product }) => {
 
       <button
         onClick={() => handleAddToCompare(product)}
-        disabled={compareProducts.some((p) => p._id === product._id)}
+        disabled={products.some((p) => p._id === product._id)}
         className={clsx(
           "flex justify-center items-center w-10 h-10 mb-2 text-gray-400 border border-zinc-200  transition-all duration-200 ease-in-out rounded-full ",
-          compareProducts.some((p) => p._id === product._id)
+          products.some((p) => p._id === product._id)
             ? "bg-gray-900 text-white border-gray-800"
             : "bg-white text-gray-400 border-zinc-200"
         )}
       >
         {/* bg-white hover:bg-gray-900 hover:text-white hover:border-gray-800 */}
-        {compareProducts.some((p) => p._id === product._id) ? (
+        {products.some((p) => p._id === product._id) ? (
           <IoRepeatOutline
             color={"#00000"}
             title={"Already Added to Compare list"}

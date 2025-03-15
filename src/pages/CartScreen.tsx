@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import {
   useReactTable,
   getCoreRowModel,
@@ -11,15 +10,15 @@ import {
 import ProductPriceInput from "../components/ProductPriceInput";
 import {
   removeFromCart,
-  selectCart,
   selectCartItemCount,
   selectCartTotal,
   updateQuantity,
+  useCart,
 } from "../redux/reducers/CartSlice";
 
 import { useMemo, useState } from "react";
 import { FiTrash } from "react-icons/fi";
-import { useAppSelector } from "../redux/store";
+import { useAppDispatch, useAppSelector } from "../redux/store";
 import { ROUTES } from "../routes/Routes";
 import { BreadCrumbs } from "../components/BreadCrumbs";
 import clsx from "clsx";
@@ -40,14 +39,14 @@ interface CartItem {
 }
 
 export default function CartScreen() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const redirect = useNavigate();
   const totalCartItems = useAppSelector(selectCartItemCount);
   const totalCartAmount = useAppSelector(selectCartTotal);
-  const cart = useAppSelector(selectCart);
+  const { cartItems } = useCart();
 
   const data = useMemo(() => {
-    return cart.flatMap((product) =>
+    return cartItems.flatMap((product) =>
       product.variations.map((variant) => ({
         productId: product.productId,
         name: product.name,
@@ -58,7 +57,7 @@ export default function CartScreen() {
         size: variant.size,
       }))
     );
-  }, [cart]);
+  }, [cartItems]);
 
   const handleDeleteVariant = (rowData: CartItem) => {
     dispatch(
@@ -273,10 +272,10 @@ export default function CartScreen() {
               type="button"
               className={clsx(
                 "w-full uppercase bg-zinc-800 hover:bg-sky-600 text-white font-medium text-xs px-5 py-4 my-6",
-                cart.length === 0 &&
+                cartItems.length === 0 &&
                   "opacity-50 hover:bg-none cursor-not-allowed"
               )}
-              disabled={cart.length === 0}
+              disabled={cartItems.length === 0}
               onClick={checkoutHandler}
             >
               Proceed To Checkout

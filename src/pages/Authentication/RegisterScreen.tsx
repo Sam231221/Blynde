@@ -5,9 +5,8 @@ import { useRegister } from "../../hooks/useAuth";
 import Spinner from "../../components/Spinner";
 import { toast } from "react-toastify";
 import { RegisterFormData } from "../../types/api/auth";
-import { useAppSelector } from "../../redux/store";
-import { selectUser } from "../../redux/reducers/AuthSlice";
 import { ApiErrorResponse } from "../../types/common/response";
+import { useUser } from "../../redux/reducers/AuthSlice";
 
 const RegistrationScreen = () => {
   const [formData, setFormData] = useState<RegisterFormData>({
@@ -29,7 +28,7 @@ const RegistrationScreen = () => {
     setErrors((prev) => ({ ...prev, [name]: "" }));
   };
   const navigate = useNavigate();
-  const user = useAppSelector(selectUser);
+  const user = useUser();
   const { mutate: register, isPending } = useRegister();
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

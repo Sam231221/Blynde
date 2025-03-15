@@ -1,16 +1,15 @@
 import { useState, useEffect } from "react";
-
 import { useParams, useNavigate } from "react-router-dom";
 import Moment from "moment";
 
 import Loader from "../components/Loader";
 import { Message } from "../components/Message";
 
-import { useUser } from "../hooks/useAuth";
 import { EsewaPaymentForm } from "./EsewaPaymentForm";
 import { ROUTES } from "../routes/Routes";
 import { useOrders } from "../hooks/useOrders";
 import { BreadCrumbs } from "../components/BreadCrumbs";
+import { useUser } from "../redux/reducers/AuthSlice";
 
 const items = [
   { label: "Home", path: ROUTES.HOME },
@@ -21,7 +20,7 @@ const items = [
 export default function OrderScreen() {
   const { order_number } = useParams();
   const redirect = useNavigate();
-  const userInfo = useUser();
+  const user = useUser();
 
   const [sdkReady, setSdkReady] = useState(false);
 
@@ -58,7 +57,7 @@ export default function OrderScreen() {
     if (!selectedOrder?.isPaid && !sdkReady) {
       addPayPalScript();
     }
-  }, [userInfo, order_number, redirect, selectedOrder?.isPaid, sdkReady]);
+  }, [user, order_number, redirect, selectedOrder?.isPaid, sdkReady]);
 
   if (isLoading) return <Loader />;
 

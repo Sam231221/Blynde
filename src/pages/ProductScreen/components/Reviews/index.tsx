@@ -11,12 +11,12 @@ import { Link } from "react-router-dom";
 interface ReviewsProps {
   productId: string | undefined;
   productSlug: string | undefined;
-  userInfo: User | null;
+  user: User | null;
 }
 export default function Reviews({
   productId,
   productSlug,
-  userInfo,
+  user,
 }: ReviewsProps) {
   const {
     data: productReviews = [],
@@ -72,10 +72,10 @@ export default function Reviews({
         <p className="text-sm my-2">No reviews yet. Be the first to review!</p>
       )}
       <div className="mb-4">
-        {userInfo?.username ? (
+        {user?.username ? (
           <ReviewForm
-            username={userInfo.username}
-            userId={String(userInfo.id)}
+            username={user.username}
+            userId={String(user.id)}
             productId={productId}
             productSlug={productSlug}
           />

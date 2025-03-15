@@ -1,12 +1,10 @@
 import ProductSidebar from "./components/ProductSidebar";
 import ProductRightbar from "./components/ProductRightbar";
 import { useSearchParams } from "react-router-dom";
-
-import { useSelector } from "react-redux";
 import { useEffect } from "react";
-import { RootState } from "../../types/redux";
 import { ROUTES } from "../../routes/Routes";
 import { BreadCrumbs } from "../../components/BreadCrumbs";
+import { useProductFilters } from "../../redux/reducers/FilterProductSlice";
 
 const items = [
   { label: "Home", path: ROUTES.HOME },
@@ -14,9 +12,7 @@ const items = [
 ];
 
 export default function ShopScreen() {
-  const productfilters = useSelector(
-    (state: RootState) => state.productfilters
-  );
+  const productfilters = useProductFilters();
   const [searchParams, setSearchParams] = useSearchParams();
   const { categories, price, sizes, color } = productfilters;
 

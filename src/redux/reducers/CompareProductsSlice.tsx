@@ -1,6 +1,7 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { Product } from "../../types";
 import { CompareState } from "../../types/redux";
+import { useAppSelector } from "../store";
 
 const loadState = (): CompareState => {
   try {
@@ -45,4 +46,8 @@ const CompareProductsSlice = createSlice({
 
 export const { addProduct, removeProduct, clearCompare } =
   CompareProductsSlice.actions;
+
+export const useCompareProducts = () => {
+  return useAppSelector((state) => state.comparelist);
+};
 export default CompareProductsSlice.reducer;

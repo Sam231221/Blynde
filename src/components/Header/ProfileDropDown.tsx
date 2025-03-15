@@ -4,8 +4,9 @@ import { RxTriangleDown } from "react-icons/rx";
 import { BsBoxArrowRight, BsGear, BsPerson } from "react-icons/bs";
 
 import { Link } from "react-router-dom";
-import { useLogout, useUser } from "../../hooks/useAuth";
+import { useLogout } from "../../hooks/useAuth";
 import { ROUTES } from "../../routes/Routes";
+import { useUser } from "../../redux/reducers/AuthSlice";
 
 interface ProfileDropDownProps {
   classes?: string;
@@ -16,12 +17,12 @@ export const ProfileDropDown = ({ classes }: ProfileDropDownProps) => {
 
   const ProfileDivRef = useRef<HTMLDivElement>(null);
 
-  const userInfo = useUser();
+  const user = useUser();
 
   const { mutate: logout, isPending } = useLogout();
 
   const handleLogout = () => {
-    logout({ refresh: userInfo?.refresh_token || "" });
+    logout({ refresh: user?.refresh_token || "" });
   };
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -65,7 +66,7 @@ export const ProfileDropDown = ({ classes }: ProfileDropDownProps) => {
                            top-14 right-[2px] border-[#f4f4f4] bg-[#fff] drop-shadow-lg w-[220px] p-2`}
       >
         <div className="ml-4 mb-2">
-          <h2 className="text-md capitalize">{userInfo?.first_name}</h2>
+          <h2 className="text-md capitalize">{user?.first_name}</h2>
         </div>
         <hr />
         <ul>
