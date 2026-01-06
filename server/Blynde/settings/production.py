@@ -4,9 +4,7 @@ DEBUG = True
 
 SITE_ID = 2
 
-ALLOWED_HOSTS = [
-    "blynde.up.railway.app",
-]
+ALLOWED_HOSTS = ["blynde.up.railway.app", "blynde-production.up.railway.app"]
 DJANGO_BASE_URL = config("DJANGO_BASE_URL")
 FRONTEND_BASE_URL = config("FRONTEND_BASE_URL")
 MIDDLEWARE = [
